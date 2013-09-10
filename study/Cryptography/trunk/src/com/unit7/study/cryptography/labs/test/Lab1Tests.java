@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 
 public class Lab1Tests extends TestCase {
     public void testBinpow() {
-        
+        	
     }
     
     public void testGcd() {
@@ -37,7 +37,7 @@ public class Lab1Tests extends TestCase {
         int privB = Utils.getRandPrime(primes, count);
         int pubA = Utils.getRandPrime(primes, count);
         int pubB = Utils.getRandPrime(primes, count);
-        writer.println(String.format("q: %d, p: %d, g: %d\nprivate A: %d, public A: %d, private B: %d, public B: %d", 
+        writer.println(String.format("q: %d, p: %d, g: %d\nprivate A: %d, public A: %d\nprivate B: %d, public B: %d", 
                                         q, p, g, privA, pubA, privB, pubB));
         
         long keyAB = CryptoUtils.DiffieHelmanKey(privA, pubB, p);
