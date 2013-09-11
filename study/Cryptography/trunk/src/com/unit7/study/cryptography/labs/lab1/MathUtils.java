@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.unit7.study.cryptography.labs.lab1.tools.Pair;
 
 public class MathUtils {
-    public static long binpow(long x, int a, long mod) {
+    public static long binpow(long x, long a, long mod) {
         long res = 1;
         for (; a > 0; a >>= 1) {
             if ((a & 1) == 1)

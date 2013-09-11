@@ -1,31 +1,44 @@
 package com.unit7.study.cryptography.labs.lab1;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CryptoUtils {
     /**
-     * Алгоритм вычисления общего ключа для шифрования Диффи-Хеллмана.
-     * @param priv Закрытый ключ А
-     * @param pub Открытый ключ Б
-     * @param p модуль
-     * @return ключ для шифрования
+     * РђР»РіРѕСЂРёС‚Рј РІС‹С‡РёСЃР»РµРЅРёСЏ РѕР±С‰РµРіРѕ РєР»СЋС‡Р° РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ Р”РёС„С„Рё-РҐРµР»Р»РјР°РЅР°.
+     * @param priv Р—Р°РєСЂС‹С‚С‹Р№ РєР»СЋС‡ Рђ
+     * @param pub РћС‚РєСЂС‹С‚С‹Р№ РєР»СЋС‡ Р‘
+     * @param p РјРѕРґСѓР»СЊ
+     * @return РєР»СЋС‡ РґР»СЏ С€РёС„СЂРѕРІР°РЅРёСЏ
      */
     public static long DiffieHelmanKey(int priv, int pub, long p) {
         return MathUtils.binpow(pub, priv, p);
     }
     
     /**
-     * Алгоритм Шенкса - шаг младенца, шаг великана.
-     * Предполагается, что модуль p не больше 10<sup>10</sup> из-за ограничений памяти.
-     * @param a число
-     * @param key число после возведения в степень
-     * @param p модуль
+     * РђР»РіРѕСЂРёС‚Рј РЁРµРЅРєСЃР° - С€Р°Рі РјР»Р°РґРµРЅС†Р°, С€Р°Рі РІРµР»РёРєР°РЅР°.
+     * РџСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ РјРѕРґСѓР»СЊ p РЅРµ Р±РѕР»СЊС€Рµ 10<sup>10</sup> РёР·-Р·Р° РѕРіСЂР°РЅРёС‡РµРЅРёР№ РїР°РјСЏС‚Рё.
+     * @param a С‡РёСЃР»Рѕ
+     * @param key С‡РёСЃР»Рѕ РїРѕСЃР»Рµ РІРѕР·РІРµРґРµРЅРёСЏ РІ СЃС‚РµРїРµРЅСЊ
+     * @param p РјРѕРґСѓР»СЊ
      * @return x, where x = log<sub>a</sub>(key). a<sup>x</sup> mod p = key;
      */
     public static long babyStepGiantStep(int a, long key, long p) {
-    	Set<Long> first = new HashSet<Long>(), second = new HashSet<Long>();
-    	// TODO realise
-    	return 0;
+    	Map<Long, Integer> babySteps = new HashMap<Long, Integer>();
+        int m = (int) Math.sqrt(p) + 1;
+        for (int i = m - 1; i >= 0; --i) {
+            babySteps.put(MathUtils.binpow(a, i, p) * key % p, i);
+        } 
+
+        for (long t = m, i = 1; t <= m * m; ++i, t *= i) {
+            long b = MathUtils.binpow(a, t, p);
+            if (babySteps.containsKey(b)) {
+                long x = i * m - babySteps.get(b);
+                return x;
+            }
+        }
+
+    	// TODO check it
+    	throw new IllegalArgumentException("May be something wrong in arguments, because the solution must be works for all samples.");
     }
 }
