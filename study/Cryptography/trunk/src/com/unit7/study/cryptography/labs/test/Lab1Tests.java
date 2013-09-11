@@ -68,9 +68,9 @@ public class Lab1Tests extends TestCase {
                         cryptoDataSecond.getPrivate(),
                         cryptoDataSecond.getPublic()));
 
-        long keyAB = CryptoUtils.DiffieHelmanKey(cryptoDataFirst.getPrivate(),
+        long keyAB = CryptoUtils.DiffieHellmanKey(cryptoDataFirst.getPrivate(),
                 cryptoDataSecond.getPublic(), p);
-        long keyBA = CryptoUtils.DiffieHelmanKey(cryptoDataSecond.getPrivate(),
+        long keyBA = CryptoUtils.DiffieHellmanKey(cryptoDataSecond.getPrivate(),
                 cryptoDataFirst.getPublic(), p);
 
         assertTrue(keyAB == keyBA);
@@ -98,9 +98,9 @@ public class Lab1Tests extends TestCase {
         CryptoData cryptoDataFirst = new CryptoData(p, g);
         CryptoData cryptoDataSecond = new CryptoData(p, g);
 
-        long keyAB = CryptoUtils.DiffieHelmanKey(cryptoDataFirst.getPrivate(),
+        long keyAB = CryptoUtils.DiffieHellmanKey(cryptoDataFirst.getPrivate(),
                 cryptoDataSecond.getPublic(), p);
-        long keyBA = CryptoUtils.DiffieHelmanKey(cryptoDataSecond.getPrivate(),
+        long keyBA = CryptoUtils.DiffieHellmanKey(cryptoDataSecond.getPrivate(),
                 cryptoDataFirst.getPublic(), p);
 
         assertTrue(keyAB == keyBA);
