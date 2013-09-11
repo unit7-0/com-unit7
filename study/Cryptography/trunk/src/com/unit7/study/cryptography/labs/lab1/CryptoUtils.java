@@ -2,13 +2,25 @@ package com.unit7.study.cryptography.labs.lab1;
 
 public class CryptoUtils {
     /**
-     * Р’С‹С‡РёС?Р»РµРЅРёРµ РѕР±С‰РµРіРѕ РєР»СЋС‡Р° РїРѕ С?С…РµРјРµ Р”РёС„С„Рё-РҐРµР»Р»РјР°РЅР°.
-     * @param priv Р·Р°РєСЂС‹С‚С‹Р№ РєР»СЋС‡ Р?
-     * @param pub РѕС‚РєСЂС‹С‚С‹Р№ РєР»СЋС‡ Р‘
-     * @param p Р±РѕР»СЊС€РѕРµ РїСЂРѕС?С‚РѕРµ, РјРѕРґСѓР»СЊ.
-     * @return РѕР±С‰РёР№ РєР»СЋС‡.
+     * Алгоритм вычисления общего ключа для шифрования Диффи-Хеллмана.
+     * @param priv Закрытый ключ А
+     * @param pub Открытый ключ Б
+     * @param p модуль
+     * @return ключ для шифрования
      */
     public static long DiffieHelmanKey(int priv, int pub, long p) {
         return MathUtils.binpow(pub, priv, p);
+    }
+    
+    /**
+     * Алгоритм Шенкса - шаг младенца, шаг великана.
+     * @param a число
+     * @param key число после возведения в степень
+     * @param p модуль
+     * @return x, where x = log<sub>a</sub>(key). a<sup>x</sup> mod p = key;
+     */
+    public static long babyStepGiantStep(int a, long key, long p) {
+    	// TODO realise
+    	return 0;
     }
 }
