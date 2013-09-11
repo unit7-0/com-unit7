@@ -13,7 +13,7 @@ public class CryptoUtils {
      * @param p модуль
      * @return ключ для шифрования
      */
-    public static long DiffieHelmanKey(long priv, long pub, long p) {
+    public static long DiffieHellmanKey(long priv, long pub, long p) {
         return MathUtils.binpow(pub, priv, p);
     }
     
@@ -26,7 +26,7 @@ public class CryptoUtils {
      * @return Список значений x, где x = log<sub>a</sub>(key). a<sup>x</sup> mod p = key; 
      */
     public static List<Long> babyStepGiantStep(long a, long key, long p) {
-    	Map<Long, Integer> babySteps = new HashMap<Long, Integer>();
+        Map<Long, Integer> babySteps = new HashMap<Long, Integer>();
         int m = (int) Math.sqrt(p) + 1;
         for (int i = m - 1; i >= 0; --i) {
             babySteps.put(MathUtils.binpow(a, i, p) * key % p, i);
@@ -42,7 +42,7 @@ public class CryptoUtils {
         }
 
         if (result.size() == 0)
-        	throw new IllegalArgumentException("May be something wrong in arguments, because the solution must be works for all samples");
+                throw new IllegalArgumentException("May be something wrong in arguments, because the solution must be works for all samples");
         return result;
     }
 }
