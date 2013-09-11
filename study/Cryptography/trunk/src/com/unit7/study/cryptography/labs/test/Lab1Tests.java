@@ -14,8 +14,8 @@ public class Lab1Tests extends TestCase {
     public void testBinpow() {
     	writer.println("testBinpow() [started]");
     	
-    	int a = 455;
-    	int d = 7;
+    	int a = 100;
+    	int d = 4;
     	int mod = 150;
     	int res = (int) MathUtils.binpow(a, d, mod);
     	
