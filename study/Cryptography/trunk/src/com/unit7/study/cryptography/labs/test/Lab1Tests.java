@@ -7,6 +7,7 @@ import java.util.Random;
 import com.unit7.study.cryptography.labs.lab1.CryptoUtils;
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
 import com.unit7.study.cryptography.labs.lab1.tools.CryptoData;
+import com.unit7.study.cryptography.labs.lab1.tools.Pair;
 import com.unit7.study.cryptography.labs.lab1.tools.Utils;
 
 import junit.framework.TestCase;
@@ -28,7 +29,18 @@ public class Lab1Tests extends TestCase {
     }
 
     public void testGcd() {
-
+        writer.println("testGcd() [started]\n");
+        Random rand = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 10; ++i) {
+            int a = rand.nextInt(40);
+            int b = rand.nextInt(255);
+            Pair<Integer, Integer> xy = new Pair();
+            int gcd = MathUtils.gcd(a, b, xy);
+            writer.println("gcd(" + a + ", " + b + ") = " + a + " * " + xy.getFirst() + " + " + b
+                    + " * " + xy.getSecond() + " = " + gcd);
+        }
+        
+        writer.println("\ntestGcd() [finished]");
     }
 
     public void testDiffieHellman() {
