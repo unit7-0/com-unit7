@@ -46,5 +46,9 @@ public class Lab1Tests extends TestCase {
         writer.println("Cypher key: " + keyAB + "\n\ntestDiffieHellman() [finished]\n");
     }
     
+    public void testBabyStepGiantStep() {
+    	
+    }
+    
     PrintWriter writer = new PrintWriter(System.out, true);
 }
