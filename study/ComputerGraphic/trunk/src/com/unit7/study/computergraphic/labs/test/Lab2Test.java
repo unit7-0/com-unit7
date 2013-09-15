@@ -85,12 +85,12 @@ public class Lab2Test extends TestCase {
                         strategy.setyAxis(1);
                         strategy.setxAxis(0);
                         strategy.setzAxis(0);
-                        strategy.setAngle(x - mouseState.getX());
+                        strategy.setAngle(strategy.getAngle() + x - mouseState.getX());
                     } else {
                         strategy.setxAxis(1);
                         strategy.setyAxis(0);
                         strategy.setzAxis(0);
-                        strategy.setAngle(y - mouseState.getY());
+                        strategy.setAngle(strategy.getAngle() + y - mouseState.getY());
                     }
                     
                     mouseState.setXY(x, y);
