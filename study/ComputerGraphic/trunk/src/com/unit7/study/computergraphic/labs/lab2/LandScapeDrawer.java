@@ -23,8 +23,7 @@ public class LandScapeDrawer implements DrawerStrategy {
     
     @Override
     public void display(GL2 gl) {
-        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        //gl.glLoadIdentity();
+        clear(gl);
         
         gl.glPushMatrix();
                
@@ -77,49 +76,6 @@ public class LandScapeDrawer implements DrawerStrategy {
     
     public void regenerateLandScape() {
         mapGenerator.regenerateMap(hMatrix);
-    }
-    
-    private void doBuildMap(float[][] map, int x1, int y1, int x2, int y2) {
-        int xc = (x1 + x2) / 2;
-        int yc = (y1 + y2) / 2;
-        
-        if (xc == x1 && yc == y1)
-            return;
-        
-        boolean type = rand.nextBoolean();
-        float vertexAdd = type ? UP : DOWN;
-        float len = (x2 - x1) * vertexAdd;
-        map[xc][y1] = ((map[x1][y1] + map[x2][y1]) / 2 + len) % MOD;
-        float val = map[xc][y1];
-        
-        type = rand.nextBoolean();
-        vertexAdd = type ? UP : DOWN;
-        len = (x2 - x1) * vertexAdd;
-        map[xc][y2] = ((map[x1][y2] + map[x2][y2]) / 2 + len) % MOD;
-        val = map[xc][y2];
-        
-        type = rand.nextBoolean();
-        vertexAdd = type ? UP : DOWN;
-        len = (y2 - y1) * vertexAdd;
-        map[x1][yc] = ((map[x1][y1] + map[x1][y2]) / 2 + len) % MOD;
-        val = map[x1][yc];
-        
-        type = rand.nextBoolean();
-        vertexAdd = type ? UP : DOWN;
-        len = (y2 - y1) * vertexAdd;
-        map[x2][yc] = ((map[x2][y1] + map[x2][y2]) / 2 + len) % MOD;
-        val = map[x2][yc];
-        
-        type = rand.nextBoolean();
-        vertexAdd = type ? UP : DOWN;
-        len = ((x2 - x1) + (y2 - y1)) * vertexAdd;
-        map[xc][yc] = ((map[xc][y1] + map[xc][y2] + map[x1][yc] + map[x2][yc]) / 4 + len) % MOD;
-        val = map[xc][yc];
-        
-        doBuildMap(map, x1, y1, xc, yc);
-        doBuildMap(map, x1, yc, xc, y2);
-        doBuildMap(map, xc, y1, x2, yc);
-        doBuildMap(map, xc, yc, x2, y2);
     }
     
     public MapGenerator getMapGenerator() {
