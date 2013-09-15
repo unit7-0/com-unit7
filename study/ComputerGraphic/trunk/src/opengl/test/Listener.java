@@ -1,9 +1,5 @@
 package opengl.test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Random;
 
 import javax.media.opengl.GL;
@@ -16,27 +12,23 @@ import javax.media.opengl.glu.GLU;
 
 public class Listener implements GLEventListener {
     public Listener() {
-        hMatrix = new float[2048][2048];
-        Random rand = new Random(System.currentTimeMillis());
-        for (int i = 0; i < hMatrix.length; ++i) {
-            for (int j = 0; j < hMatrix[0].length; ++j) {
-                hMatrix[i][j] = rand.nextFloat();
-            }
-        }
+        hMatrix = generateMap(512);
     }
     
     @Override
     public void display(GLAutoDrawable glAutoDrawable) {
         GL2 gl = glAutoDrawable.getGL().getGL2();
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        gl.glLoadIdentity();
+        //gl.glLoadIdentity();
         
-        //draw
-        gl.glTranslatef(-5, 0, -5f);
-        gl.glRotatef(-55, 1, 0, 0);
+        gl.glPushMatrix();
+        //draw        
+        gl.glTranslatef(-.8f, -0.7f, -3.f);
+        //gl.glRotatef(-60, 1, 0, 0);        
+        
         for (int i = 0; i < hMatrix.length - 1; ++i) {
             for (int j = 0; j < hMatrix[0].length - 1; ++j) {
-                gl.glBegin(GL2.GL_TRIANGLE_STRIP);
+                gl.glBegin(GL2.GL_QUADS);
                 
                 float h = hMatrix[i][j] * ZOOM;
                 float x = i * ZOOM_XY;
@@ -49,35 +41,23 @@ public class Listener implements GLEventListener {
                 gl.glColor3f(0, hMatrix[i][j + 1], 0);
                 gl.glVertex3f(x, y + ZOOM_XY, h);
                 
+                h = hMatrix[i + 1][j + 1] * ZOOM;
+                x = (i + 1) * ZOOM_XY;
+                gl.glColor3f(0, hMatrix[i + 1][j], 0);
+                gl.glVertex3f(x + ZOOM_XY, y + ZOOM_XY, h);
+                
                 h = hMatrix[i + 1][j] * ZOOM;
                 x = (i + 1) * ZOOM_XY;
                 y = j * ZOOM_XY;
                 gl.glColor3f(0, hMatrix[i + 1][j], 0);
                 gl.glVertex3f(x + ZOOM_XY, y, h);
                 
-                h = hMatrix[i + 1][j + 1] * ZOOM;
-                y = (j + 1) * ZOOM_XY;
-                gl.glColor3f(0, hMatrix[i + 1][j], 0);
-                gl.glVertex3f(x + ZOOM_XY, y + ZOOM_XY, h);
-                
                 gl.glEnd();
             }
+            
         }
         
-        /*
-        gl.glBegin(GL2.GL_QUADS);
-        gl.glColor3f(1, 0, 0);
-        gl.glVertex3f(0, 0, 0);
-        
-        gl.glColor3f(0, 1, 0);
-        gl.glVertex3f(100, 0, 0);
-        
-        gl.glColor3f(0, 0, 1);
-        gl.glVertex3f(100, 100, 0);
-        
-        gl.glColor3f(0.5f, 0.5f, 0.5f);
-        gl.glVertex3f(0, 100, 0);
-        gl.glEnd();*/
+        gl.glPopMatrix();
     }
 
     @Override
@@ -111,8 +91,68 @@ public class Listener implements GLEventListener {
         gl.glLoadIdentity();
     }
     
+    private float[][] generateMap(int n) {
+        float[][] map = new float[n][n];
+        
+        map[0][0] = rand.nextFloat();
+        map[0][n - 1] = rand.nextFloat();
+        map[n - 1][0] = rand.nextFloat();
+        map[n - 1][n - 1] = rand.nextFloat();
+        
+        doBuildMap(map, 0, 0, n - 1, n - 1);
+        
+        return map;
+    }
+    
+    private void doBuildMap(float[][] map, int x1, int y1, int x2, int y2) {
+        int xc = (x1 + x2) / 2;
+        int yc = (y1 + y2) / 2;
+        
+        if (xc == x1 && yc == y1)
+            return;
+        
+        boolean type = rand.nextBoolean();
+        float vertexAdd = type ? UP : DOWN;
+        float len = (x2 - x1) * vertexAdd;
+        map[xc][y1] = ((map[x1][y1] + map[x2][y1]) / 2 + len) % MOD;
+        float val = map[xc][y1];
+        
+        type = rand.nextBoolean();
+        vertexAdd = type ? UP : DOWN;
+        len = (x2 - x1) * vertexAdd;
+        map[xc][y2] = ((map[x1][y2] + map[x2][y2]) / 2 + len) % MOD;
+        val = map[xc][y2];
+        
+        type = rand.nextBoolean();
+        vertexAdd = type ? UP : DOWN;
+        len = (y2 - y1) * vertexAdd;
+        map[x1][yc] = ((map[x1][y1] + map[x1][y2]) / 2 + len) % MOD;
+        val = map[x1][yc];
+        
+        type = rand.nextBoolean();
+        vertexAdd = type ? UP : DOWN;
+        len = (y2 - y1) * vertexAdd;
+        map[x2][yc] = ((map[x2][y1] + map[x2][y2]) / 2 + len) % MOD;
+        val = map[x2][yc];
+        
+        type = rand.nextBoolean();
+        vertexAdd = type ? UP : DOWN;
+        len = ((x2 - x1) + (y2 - y1)) * vertexAdd;
+        map[xc][yc] = ((map[xc][y1] + map[xc][y2] + map[x1][yc] + map[x2][yc]) / 4 + len) % MOD;
+        val = map[xc][yc];
+        
+        doBuildMap(map, x1, y1, xc, yc);
+        doBuildMap(map, x1, yc, xc, y2);
+        doBuildMap(map, xc, y1, x2, yc);
+        doBuildMap(map, xc, yc, x2, y2);
+    }
+    
     private GLU glu = new GLU();
     private float[][] hMatrix;
     private float ZOOM = 1;
     private float ZOOM_XY = 0.0031f;
+    private Random rand = new Random(System.currentTimeMillis());
+    public static final float UP = 0.0004f;
+    public static final float DOWN = 0.0002f;
+    public static final float MOD = 1.1f;
 }
