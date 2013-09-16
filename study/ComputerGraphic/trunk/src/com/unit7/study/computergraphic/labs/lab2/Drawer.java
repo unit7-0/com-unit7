@@ -34,7 +34,7 @@ public class Drawer {
     public void display(GL2 gl) {
         strategy.display(gl);
     }
-
+    
     public DrawerStrategy getStrategy() {
         return strategy;
     }

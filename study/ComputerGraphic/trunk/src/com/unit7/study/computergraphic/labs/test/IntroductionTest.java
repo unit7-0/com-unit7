@@ -50,3 +50,10 @@ public class IntroductionTest extends TestCase {
     public native static void clearConsole();
     public native static void printCharXY(String str, int x, int y);
 }
+
+class One {
+    public native static int getWidth();
+    public native static int getHeight();
+    public native static void clearConsole();
+    public native static void printCharXY(String str, int x, int y);
+}
