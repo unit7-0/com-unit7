@@ -2,6 +2,7 @@ package com.unit7.study.computergraphic.labs.lab2;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.media.opengl.GL2;
@@ -49,71 +50,71 @@ public class LandScapeDrawer implements DrawerStrategy {
                 float h = hMatrix[i][j] * ZOOM;
                 float x = i * ZOOM_XY;
                 float y = j * ZOOM_XY;
-        /*        gl.glColor3f(0, hMatrix[i][j], 0);
-                gl.glVertex3f(x, y, h);
-        */        
-                points[i * hMatrix.length * 12 + j * 12] = x;
-                points[i * hMatrix.length * 12 + j * 12 + 1] = y;
-                points[i * hMatrix.length * 12 + j * 12 + 2] = h;
                 
-                colors[i * hMatrix.length * 12 + j * 12] = 0;
-                colors[i * hMatrix.length * 12 + j * 12 + 1] = h;
-                colors[i * hMatrix.length * 12 + j * 12 + 2] = 0;
+                points[i * (hMatrix.length - 1) * 12 + j * 12] = x;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 1] = y;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 2] = h;
                 
+                colors[i * (hMatrix.length - 1) * 12 + j * 12] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 1] = h;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 2] = 0;
+       /*         
+                gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 1], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 2]);
+                gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12], points[i * (hMatrix.length - 1) * 12 + j * 12 + 1], points[i * (hMatrix.length - 1) * 12 + j * 12 + 2]);
+          */      
                 h = hMatrix[i][j + 1] * ZOOM;
                 y = (j + 1) * ZOOM_XY;
-         /*       gl.glColor3f(0, hMatrix[i][j + 1], 0);
-                gl.glVertex3f(x, y + ZOOM_XY, h);
-         */       
                 
-                points[i * hMatrix.length * 12 + j * 12 + 3] = x;
-                points[i * hMatrix.length * 12 + j * 12 + 4] = y;
-                points[i * hMatrix.length * 12 + j * 12 + 5] = h;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 3] = x;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 4] = y + ZOOM_XY;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 5] = h;
                 
-                colors[i * hMatrix.length * 12 + j * 12 + 3] = 0;
-                colors[i * hMatrix.length * 12 + j * 12 + 4] = h;
-                colors[i * hMatrix.length * 12 + j * 12 + 5] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 3] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 4] = h;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 5] = 0;
                 
-                h = hMatrix[i + 1][j + 1] * ZOOM;
+        /*        gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 3], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 4], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 5]);
+                gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12 + 3], points[i * (hMatrix.length - 1) * 12 + j * 12 + 4], points[i * (hMatrix.length - 1) * 12 + j * 12 + 5]);
+                
+          */      h = hMatrix[i + 1][j + 1] * ZOOM;
                 x = (i + 1) * ZOOM_XY;
                 
-                points[i * hMatrix.length * 12 + j * 12 + 6] = x;
-                points[i * hMatrix.length * 12 + j * 12 + 7] = y;
-                points[i * hMatrix.length * 12 + j * 12 + 8] = h;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 6] = x + ZOOM_XY;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 7] = y + ZOOM_XY;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 8] = h;
                 
-                colors[i * hMatrix.length * 12 + j * 12 + 6] = 0;
-                colors[i * hMatrix.length * 12 + j * 12 + 7] = h;
-                colors[i * hMatrix.length * 12 + j * 12 + 8] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 6] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 7] = h;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 8] = 0;
                 
-         /*       gl.glColor3f(0, hMatrix[i + 1][j], 0);
-                gl.glVertex3f(x + ZOOM_XY, y + ZOOM_XY, h);
-         */       
+         /*       gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 6], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 7], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 8]);
+                gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12 + 6], points[i * (hMatrix.length - 1) * 12 + j * 12 + 7], points[i * (hMatrix.length - 1) * 12 + j * 12 + 8]);
+                */
                 h = hMatrix[i + 1][j] * ZOOM;
                 x = (i + 1) * ZOOM_XY;
                 y = j * ZOOM_XY;
                 
-                points[i * hMatrix.length * 12 + j * 12 + 9] = x;
-                points[i * hMatrix.length * 12 + j * 12 + 10] = y;
-                points[i * hMatrix.length * 12 + j * 12 + 11] = h;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 9] = x + ZOOM_XY;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 10] = y;
+                points[i * (hMatrix.length - 1) * 12 + j * 12 + 11] = h;
                 
-                colors[i * hMatrix.length * 12 + j * 12 + 9] = 0;
-                colors[i * hMatrix.length * 12 + j * 12 + 10] = h;
-                colors[i * hMatrix.length * 12 + j * 12 + 11] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 9] = 0;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 10] = h;
+                colors[i * (hMatrix.length - 1) * 12 + j * 12 + 11] = 0;
                 
-         /*       gl.glColor3f(0, hMatrix[i + 1][j], 0);
-                gl.glVertex3f(x + ZOOM_XY, y, h);
-                
-                gl.glEnd();
-         */   }
+               /* gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 9], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 10], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 11]);
+                gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12 + 9], points[i * (hMatrix.length - 1) * 12 + j * 12 + 10], points[i * (hMatrix.length - 1) * 12 + j * 12 + 11]);
+                gl.glEnd();*/
+            }
             
         }
+        
         
         
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         
         FloatBuffer pointsBuff = Buffers.newDirectFloatBuffer(points);
-        
         FloatBuffer colorsBuff = Buffers.newDirectFloatBuffer(colors);
         
         gl.glVertexPointer(3, GL2.GL_FLOAT, 0, pointsBuff);
@@ -140,7 +141,13 @@ public class LandScapeDrawer implements DrawerStrategy {
     }
     
     public void regenerateLandScape() {
-        mapGenerator.regenerateMap(hMatrix);
+        float[][] copy = new float[hMatrix.length][];
+        for (int i = 0; i < copy.length; ++i) {
+            copy[i] = Arrays.copyOf(hMatrix[i], hMatrix[i].length);
+        }
+        
+        mapGenerator.regenerateMap(copy);
+        hMatrix = copy;
     }
     
     public MapGenerator getMapGenerator() {
