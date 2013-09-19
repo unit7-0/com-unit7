@@ -45,7 +45,7 @@ public class LandScapeDrawer implements DrawerStrategy {
         
         for (int i = 0; i < hMatrix.length - 1; ++i) {
             for (int j = 0; j < hMatrix[0].length - 1; ++j) {
-//                gl.glBegin(GL2.GL_QUADS);
+                gl.glBegin(GL2.GL_QUADS);
                 
                 float h = hMatrix[i][j] * ZOOM;
                 float x = i * ZOOM_XY;
@@ -58,10 +58,10 @@ public class LandScapeDrawer implements DrawerStrategy {
                 colors[i * (hMatrix.length - 1) * 12 + j * 12] = 0;
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 1] = h;
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 2] = 0;
-       /*         
+                
                 gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 1], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 2]);
                 gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12], points[i * (hMatrix.length - 1) * 12 + j * 12 + 1], points[i * (hMatrix.length - 1) * 12 + j * 12 + 2]);
-          */      
+                
                 h = hMatrix[i][j + 1] * ZOOM;
                 y = (j + 1) * ZOOM_XY;
                 
@@ -73,10 +73,10 @@ public class LandScapeDrawer implements DrawerStrategy {
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 4] = h;
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 5] = 0;
                 
-        /*        gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 3], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 4], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 5]);
+                gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 3], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 4], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 5]);
                 gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12 + 3], points[i * (hMatrix.length - 1) * 12 + j * 12 + 4], points[i * (hMatrix.length - 1) * 12 + j * 12 + 5]);
                 
-          */      h = hMatrix[i + 1][j + 1] * ZOOM;
+                h = hMatrix[i + 1][j + 1] * ZOOM;
                 x = (i + 1) * ZOOM_XY;
                 
                 points[i * (hMatrix.length - 1) * 12 + j * 12 + 6] = x + ZOOM_XY;
@@ -87,9 +87,9 @@ public class LandScapeDrawer implements DrawerStrategy {
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 7] = h;
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 8] = 0;
                 
-         /*       gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 6], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 7], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 8]);
+                gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 6], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 7], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 8]);
                 gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12 + 6], points[i * (hMatrix.length - 1) * 12 + j * 12 + 7], points[i * (hMatrix.length - 1) * 12 + j * 12 + 8]);
-                */
+                
                 h = hMatrix[i + 1][j] * ZOOM;
                 x = (i + 1) * ZOOM_XY;
                 y = j * ZOOM_XY;
@@ -102,16 +102,14 @@ public class LandScapeDrawer implements DrawerStrategy {
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 10] = h;
                 colors[i * (hMatrix.length - 1) * 12 + j * 12 + 11] = 0;
                 
-               /* gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 9], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 10], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 11]);
+                gl.glColor3f(colors[i * (hMatrix.length - 1) * 12 + j * 12 + 9], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 10], colors[i * (hMatrix.length - 1) * 12 + j * 12 + 11]);
                 gl.glVertex3f(points[i * (hMatrix.length - 1) * 12 + j * 12 + 9], points[i * (hMatrix.length - 1) * 12 + j * 12 + 10], points[i * (hMatrix.length - 1) * 12 + j * 12 + 11]);
-                gl.glEnd();*/
+                gl.glEnd();
             }
             
         }
         
-        
-        
-        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+        /*gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
         
         FloatBuffer pointsBuff = Buffers.newDirectFloatBuffer(points);
@@ -127,7 +125,7 @@ public class LandScapeDrawer implements DrawerStrategy {
         
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
-        
+        */
         gl.glPopMatrix();
     }
     
