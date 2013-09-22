@@ -1,6 +1,8 @@
 package com.unit7.study.cryptography.labs.lab1;
 
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.unit7.study.cryptography.labs.lab1.tools.Pair;
 
@@ -32,6 +34,18 @@ public class MathUtils {
         return d;
     }
     
+    public static int getRandPrime(int n) {
+        BigInteger test;
+        int val;
+        
+        do {
+            val = rand.nextInt(n);
+            test = new BigInteger(String.valueOf(val));
+        } while (!test.isProbablePrime(6));
+        
+        return val; 
+    }
+    
     public static boolean[] getPrimes(int n) {
         boolean[] primes = new boolean[n + 1];
         Arrays.fill(primes, true);
@@ -52,4 +66,6 @@ public class MathUtils {
         // TODO realise
         return 0;
     }
+    
+    private static Random rand = new Random(System.currentTimeMillis());
 }
