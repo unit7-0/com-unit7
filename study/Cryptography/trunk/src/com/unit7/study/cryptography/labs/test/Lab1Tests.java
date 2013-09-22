@@ -1,6 +1,7 @@
 package com.unit7.study.cryptography.labs.test;
 
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Random;
 
@@ -45,8 +46,15 @@ public class Lab1Tests extends TestCase {
 
     public void testDiffieHellman() {
         writer.println("\ntestDiffieHelman() [started]\n");
-        int q = Utils.getRandPrime(5777);
-        int p = 2 * q + 1;
+        int q;
+        int p;
+        BigInteger testP;
+        
+        do {
+            q = MathUtils.getRandPrime(13335);
+            p = 2 * q + 1;
+            testP = new BigInteger(String.valueOf(p));
+        } while(!testP.isProbablePrime(6));
 
         int g = 2;
         while (MathUtils.binpow(g, q, p) == 1) {
