@@ -16,7 +16,7 @@ public class CodingInputStream extends InputStream {
             if (i == -1)
                 return i;
             
-            coded = coderInfo.getCoded(i);
+            coded = coderInfo.getEncoded(i);
         } else {
             ret = (Integer) ((Object[]) coded)[1];
             coded = null;

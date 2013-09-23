@@ -62,6 +62,10 @@ public class MathUtils {
         return primes;
     }
     
+    public static int getRandInt(int n) {
+        return rand.nextInt(n);
+    }
+    
     public static int getPrime(int n) {
         // TODO realise
         return 0;
