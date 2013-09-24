@@ -3,13 +3,10 @@ package com.unit7.study.translationmethods.labs.lab1;
 public class GrammarValidator implements Validator {
     @Override
     public boolean validate(Object param) {
-        if (!(param instanceof String[]) || ((String[]) param).length != 3)
-            throw new IllegalArgumentException("Parameter must be String[] object");
+        if (!(param instanceof String))
+            throw new IllegalArgumentException("Parameter must be String object");
         
-        String[] args = (String[]) param;
-        String expr = args[0];
-        String term = args[1];
-        String notTerm = args[2];
+        String expr = (String) param;
         
         String[] tokens = expr.split(GrammarRules.GRAMMAR_DELIMETER);
         for (String token : tokens) {

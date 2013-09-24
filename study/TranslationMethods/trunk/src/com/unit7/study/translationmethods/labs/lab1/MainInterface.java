@@ -12,6 +12,8 @@ import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -148,6 +150,10 @@ public class MainInterface extends JFrame {
     public MainInterface() {
         this("Lab1");
     }
+    
+    public Map<String, String> getExpressions() {
+        return expressions;
+    }
 
     public void swapContent(int mode) {
         Container content = getContentPane();
@@ -160,4 +166,6 @@ public class MainInterface extends JFrame {
 
     public static final int AUTO_MODE = 0;
     public static final int HAND_MODE = 1;
+    
+    private Map<String, String> expressions = new HashMap();
 }

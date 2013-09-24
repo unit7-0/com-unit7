@@ -26,10 +26,10 @@ public class PrepareListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String terminalsRaw = terminal.getText().trim();
-        String notTerminalsRaw = notTerminal.getText().trim();
-        String targetSymbolRaw = target.getText().trim();
-        String lenRaw = lenField.getText().trim();
+        String terminalsRaw = terminal.getText().trim().replaceAll(" +", " ");
+        String notTerminalsRaw = notTerminal.getText().trim().replaceAll(" +", " ");
+        String targetSymbolRaw = target.getText().trim().replaceAll(" +", " ");
+        String lenRaw = lenField.getText().trim().replaceAll(" +", " ");
 
         if (isCleaned(targetSymbolRaw) || isCleaned(lenRaw)
                 || isCleaned(notTerminalsRaw) || isCleaned(terminalsRaw)) {
