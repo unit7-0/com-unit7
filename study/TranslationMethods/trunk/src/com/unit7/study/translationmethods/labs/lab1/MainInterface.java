@@ -36,10 +36,10 @@ public class MainInterface extends JFrame {
 		Menu fileMenu = new Menu("Файл");
 		Menu helpMenu = new Menu("Помощь");
 		MenuItem exit = new MenuItem("Выход");
-		MenuItem defaultGrammar = new MenuItem("Грамматика по умолчанию");
-		MenuItem newGrammar = new MenuItem("Задать грамматику");
+		final MenuItem defaultGrammar = new MenuItem("Грамматика по умолчанию");
+//		MenuItem newGrammar = new MenuItem("Задать грамматику");
 
-		fileMenu.add(newGrammar);
+//		fileMenu.add(newGrammar);
 		fileMenu.add(defaultGrammar);
 		fileMenu.add(exit);
 		menuBar.add(fileMenu);
@@ -51,6 +51,8 @@ public class MainInterface extends JFrame {
 				System.exit(0);
 			}
 		});
+		
+		defaultGrammar.setEnabled(false);
 
 		setMenuBar(menuBar);
 
@@ -121,6 +123,7 @@ public class MainInterface extends JFrame {
 						&& evt.getSource() == terminalField
 						&& evt.getPropertyName().equals("enabled")) {
 							buildButton.setEnabled(!terminalField.isEnabled());
+							defaultGrammar.setEnabled(!terminalField.isEnabled());
 				}
 			}
 		});
