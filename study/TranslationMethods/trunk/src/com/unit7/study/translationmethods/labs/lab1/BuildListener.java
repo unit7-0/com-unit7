@@ -64,7 +64,7 @@ public class BuildListener implements ActionListener {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CertainsShower(expressions, target.getText().trim(), Integer.parseInt(lenField.getText().trim())).setVisible(true);
+                new ChainsShower(expressions, target.getText().trim(), Integer.parseInt(lenField.getText().trim())).setVisible(true);
             }
         });
     }
