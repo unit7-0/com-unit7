@@ -14,7 +14,7 @@ public class CertainsShower extends JFrame {
     public String buildCertains(String target, int len) {
         String exprs = expressions.get(target);
         String[] vars = exprs.split(GrammarRules.GRAMMAR_DELIMETER);
-        String expr = vars[rand.nextInt(vars.length)];
+        String expr = ""; // ????
 
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < expr.length(); ++i) {
