@@ -2,7 +2,6 @@ package com.unit7.study.translationmethods.labs.test;
 
 import java.awt.event.WindowEvent;
 
-import com.jogamp.newt.event.WindowAdapter;
 import com.unit7.study.translationmethods.labs.lab1.MainInterface;
 
 import junit.framework.TestCase;
