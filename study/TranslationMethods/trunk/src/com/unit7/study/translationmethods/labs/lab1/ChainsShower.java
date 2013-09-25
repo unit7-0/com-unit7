@@ -1,5 +1,7 @@
 package com.unit7.study.translationmethods.labs.lab1;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -17,7 +19,7 @@ public class ChainsShower extends JFrame {
 		String[] vars = exprs.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
 		// for each rule we call doBuild and get some chain
 		for (String var : vars) {
-			String[] nextRes = doBuild(var, 0);
+			List<String> nextRes = doBuild(var, 0);
 			for (String res : nextRes) {
 				area.append(res + "\n");
 			}
@@ -29,12 +31,13 @@ public class ChainsShower extends JFrame {
 
 	/**
 	 * build chains
-	 * 
+	 * TODO improve asymptotic
 	 * @param expr
 	 * @param pos
 	 * @return
 	 */
-	private String[] doBuild(String expr, int pos) {
+	private List<String> doBuild(String expr, int pos) {
+		List<String> totalResult = new ArrayList<String>();
     	StringBuilder result = new StringBuilder(expr.substring(0, pos - 1));
     	// step by step through expression if we met notTerminal then buid all possible chains
     	for (int i = pos; i < expr.length(); ++i) {
@@ -47,33 +50,20 @@ public class ChainsShower extends JFrame {
     			// current = one of chains[]
     			// and after = before + each of chains[] + remain expression(expr)
     			for (String possible : possibleChains) {
-    				String[] chains = doBuild(result.toString() + possible + expr.substring(i + 1), result.length());
+    				List<String> chains = doBuild(result.toString() + possible + expr.substring(i + 1), result.length());
+    				totalResult.addAll(chains);
     			}
     		}
     	}
+    	
+    	totalResult.add(result.toString());
+    	return totalResult;
     }
 
 	private String[] expandChain(String chain) {
 		return expressions.get(chain).split(GrammarRules.GRAMMAR_DELIMETER);
 		// TODO may be rule expand to empty symbol(delimiter) then array is
 		// null, check and FIX it
-	}
-
-	public String[] buildChains(String target, int len) {
-		String exprs = expressions.get(target);
-		String[] vars = exprs.split(GrammarRules.GRAMMAR_DELIMETER);
-		String expr = ""; // ????
-
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < expr.length(); ++i) {
-			if (GrammarRules.isTerminal(expr.charAt(i))) {
-				result.append(expr.charAt(i));
-			} else if (GrammarRules.isNotTerminal(expr.charAt(i))) {
-				result.append(buildChains(expr.substring(i, i + 1), len));
-			}
-		}
-
-		return result.toString();
 	}
 
 	private Map<String, String> expressions;
