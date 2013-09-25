@@ -39,7 +39,7 @@ public class BuildListener implements ActionListener {
         ArrayList<String[]> exprs = new ArrayList();
         for (Component comp : rulePanel.getComponents()) {
             if (comp instanceof JLabel) {
-                name = ((JLabel) comp).getText();
+                name = String.valueOf(((JLabel) comp).getText().charAt(0));
             } else if (comp instanceof JTextField) {
                 expr = ((JTextField) comp).getText().trim().replaceAll(" +", " ");
                 isOk = true;
