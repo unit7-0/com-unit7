@@ -46,7 +46,7 @@ public class BuildListener implements ActionListener {
             }
             
             if (isOk) {
-                if (expr == null || expr.length() == 0 || validator.validate(expr)) {
+                if (expr == null || expr.length() == 0 || !validator.validate(expr)) {
                     JOptionPane.showMessageDialog(rulePanel, "Правила заданы неверно!");
                     return;
                 }

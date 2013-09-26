@@ -38,7 +38,7 @@ public class ChainsShower extends JFrame {
 	 */
 	private List<String> doBuild(String expr, int pos) {
 		List<String> totalResult = new ArrayList<String>();
-		StringBuilder result = new StringBuilder(expr.substring(0, pos - 1));
+		StringBuilder result = new StringBuilder(expr.substring(0, pos));
 		// step by step through expression if we met notTerminal then buid all
 		// possible chains
 		for (int i = pos; i < expr.length(); ++i) {
