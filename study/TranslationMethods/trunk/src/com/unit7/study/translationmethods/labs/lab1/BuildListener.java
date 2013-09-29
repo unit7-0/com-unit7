@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.sun.org.apache.bcel.internal.generic.ALOAD;
+import com.unit7.study.translationmethods.labs.exceptions.InformationMessageException;
+
 public class BuildListener implements ActionListener {
     public BuildListener(JComponent[] args) {
         this.terminal = (JTextField) args[0];
@@ -24,47 +27,95 @@ public class BuildListener implements ActionListener {
         this.lenField = (JTextField) args[3];
         this.rulePanel = (JPanel) args[4];
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Container cont = rulePanel.getParent();
         while (cont.getParent() != null) {
             cont = cont.getParent();
         }
-        
+
         String name = "";
-        String expr = "";
+        StringBuilder expr = new StringBuilder();
         boolean isOk = false;
-        GrammarValidator validator = new GrammarValidator();
+        Validator validator = new GrammarValidator();
+        Analizer analizer = new RecursiveAnalizer();
+        Parser parser = new InputDataParser();
         ArrayList<String[]> exprs = new ArrayList();
+        String[] allowedStrings = (parser.parse(terminal.getText().trim()
+                .replaceAll(" +", " ")) + parser.parse(notTerminal.getText()
+                .trim().replaceAll(" +", ""))).split("");
         for (Component comp : rulePanel.getComponents()) {
             if (comp instanceof JLabel) {
                 name = String.valueOf(((JLabel) comp).getText().charAt(0));
             } else if (comp instanceof JTextField) {
-                expr = ((JTextField) comp).getText().trim().replaceAll(" +", " ");
+                expr = new StringBuilder(((JTextField) comp).getText().trim()
+                        .replaceAll(" +", " "));
                 isOk = true;
             }
-            
+
             if (isOk) {
-                if (expr == null || expr.length() == 0 || !validator.validate(expr)) {
-                    JOptionPane.showMessageDialog(rulePanel, "Правила заданы неверно!");
+                if (expr == null || expr.length() == 0
+                        || !validator.validate(expr.toString())) {
+                    JOptionPane.showMessageDialog(rulePanel,
+                            "Правила заданы неверно!");
                     return;
                 }
-                
-                exprs.add(new String[] { name, expr });
+
+                String[] tokens = parser.parse(expr.toString()).split("");
+                for (String token : tokens) {
+                    boolean ex = false;
+                    // fuck the perfomanence
+                    for (String allowed : allowedStrings) {
+                        if (token.equals(allowed)) {
+                            ex = true;
+                            break;
+                        }
+                    }
+
+                    if (!ex && !token.equals(GrammarRules.GRAMMAR_EMPTY)
+                            && !token.equals("|")) {
+                        JOptionPane.showMessageDialog(rulePanel,
+                                "Найден незаданный терминал");
+                        return;
+                    }
+                }
+
+                // check expression to recursive dependency
+                // and remove it
+                String[] parts = expr.toString().split(
+                        GrammarRules.GRAMMAR_DELIMETER);
+                expr = new StringBuilder();
+                for (String part : parts) {
+                    try {
+                        if (analizer.analize(new String[] { name, part })) {
+                            expr.append(part).append("|");
+                        }
+                    } catch (InformationMessageException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                }
+
+                exprs.add(new String[] {
+                        name,
+                        expr.delete(expr.length() - 1, expr.length() - 1)
+                                .toString() });
                 isOk = false;
             }
         }
-        
-        final Map<String, String> expressions = ((MainInterface) cont).getExpressions();
+
+        final Map<String, String> expressions = ((MainInterface) cont)
+                .getExpressions();
         for (String[] pair : exprs) {
             expressions.put(pair[0], pair[1]);
         }
-        
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new ChainsShower(expressions, target.getText().trim(), Integer.parseInt(lenField.getText().trim())).setVisible(true);
+                new ChainsShower(expressions, target.getText().trim(), Integer
+                        .parseInt(lenField.getText().trim())).setVisible(true);
             }
         });
     }

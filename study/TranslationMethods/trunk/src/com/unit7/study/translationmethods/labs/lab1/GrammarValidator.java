@@ -6,7 +6,7 @@ public class GrammarValidator implements Validator {
         if (!(param instanceof String))
             throw new IllegalArgumentException("Parameter must be String object");
         
-        String expr = (String) param;
+        String expr = ((String) param).replaceAll("\\s", "");
         
         String[] tokens = expr.split(GrammarRules.GRAMMAR_DELIMETER);
         for (String token : tokens) {
