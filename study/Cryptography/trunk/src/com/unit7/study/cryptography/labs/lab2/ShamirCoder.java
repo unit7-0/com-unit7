@@ -1,8 +1,7 @@
 package com.unit7.study.cryptography.labs.lab2;
 
-import java.math.BigInteger;
-
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
+import com.unit7.study.cryptography.labs.lab1.tools.Pair;
 
 public class ShamirCoder {
     public ShamirCoder(int p) {
@@ -10,25 +9,20 @@ public class ShamirCoder {
         generate();
     }
     
-    public void generate() {
-        BigInteger test;
-        boolean recieved = false;
-        
+    public void generate() {        
         do {
-            int number = MathUtils.getRandInt(p + 1);
-            test = new BigInteger(String.valueOf(number));
-            if (test.isProbablePrime(6) || (number % (p - 1)) != 1)
+            c = MathUtils.getRandInt(p - 1);
+            Pair<Integer, Integer> xy = new Pair();
+            int gcd = MathUtils.gcd(c, p - 1, xy);
+            if (gcd != 1) {
                 continue;
-            int root = (int) (Math.sqrt(number) + 1);
-            for (int i = 2; i <= root; ++i) {
-                if (number % i == 0) {
-                    c = i;
-                    d = number / i;
-                    recieved = true;
-                    break;
-                }
             }
-        } while (!recieved);
+           
+            d = xy.getFirst();
+            if (!(d > 2 && MathUtils.gcd(c, d, xy) == 1))
+                continue;
+            break;
+        } while (true);
     }
     
     public long getP() {
@@ -59,12 +53,11 @@ public class ShamirCoder {
         int buf = 0;
         if (first) {
             buf = c;
-            first = false;
         } else {
             buf = d;
-            first = true;
         }
         
+        first = !first;
         return (int) (MathUtils.binpow(m, buf, p) % p);
     }
     

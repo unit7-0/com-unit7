@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DecodingInputStream extends InputStream {
-    public DecodingInputStream(InputStream in) {
+    public DecodingInputStream(InputStream in, CoderInfo coderInfo) {
         this.in = in;
+        this.coderInfo = coderInfo;
     }
     
     @Override
@@ -19,14 +20,6 @@ public class DecodingInputStream extends InputStream {
             ret = coderInfo.getDecoded(new Integer[] { readed, in.read() });
         
         return ret;
-    }
-
-    public CoderInfo getCoderInfo() {
-        return coderInfo;
-    }
-
-    public void setCoderInfo(CoderInfo coderInfo) {
-        this.coderInfo = coderInfo;
     }
 
     private InputStream in;
