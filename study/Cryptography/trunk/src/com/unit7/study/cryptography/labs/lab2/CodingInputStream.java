@@ -25,7 +25,7 @@ public class CodingInputStream extends InputStream {
         
         if (coded instanceof Object[]) {
             return (Integer) ((Object[]) coded)[0];
-        } else {
+        } else if (coded != null) {
             ret = (Integer) coded;
         }
         
