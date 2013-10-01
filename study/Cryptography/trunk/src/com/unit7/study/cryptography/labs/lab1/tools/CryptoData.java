@@ -10,7 +10,7 @@ public class CryptoData {
 	}
 	
 	public void generateKeys() {
-        priv = Utils.getRandPrime(p);
+        priv = Utils.getRandPrime(p - 1);
         pub = (int) MathUtils.binpow(g, priv, p);
 	}
 	
@@ -22,7 +22,7 @@ public class CryptoData {
 		this.priv = priv;
 	}
 	
-	public long getPublic() {
+	public int getPublic() {
 		return pub;
 	}
 	

@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class CodingInputStream extends InputStream {
-    public CodingInputStream(InputStream in) {
+    public CodingInputStream(InputStream in, CoderInfo coderInfo) {
         this.in = in;
+        this.coderInfo = coderInfo;
     }
     
     @Override
@@ -31,15 +32,7 @@ public class CodingInputStream extends InputStream {
         coded = null;
         return ret;
     }
-
-    public CoderInfo getCoderInfo() {
-        return coderInfo;
-    }
-
-    public void setCoderInfo(CoderInfo coderInfo) {
-        this.coderInfo = coderInfo;
-    }
-
+    
     private Object coded;
     private InputStream in;
     private CoderInfo coderInfo;
