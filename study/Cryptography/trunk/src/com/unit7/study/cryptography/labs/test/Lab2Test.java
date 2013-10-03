@@ -10,11 +10,11 @@ import com.unit7.study.cryptography.labs.lab1.MathUtils;
 import com.unit7.study.cryptography.labs.lab1.tools.CryptoData;
 import com.unit7.study.cryptography.labs.lab1.tools.Pair;
 import com.unit7.study.cryptography.labs.lab1.tools.Utils;
-import com.unit7.study.cryptography.labs.lab2.CodedOutputStream;
 import com.unit7.study.cryptography.labs.lab2.CoderInfo;
 import com.unit7.study.cryptography.labs.lab2.CodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.DecodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.ElGamalCoder;
+import com.unit7.study.cryptography.labs.lab2.Rewriter;
 import com.unit7.study.cryptography.labs.lab2.ShamirCoder;
 
 import junit.framework.TestCase;
@@ -82,10 +82,10 @@ public class Lab2Test extends TestCase {
         }
         
         CodingInputStream codedIn = new CodingInputStream(fin, coderInfoA);
-        CodedOutputStream rewriter = new CodedOutputStream(codedIn, fout);
+        Rewriter rewriter = new Rewriter(codedIn, fout);
         
         try {
-            rewriter.write();
+            rewriter.rewrite();
         } catch (IOException e) {
             fail("can't write file");
         }
@@ -103,7 +103,7 @@ public class Lab2Test extends TestCase {
         rewriter.setOut(fout);
         
         try {
-            rewriter.write();
+            rewriter.rewrite();
         } catch (IOException e) {
             fail("can't write decoded file");
         }

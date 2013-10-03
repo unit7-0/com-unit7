@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.sun.org.apache.bcel.internal.generic.ALOAD;
 import com.unit7.study.translationmethods.labs.exceptions.InformationMessageException;
 
 public class BuildListener implements ActionListener {
