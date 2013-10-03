@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
@@ -14,8 +16,11 @@ import com.unit7.study.cryptography.labs.lab2.CoderInfo;
 import com.unit7.study.cryptography.labs.lab2.CodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.DecodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.ElGamalCoder;
+import com.unit7.study.cryptography.labs.lab2.IntOutputStream;
+import com.unit7.study.cryptography.labs.lab2.RSACoder;
 import com.unit7.study.cryptography.labs.lab2.Rewriter;
 import com.unit7.study.cryptography.labs.lab2.ShamirCoder;
+import com.unit7.study.cryptography.labs.lab2.VernamCoder;
 
 import junit.framework.TestCase;
 
@@ -69,14 +74,14 @@ public class Lab2Test extends TestCase {
         
         // encoding
         String fileIn = "file.txt";
-        String fileOut = "codedFile.txt";
-        String decodedFile = "decoded.txt";
+        String fileOut = "codedElGamal.txt";
+        String decodedFile = "decodedElGamal.txt";
         
         FileInputStream fin = null;
-        FileOutputStream fout = null;
+        OutputStream fout = null;
         try {
             fin = new FileInputStream(fileIn);
-            fout = new FileOutputStream(fileOut);
+            fout = new IntOutputStream(new FileOutputStream(fileOut));
         } catch (FileNotFoundException e) {
             fail("can't create filestream");
         }
@@ -109,6 +114,111 @@ public class Lab2Test extends TestCase {
         }
         
         writer.println("\ntestElGamal() [finished]\n");
+        writer.flush();
+    }
+    
+    public void testRSA() {
+        writer.println("\ntestRSA() [started]\n");
+        RSACoder coderA = new RSACoder();
+        RSACoder coderB = new RSACoder();
+        
+        coderA.setDb(coderB.getD());
+        coderA.setNb(coderB.getN());
+        coderB.setDb(coderA.getD());
+        coderB.setNb(coderA.getN());
+        
+        String fileIn = "file.txt";
+        String codedFile = "codedRSA.txt";
+        String decodedFile = "decodedRSA.txt";
+        
+        InputStream in = null;
+        OutputStream out = null;
+        
+        try {
+            in = new FileInputStream(fileIn);
+            out = new IntOutputStream(new FileOutputStream(codedFile));
+        } catch (FileNotFoundException e) {
+            fail("can't create files");
+        }
+        
+        // coding
+        CodingInputStream coding = new CodingInputStream(in, coderA);
+        Rewriter rewriter = new Rewriter(coding, out);
+        try {
+            rewriter.rewrite();
+        } catch (IOException e) {
+            fail("can't rewrite");
+        }
+        
+        try {
+            in = new FileInputStream(codedFile);
+            out = new FileOutputStream(decodedFile);
+        } catch (FileNotFoundException e) {
+            fail("can't create files");
+        }
+        
+        // decoding
+        DecodingInputStream decoding = new DecodingInputStream(in, coderB);
+        rewriter.setIn(decoding);
+        rewriter.setOut(out);
+        try {
+            rewriter.rewrite();
+        } catch (IOException e) {
+            fail("can't rewrite, decode");
+        }
+        
+        writer.println("\ntestRSA [finished]\n");
+        writer.flush();
+    }
+    
+    public void testVernam() {
+        writer.println("\ntestVernam() [started]\n");
+        
+        int k = MathUtils.getRandInt(1513035135);
+        VernamCoder coderA = new VernamCoder(k);
+        VernamCoder coderB = new VernamCoder(k);
+        
+        String fileIn = "file.txt";
+        String codedFile = "codedVernam.txt";
+        String decodedFile = "decodedVernam.txt";
+        
+        InputStream in = null;
+        OutputStream out = null;
+        
+        try {
+            in = new FileInputStream(fileIn);
+            out = new IntOutputStream(new FileOutputStream(codedFile));
+        } catch (FileNotFoundException e) {
+            fail("can't create files");
+        }
+        
+        // coding
+        CodingInputStream coding = new CodingInputStream(in, coderA);
+        Rewriter rewriter = new Rewriter(coding, out);
+        try {
+            rewriter.rewrite();
+        } catch (IOException e) {
+            fail("can't rewrite");
+        }
+        
+        try {
+            in = new FileInputStream(codedFile);
+            out = new FileOutputStream(decodedFile);
+        } catch (FileNotFoundException e) {
+            fail("can't create files");
+        }
+        
+        // decoding
+        DecodingInputStream decoding = new DecodingInputStream(in, coderB);
+        rewriter.setIn(decoding);
+        rewriter.setOut(out);
+        try {
+            rewriter.rewrite();
+        } catch (IOException e) {
+            fail("can't rewrite, decode");
+        }
+        
+        writer.println("\ntestVernam() [finished]\n");
         writer.flush();
     }
     
