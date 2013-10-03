@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class CodedOutputStream {
-    public CodedOutputStream(InputStream in, OutputStream out) {
+public class Rewriter {
+    public Rewriter(InputStream in, OutputStream out) {
         this.in = in;
         this.out = out;
     }
 
-    public void write() throws IOException {
+    public void rewrite() throws IOException {
         int readed = -1;
         while ((readed = in.read()) != -1) {
             out.write(readed);
