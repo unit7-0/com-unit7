@@ -24,7 +24,7 @@ import com.unit7.study.cryptography.labs.lab2.VernamCoder;
 
 import junit.framework.TestCase;
 
-public class Lab2Test extends TestCase {
+public class Lab2Tests extends TestCase {
     public void testShamirSending() {
         int p = MathUtils.getRandPrime(3377651);
         ShamirCoder first = new ShamirCoder(p);
