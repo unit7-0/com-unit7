@@ -29,7 +29,6 @@ import com.unit7.study.computergraphic.labs.lab2.MouseState;
 import com.unit7.study.computergraphic.labs.lab2.MouseStateImpl;
 import com.unit7.study.computergraphic.labs.lab2.Normalizer;
 
-
 public class Lab2Test {
     @Test
     public void draw() {
