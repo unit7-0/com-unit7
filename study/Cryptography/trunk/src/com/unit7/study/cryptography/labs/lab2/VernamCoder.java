@@ -31,6 +31,7 @@ public class VernamCoder implements CoderInfo {
     }
 
     public void setK(int[] k) {
+        enc = dec = 0;
         this.k = k;
     }
 
