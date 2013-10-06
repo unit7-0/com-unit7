@@ -174,10 +174,6 @@ public class Lab2Tests extends TestCase {
     public void testVernam() {
         writer.println("\ntestVernam() [started]\n");
         
-        int k = MathUtils.getRandInt(1513035135);
-        VernamCoder coderA = new VernamCoder(k);
-        VernamCoder coderB = new VernamCoder(k);
-        
         String fileIn = "file.txt";
         String codedFile = "codedVernam.txt";
         String decodedFile = "decodedVernam.txt";
@@ -191,6 +187,20 @@ public class Lab2Tests extends TestCase {
         } catch (FileNotFoundException e) {
             fail("can't create files");
         }
+        
+        int[] k = null;
+        try {
+            k = new int[in.available()];
+        } catch (IOException e1) {
+            fail("can't get bytes from file");
+        }
+        
+        for (int i = 0; i < k.length; ++i) {
+            k[i] = MathUtils.getRandInt(256);
+        }
+        
+        VernamCoder coderA = new VernamCoder(k);
+        VernamCoder coderB = new VernamCoder(k);
         
         // coding
         CodingInputStream coding = new CodingInputStream(in, coderA);
