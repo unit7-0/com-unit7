@@ -57,7 +57,7 @@ public class Lab1Tests extends TestCase {
         } while(!testP.isProbablePrime(6));
 
         int g = 2;
-        while (MathUtils.binpow(g, q, p) == 1) {
+        while (MathUtils.binpow(g, q, p) != 1) {
             for (int i = g + 1; i < p; ++i) {
                 if (Utils.isPrime(i)) {
                     g = i;
