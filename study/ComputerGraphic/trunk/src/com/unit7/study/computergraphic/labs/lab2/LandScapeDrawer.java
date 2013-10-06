@@ -38,8 +38,10 @@ public class LandScapeDrawer implements DrawerStrategy {
         
         gl.glPushMatrix();
                
-        gl.glTranslatef(-.8f, -0.7f, -4.f);
-        gl.glRotatef(angle, xAxis, yAxis, zAxis);        
+        gl.glTranslatef(-1.1f, -0.f, -3.5f);
+        gl.glRotatef(angle, xAxis, yAxis, zAxis);  
+        gl.glRotatef(-50, 1, 0, 0);
+        gl.glRotatef(-50, 0, 0, 1);
         
         // draw
         
