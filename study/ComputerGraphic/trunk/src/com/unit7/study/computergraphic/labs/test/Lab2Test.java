@@ -5,6 +5,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
@@ -12,18 +16,27 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
+import org.junit.Test;
+import org.junit.experimental.theories.suppliers.TestedOn;
+
 import junit.framework.TestCase;
 
 import com.unit7.study.computergraphic.labs.lab2.Drawer;
+import com.unit7.study.computergraphic.labs.lab2.HilledLandScapeGenerator;
 import com.unit7.study.computergraphic.labs.lab2.Initializer3DGL;
 import com.unit7.study.computergraphic.labs.lab2.LandScapeDrawer;
 import com.unit7.study.computergraphic.labs.lab2.MouseState;
 import com.unit7.study.computergraphic.labs.lab2.MouseStateImpl;
+import com.unit7.study.computergraphic.labs.lab2.Normalizer;
 
-public class Lab2Test extends TestCase {
-    public void testDraw() {
+
+public class Lab2Test {
+    @Test
+    public void draw() {
         // user
         final LandScapeDrawer strategy = new LandScapeDrawer(512);
+        strategy.setMapGenerator(new HilledLandScapeGenerator());
+        strategy.regenerateLandScape();
         Drawer drawer = new Drawer(strategy);
         
         // openGL
@@ -109,5 +122,63 @@ public class Lab2Test extends TestCase {
         }
     }
     
+    @Test
+    public void vallying() {
+        HilledLandScapeGenerator generator = new HilledLandScapeGenerator();
+        float[][] map = generator.generateMap(512);
+        ArrayList<int[]> indexes = new ArrayList();
+        for (int i = 0; i < map.length; ++i) {
+            for (int j = 0; j < map[i].length; ++j) {
+                if (map[i][j] < 0) {
+                    indexes.add(new int[] { i, j} );
+                }
+            }
+        }
+        
+        for (int[] index : indexes) {
+            writer.println(String.format("map[%d][%d] = %d", map[index[0]][index[1]]));
+        }
+    }
+    
+    @Test
+    public void mapAverage() {
+        HilledLandScapeGenerator generator = new HilledLandScapeGenerator();
+        float[][] map = generator.generateMap(512);
+        float amount = 0;
+        float min = Float.MAX_VALUE;
+        ArrayList<int[]> indexes = new ArrayList();
+        for (int i = 0; i < map.length; ++i) {
+            for (int j = 0; j < map[i].length; ++j) {
+                amount += map[i][j];
+                min = Math.min(min, map[i][j]);
+            }
+        }
+        
+        writer.println("Average value: " + amount / (map.length * map.length) + " min: " + min);
+    }
+    
+    @Test 
+    public void mapToFile() {
+        HilledLandScapeGenerator generator = new HilledLandScapeGenerator();
+        float[][] map = generator.generateMap(512);
+        float amount = 0;
+        float min = Float.MAX_VALUE;
+        ArrayList<int[]> indexes = new ArrayList();
+        PrintWriter log = null;
+        try {
+            log = new PrintWriter(new FileOutputStream("/home/unit7/map.log"));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        for (int i = 0; i < map.length; ++i) {
+            for (int j = 0; j < map[i].length; ++j) {
+                log.print(map[i][j] + "\t");
+            }
+            log.println();
+        }
+    }
+    
     private boolean quite;
+    private PrintWriter writer = new PrintWriter(System.out, true);
 }
