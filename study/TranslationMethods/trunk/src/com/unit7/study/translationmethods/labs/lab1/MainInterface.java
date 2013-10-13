@@ -36,12 +36,14 @@ public class MainInterface extends JFrame {
 		Menu fileMenu = new Menu("Файл");
 		Menu helpMenu = new Menu("Помощь");
 		MenuItem exit = new MenuItem("Выход");
+		MenuItem ref = new MenuItem("Спрвка");
 		final MenuItem defaultGrammar = new MenuItem("Грамматика по умолчанию");
 //		MenuItem newGrammar = new MenuItem("Задать грамматику");
 
 //		fileMenu.add(newGrammar);
 		fileMenu.add(defaultGrammar);
 		fileMenu.add(exit);
+		helpMenu.add(ref);
 		menuBar.add(fileMenu);
 		menuBar.add(helpMenu);
 
@@ -51,6 +53,17 @@ public class MainInterface extends JFrame {
 				System.exit(0);
 			}
 		});
+		
+		ref.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = new JFrame("Справка");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.add(new JLabel(Help.HELP));
+                frame.setVisible(true);
+                frame.pack();
+            }
+        });
 		
 		defaultGrammar.setEnabled(false);
 
