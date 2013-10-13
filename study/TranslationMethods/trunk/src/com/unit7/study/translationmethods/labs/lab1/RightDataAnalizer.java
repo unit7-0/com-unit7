@@ -35,10 +35,12 @@ public class RightDataAnalizer implements Analizer {
             if (terminal.isEmpty())
                 continue;
             
-            if (terminal.length() != 1
-                    || GrammarRules.TERMINALS.indexOf(terminal) == -1) {
+            if (terminal.length() != 1) {
+                throw new InformationMessageException("Терминал должен быть единичной длины");
+            }
+            if (GrammarRules.TERMINALS.indexOf(terminal) == -1) {
                 throw new InformationMessageException(
-                        "Неверное выражение в поле терминалов");
+                        "Задан неверный терминал");
             }
         }
 
@@ -46,7 +48,7 @@ public class RightDataAnalizer implements Analizer {
         Arrays.sort(terminals);
         if (!checkUnique(terminals)) {
             throw new InformationMessageException(
-                    "Неверное выражение в поле терминалов");
+                    "Заданы одинаковые терминалы");
         }
 
         String[] notTerminals = parser.parse(notTerminalsRaw).split("");
@@ -54,23 +56,28 @@ public class RightDataAnalizer implements Analizer {
             if (terminal.isEmpty())
                 continue;
             
-            if (terminal.length() != 1
-                    || GrammarRules.NOT_TERMINALS.indexOf(terminal) == -1) {
+            if (terminal.length() != 1) {
+                throw new InformationMessageException("Нетерминал должен быть единичной длины");
+            }
+            if (GrammarRules.NOT_TERMINALS.indexOf(terminal) == -1) {
                 throw new InformationMessageException(
-                        "Неверное выражение в поле не терминалов");
+                        "Задан неверный нетерминал");
             }
         }
 
         Arrays.sort(notTerminals);
         if (!checkUnique(notTerminals)) {
             throw new InformationMessageException(
-                    "Неверное выражение в поле не терминалов");
+                    "Заданы одинаковые нетерминалы");
         }
 
-        if (targetSymbolRaw.length() != 1
-                || notTerminalsRaw.indexOf(targetSymbolRaw) == -1) {
+        if (targetSymbolRaw.length() != 1) {
+            throw new InformationMessageException("Целевой символ должен быть единичной длины");
+        }
+        
+        if (notTerminalsRaw.indexOf(targetSymbolRaw) == -1) {
             throw new InformationMessageException(
-                    "Целевой символ задан неверно");
+                    "Задан неверный целевой символ");
         }
 
         int len = -1;
