@@ -96,7 +96,7 @@ public class ChainsShower extends JFrame {
 		}
 
 		setContentPane(pane);
-		setPreferredSize(new Dimension(400, 300));
+		setSize(new Dimension(400, 300));
 	}
 
 	/**
@@ -107,21 +107,24 @@ public class ChainsShower extends JFrame {
 	 * @return
 	 */
 	private List<String> doBuild(String expr, int pos) {
-		List<String> totalResult = new ArrayList<String>();
 		StringBuilder result = new StringBuilder(expr.substring(0, pos));
+		List<String> totalResult = new ArrayList<String>();
 		// step by step through expression if we met notTerminal then buid all
 		// possible chains
 		if (pos > maxLen)
 		    return totalResult;
 		for (int i = pos; i < expr.length(); ++i) {
 			if (GrammarRules.isTerminal(expr.charAt(i))) {
-			    if (result.length() + 1 > maxLen)
+			    if (result.length() + 1 > maxLen) {
+			        totalResult.add(result.toString());
 			        return totalResult;
+			    }
 			    
 				result.append(expr.charAt(i));
 			} else if (GrammarRules.isNotTerminal(expr.charAt(i))) {
 				// possible chains
-				String[] possibleChains = expandChain(expr.substring(i, i + 1));
+			    String name = nameToolz.getName(expr.substring(i));
+				String[] possibleChains = expandChain(name);
 				// each chain may present as before = result[pos..i - 1],
 				// current = one of chains[]
 				// and after = before + each of chains[] + remain
@@ -140,7 +143,7 @@ public class ChainsShower extends JFrame {
 					// TODO make it normal (crazy)
 					try {
 					    chains = doBuild(result.toString() + possible
-							+ expr.substring(i + 1), result.length());
+							+ expr.substring(i + name.length()), result.length());
 					} catch (StackOverflowError err) {
 					    continue;
 					}
@@ -166,7 +169,8 @@ public class ChainsShower extends JFrame {
 	}
 
 	private int maxLen;
-	private RecursionRemover recursiveRemover;
+	private RecursionRemover recursiveRemover = new LeftRecursionRemover();
+	private NameToolz nameToolz = new DigitNameToolz();
 	private Map<String, String> expressions;
 	private Map<String, String> log = new HashMap<String, String>();
 }
