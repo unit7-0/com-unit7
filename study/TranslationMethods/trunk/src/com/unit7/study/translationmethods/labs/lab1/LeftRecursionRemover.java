@@ -16,17 +16,42 @@ public class LeftRecursionRemover implements RecursionRemover {
                 replaceRule(rule, expressions, target);
             }
 
-            boolean wasChanged = false;
+            rules = expressions.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
+            ArrayList<String> alfaRules = new ArrayList(), betaRules = new ArrayList();
             // remove direct left recursion
+            // split all rule to:
+            // who stars with target and no
             for (String rule : rules) {
-                
+                if (beginFromName(rule, target)) {
+                    alfaRules.add(rule.substring(target.length()));
+                } else {
+                    betaRules.add(rule);
+                }
             }
-            if (!wasChanged) {
-                break;
+
+            // if we meet the rule whose starts with target
+            // then enter new target = target'
+            if (!alfaRules.isEmpty()) {
+                String newTarget = nameToolz.makeName(target);
+                StringBuilder alfas = new StringBuilder();
+                for (int i = 0; i < alfaRules.size(); ++i) {
+                    alfas.append(alfaRules.get(i)).append(newTarget).append(GrammarRules.PURE_GRAMMAR_DELIMITER);
+                }
+                
+                StringBuilder betas = new StringBuilder();
+                for (int i = 0; i < betaRules.size(); ++i) {
+                    betas.append(betaRules.get(i)).append(newTarget).append(GrammarRules.PURE_GRAMMAR_DELIMITER);
+                }
+                
+                // TODO remove strings types: &Afg, &ertt
+                alfas.deleteCharAt(alfas.length() - 1);
+                betas.deleteCharAt(betas.length() - 1);
+                expressions.put(target, betas.toString());
+                expressions.put(newTarget, alfas.toString());
             }
         }
     }
-
+    
     protected void replaceRule(String rule, Map<String, String> expressions, String target) {
         if (beginFromNotTerminal(rule)) {
             for (Map.Entry<String, String> checkEntry : expressions.entrySet()) {
