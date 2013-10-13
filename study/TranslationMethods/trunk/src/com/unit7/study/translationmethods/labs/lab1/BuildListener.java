@@ -38,7 +38,7 @@ public class BuildListener implements ActionListener {
         StringBuilder expr = new StringBuilder();
         boolean isOk = false;
         Validator validator = new GrammarValidator();
-        Analizer analizer = new RecursiveAnalizer();
+        Analizer analizer = new RecursionAnalizer();
         Parser parser = new InputDataParser();
         ArrayList<String[]> exprs = new ArrayList();
         String[] allowedStrings = (parser.parse(terminal.getText().trim()

@@ -1,6 +1,6 @@
 package com.unit7.study.translationmethods.labs.lab1;
 
-public class RecursiveAnalizer implements Analizer {
+public class RecursionAnalizer implements Analizer {
     @Override
     public boolean analize(Object param) {
         if (!(param instanceof String[]) || ((String[]) param).length != 2) {
