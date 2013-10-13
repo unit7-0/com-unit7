@@ -37,21 +37,27 @@ public class LeftRecursionRemover implements RecursionRemover {
                 for (int i = 0; i < alfaRules.size(); ++i) {
                     alfas.append(alfaRules.get(i)).append(newTarget).append(GrammarRules.PURE_GRAMMAR_DELIMITER);
                 }
-                
+
                 StringBuilder betas = new StringBuilder();
                 for (int i = 0; i < betaRules.size(); ++i) {
                     betas.append(betaRules.get(i)).append(newTarget).append(GrammarRules.PURE_GRAMMAR_DELIMITER);
                 }
-                
+
                 // TODO remove strings types: &Afg, &ertt
-                alfas.deleteCharAt(alfas.length() - 1);
-                betas.deleteCharAt(betas.length() - 1);
-                expressions.put(target, betas.toString());
-                expressions.put(newTarget, alfas.toString());
+                if (alfas.length() != 0) {
+                    alfas.deleteCharAt(alfas.length() - 1);
+                    expressions.put(newTarget, alfas.toString());
+                }
+
+                if (betas.length() != 0) {
+                    betas.deleteCharAt(betas.length() - 1);
+                    expressions.put(target, betas.toString());
+                } else
+                    expressions.put(target, newTarget);
             }
         }
     }
-    
+
     protected void replaceRule(String rule, Map<String, String> expressions, String target) {
         if (beginFromNotTerminal(rule)) {
             for (Map.Entry<String, String> checkEntry : expressions.entrySet()) {
@@ -72,14 +78,15 @@ public class LeftRecursionRemover implements RecursionRemover {
 
                 String targetRule = expressions.get(target);
                 int index = 0;
-                while (true) {
+                while (newRules.length() != 0) {
                     index = targetRule.indexOf(rule, index);
                     if (index + rule.length() == targetRule.length()
-                            || targetRule.charAt(index + rule.length() - 1) == GrammarRules.PURE_GRAMMAR_DELIMITER
+                            || targetRule.charAt(index + rule.length()) == GrammarRules.PURE_GRAMMAR_DELIMITER
                                     .charAt(0)) {
                         StringBuilder newRule = new StringBuilder(targetRule.substring(0, index)).append(
                                 newRules.toString()).append(
                                 targetRule.substring(index + rule.length(), targetRule.length()));
+                        expressions.put(target, newRule.toString());
                         break;
                     } else {
                         index += rule.length();
