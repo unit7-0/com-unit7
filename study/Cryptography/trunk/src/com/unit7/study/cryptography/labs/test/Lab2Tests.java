@@ -1,5 +1,6 @@
 package com.unit7.study.cryptography.labs.test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -180,27 +181,42 @@ public class Lab2Tests extends TestCase {
         
         InputStream in = null;
         OutputStream out = null;
+        OutputStream keyOut = null;
+        
+        File keyFile = new File("VernamKeyFile");
         
         try {
             in = new FileInputStream(fileIn);
             out = new IntOutputStream(new FileOutputStream(codedFile));
+            keyOut = new FileOutputStream(keyFile);
         } catch (FileNotFoundException e) {
             fail("can't create files");
         }
         
-        int[] k = null;
         try {
-            k = new int[in.available()];
+            byte[] buffer = new byte[1024];
+            for (int i = 0; i < in.available(); i += 1024) {
+                int rem = Math.min(in.available() - i, 1024);
+                for (int j = 0; j < rem; ++j) {
+                    buffer[i] = (byte) MathUtils.getRandInt(256);
+                }
+                
+                keyOut.write(buffer, 0, rem);
+            }
         } catch (IOException e1) {
             fail("can't get bytes from file");
         }
         
-        for (int i = 0; i < k.length; ++i) {
-            k[i] = MathUtils.getRandInt(256);
+        try {
+            keyOut.close();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            fail("Cannot close key file");
         }
         
-        VernamCoder coderA = new VernamCoder(k);
-        VernamCoder coderB = new VernamCoder(k);
+        VernamCoder coderA = new VernamCoder(keyFile);
+        VernamCoder coderB = new VernamCoder(keyFile);
         
         // coding
         CodingInputStream coding = new CodingInputStream(in, coderA);

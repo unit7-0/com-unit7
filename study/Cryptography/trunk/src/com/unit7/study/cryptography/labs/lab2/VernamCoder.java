@@ -1,5 +1,11 @@
 package com.unit7.study.cryptography.labs.lab2;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * enc и dec индексы по массиву ключа соответственно для кодирования и
  * декодирования. Единичный вызов getEncoded или getDecoded сдвигает индекс на
@@ -9,13 +15,26 @@ package com.unit7.study.cryptography.labs.lab2;
  * 
  */
 public class VernamCoder implements CoderInfo {
-    public VernamCoder(int[] k) {
-        this.k = k;
+    public VernamCoder(File key) {
+        try {
+            keyEnc = new FileInputStream(key);
+            keyDec = new FileInputStream(key);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new RuntimeException("Cannot read file with key, Check it out");
+        }
     }
 
     @Override
     public Object getEncoded(int m) {
-        return m ^ k[enc++];
+        try {
+            return m ^ keyEnc.read();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new RuntimeException("Cannot read file with key, Check it out");
+        }
     }
 
     @Override
@@ -23,18 +42,14 @@ public class VernamCoder implements CoderInfo {
         if (!(coded instanceof Integer))
             throw new IllegalArgumentException("coded parameter must be int");
 
-        return (Integer) coded ^ k[dec++];
+        try {
+            return (Integer) coded ^ keyDec.read();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new RuntimeException("Cannot read file with key, Check it out");
+        }
     }
 
-    public int[] getK() {
-        return k;
-    }
-
-    public void setK(int[] k) {
-        enc = dec = 0;
-        this.k = k;
-    }
-
-    private int[] k;
-    private int enc, dec;
+    private InputStream keyEnc, keyDec;
 }
