@@ -19,5 +19,17 @@ public class IntOutputStream extends OutputStream {
 	    out.write(buffer.array());
 	}
 	
-	private OutputStream out;
+	@Override
+    public void flush() throws IOException {
+        out.flush();
+    }
+
+    @Override
+    public void close() throws IOException {
+        out.close();
+    }
+
+
+
+    private OutputStream out;
 }

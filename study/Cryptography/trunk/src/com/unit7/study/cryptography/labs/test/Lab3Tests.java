@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.unit7.study.cryptography.labs.lab2.CodingInputStream;
+import com.unit7.study.cryptography.labs.lab2.DecodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.IntOutputStream;
 import com.unit7.study.cryptography.labs.lab2.RSACoder;
 import com.unit7.study.cryptography.labs.lab2.Rewriter;
@@ -42,6 +43,7 @@ public class Lab3Tests {
 			digester = MessageDigest.getInstance("MD5");
 			in = new FileInputStream(fileIn);
 			data = new byte[in.available()];
+			in.read(data);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -64,6 +66,7 @@ public class Lab3Tests {
 
 		try {
 			rewriter.rewrite();
+			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -75,31 +78,79 @@ public class Lab3Tests {
 		try {
 			out = new FileOutputStream(signedFile);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    e.printStackTrace();
+            Assert.fail();
 		}
 		
-		// ? ?? ? connect
+		// first we write to file the signature
+		in = new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
+		rewriter.setIn(in);
 		rewriter.setOut(out);
 		
 		try {
-			rewriter.rewrite();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            rewriter.rewrite();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            Assert.fail();
+        }
 		
+		// and second we write the our file
 		try {
-			in = new FileInputStream(signedFile);
-			out = new FileOutputStream(designedFile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            in = new FileInputStream(fileIn);
+            out = new FileOutputStream(signedFile, true);
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+            Assert.fail();
+        }
 		
-		// здесь отрезать от файла 64 байта наших
-		// потом прогнать через RSA получить хэш
-		// посчитать хэш от сообщения, сравнить == - ок.
+		in = new ByteArrayInputStream(((ByteArrayOutputStream) out).toByteArray());
+        rewriter.setIn(in);
+        rewriter.setOut(out);
+        
+        try {
+            rewriter.rewrite();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            Assert.fail();
+        }
+		
+		// read sign from file and file contained data
+        // then check hash data == decoded sign
+        try {
+            in = new FileInputStream(signedFile);
+            digest = new byte[16 * 4];
+            data = new byte[in.available() - digest.length];
+            in.read(digest);
+            in.read(data);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+		
+        in = new ByteArrayInputStream(digest);
+        out = new ByteArrayOutputStream();
+        
+        // decoding hash
+        DecodingInputStream decIn = new DecodingInputStream(in, coder);
+        rewriter.setIn(decIn);
+        rewriter.setOut(out);
+        
+        try {
+            rewriter.rewrite();
+            out.flush();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        digest = ((ByteArrayOutputStream) out).toByteArray();
+        byte[] newDigest = digester.digest(data);
+        
+        // check equals
+        Assert.assertArrayEquals(digest, newDigest);
 	}
 
 	@Test
