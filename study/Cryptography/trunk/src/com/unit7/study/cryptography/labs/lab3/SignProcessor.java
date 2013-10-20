@@ -1,15 +1,25 @@
 package com.unit7.study.cryptography.labs.lab3;
 
+import java.security.NoSuchAlgorithmException;
+
+import com.unit7.study.cryptography.labs.exceptions.UnspecifiedField;
+
 public class SignProcessor {
     public SignProcessor(Signer signer) {
         this.signer = signer;
     }
     
-    public byte[] sign(byte[] message) {
-        return signer.sign(message);
+    public SignedData sign(byte[] message) throws UnspecifiedField {
+        SignedData signedData = new SignedDataImpl();
+        signedData.setData(message);
+        signer.sign(signedData);
+        if (isDetached())
+            signedData.setData(null);
+        
+        return signedData;
     }
 
-    public boolean verify(byte[] data) {
+    public boolean verify(SignedData data) throws NoSuchAlgorithmException, UnspecifiedField {
         return signer.verify(data);
     }
 
@@ -21,5 +31,14 @@ public class SignProcessor {
         this.signer = signer;
     }
 
+    public boolean isDetached() {
+        return detached;
+    }
+
+    public void setDetached(boolean detached) {
+        this.detached = detached;
+    }
+
     private Signer signer;
+    private boolean detached;
 }
