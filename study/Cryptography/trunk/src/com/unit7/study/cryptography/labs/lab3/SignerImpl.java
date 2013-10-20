@@ -3,6 +3,7 @@ package com.unit7.study.cryptography.labs.lab3;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.unit7.study.cryptography.labs.exceptions.UnspecifiedField;
 import com.unit7.study.cryptography.labs.lab2.CoderInfo;
 
 /**
@@ -27,6 +28,7 @@ public class SignerImpl implements Signer {
     @Override
     public byte[] sign(byte[] message) {
         // TODO Auto-generated method stub
+
         return null;
     }
 
@@ -34,6 +36,44 @@ public class SignerImpl implements Signer {
     public boolean verify(byte[] data) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public void sign(SignedData signedData) throws UnspecifiedField {
+        byte[] data = signedData.getData();
+        if (data == null)
+            throw new UnspecifiedField("signedData.data");
+
+        signedData.setSignature(sign(data));
+        signedData.setHash(hasher.getAlgorithm());
+        signedData.setCypher(coder.getAlgorithm());
+    }
+
+    @Override
+    public boolean verify(SignedData signedData) throws UnspecifiedField, NoSuchAlgorithmException {
+        byte[] data = signedData.getData();
+        byte[] sign = signedData.getSignature();
+        if (data == null)
+            throw new UnspecifiedField("signedData.data");
+        
+        if (sign == null)
+            throw new UnspecifiedField("signedData.signature");
+        
+        if (!signedData.getCypher().equals(coder.getAlgorithm()))
+            throw new NoSuchAlgorithmException("cypher algorithm signedData not math with signer algorithm");
+        
+        if (!signedData.getHash().equals(hasher.getAlgorithm()))
+            throw new NoSuchAlgorithmException("hash algorithm signedData not math with signer algorithm");
+        
+        byte[] signature = new byte[data.length + sign.length];
+        for (int i = 0; i < signature.length; ++i) {
+            if (i < sign.length)
+                signature[i] = sign[i];
+            else
+                signature[i] = data[i - sign.length];
+        }
+        
+        return verify(signature);
     }
 
     public MessageDigest getHasher() {

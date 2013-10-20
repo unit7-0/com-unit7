@@ -2,6 +2,7 @@ package com.unit7.study.cryptography.labs.lab2;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
 import com.unit7.study.cryptography.labs.lab1.tools.Pair;
+import com.unit7.study.cryptography.labs.lab3.Signer;
 
 public class RSACoder implements CoderInfo {
     public RSACoder() {
@@ -56,4 +57,8 @@ public class RSACoder implements CoderInfo {
 
     private int c, n, d;
     private int db, nb;
+    @Override
+    public String getAlgorithm() {
+        return Signer.CYPHER_RSA;
+    }
 }

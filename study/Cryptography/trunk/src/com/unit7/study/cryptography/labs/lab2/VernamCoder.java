@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.unit7.study.cryptography.labs.lab3.Signer;
+
 /**
  * enc и dec индексы по массиву ключа соответственно для кодирования и
  * декодирования. Единичный вызов getEncoded или getDecoded сдвигает индекс на
@@ -52,4 +54,9 @@ public class VernamCoder implements CoderInfo {
     }
 
     private InputStream keyEnc, keyDec;
+
+    @Override
+    public String getAlgorithm() {
+        return Signer.CYPHER_GOST;
+    }
 }
