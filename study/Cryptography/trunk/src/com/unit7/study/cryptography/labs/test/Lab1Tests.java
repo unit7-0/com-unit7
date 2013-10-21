@@ -7,9 +7,9 @@ import java.util.Random;
 
 import com.unit7.study.cryptography.labs.lab1.CryptoUtils;
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
-import com.unit7.study.cryptography.labs.lab1.tools.CryptoData;
-import com.unit7.study.cryptography.labs.lab1.tools.Pair;
-import com.unit7.study.cryptography.labs.lab1.tools.Utils;
+import com.unit7.study.cryptography.tools.CryptoData;
+import com.unit7.study.cryptography.tools.Pair;
+import com.unit7.study.cryptography.tools.Utils;
 
 import junit.framework.TestCase;
 

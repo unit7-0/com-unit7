@@ -1,4 +1,4 @@
-package com.unit7.study.cryptography.labs.lab1.tools;
+package com.unit7.study.cryptography.tools;
 
 public class Pair<K, V> {
     public Pair() {

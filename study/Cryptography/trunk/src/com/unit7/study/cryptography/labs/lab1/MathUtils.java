@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Random;
 
-import com.unit7.study.cryptography.labs.lab1.tools.Pair;
+import com.unit7.study.cryptography.tools.Pair;
 
 public class MathUtils {
     public static long binpow(long x, long a, long mod) {

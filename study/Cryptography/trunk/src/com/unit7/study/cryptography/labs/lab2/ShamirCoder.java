@@ -1,7 +1,7 @@
 package com.unit7.study.cryptography.labs.lab2;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
-import com.unit7.study.cryptography.labs.lab1.tools.Pair;
+import com.unit7.study.cryptography.tools.Pair;
 
 public class ShamirCoder {
     public ShamirCoder(int p) {

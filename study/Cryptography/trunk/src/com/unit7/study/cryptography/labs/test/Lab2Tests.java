@@ -10,9 +10,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
-import com.unit7.study.cryptography.labs.lab1.tools.CryptoData;
-import com.unit7.study.cryptography.labs.lab1.tools.Pair;
-import com.unit7.study.cryptography.labs.lab1.tools.Utils;
 import com.unit7.study.cryptography.labs.lab2.CoderInfo;
 import com.unit7.study.cryptography.labs.lab2.CodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.DecodingInputStream;
@@ -22,6 +19,9 @@ import com.unit7.study.cryptography.labs.lab2.RSACoder;
 import com.unit7.study.cryptography.labs.lab2.Rewriter;
 import com.unit7.study.cryptography.labs.lab2.ShamirCoder;
 import com.unit7.study.cryptography.labs.lab2.VernamCoder;
+import com.unit7.study.cryptography.tools.CryptoData;
+import com.unit7.study.cryptography.tools.Pair;
+import com.unit7.study.cryptography.tools.Utils;
 
 import junit.framework.TestCase;
 
