@@ -1,8 +1,8 @@
 package com.unit7.study.cryptography.labs.lab2;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
-import com.unit7.study.cryptography.labs.lab1.tools.Pair;
 import com.unit7.study.cryptography.labs.lab3.Signer;
+import com.unit7.study.cryptography.tools.Pair;
 
 public class RSACoder implements CoderInfo {
     public RSACoder() {
