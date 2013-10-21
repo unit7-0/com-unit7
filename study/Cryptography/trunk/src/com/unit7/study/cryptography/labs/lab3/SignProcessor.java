@@ -9,10 +9,16 @@ public class SignProcessor {
         this.signer = signer;
     }
     
-    public SignedData sign(byte[] message) throws UnspecifiedField {
+    public SignedData sign(byte[] message) {
         SignedData signedData = new SignedDataImpl();
         signedData.setData(message);
-        signer.sign(signedData);
+        
+        try {
+			signer.sign(signedData);
+		} catch (UnspecifiedField e) {
+			throw new NullPointerException("message");
+		}
+        
         if (isDetached())
             signedData.setData(null);
         
