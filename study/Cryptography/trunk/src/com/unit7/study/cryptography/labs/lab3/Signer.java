@@ -16,4 +16,5 @@ public interface Signer {
     public static final String CYPHER_RSA = "RSA";
     public static final String CYPHER_GOST = "GOST";
     public static final String CYPHER_EL_GAMAL = "EL_GAMAL";
+    public static final String CYPHER_VERNAM = "VERNAM";
 }
