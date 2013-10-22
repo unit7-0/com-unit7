@@ -36,11 +36,11 @@ public class ElGamalCoder implements CoderInfo {
         
         return m;
     }
-
-    private int p, g, selfPriv, pub;
-
+    
     @Override
     public String getAlgorithm() {
         return Signer.CYPHER_EL_GAMAL;
     }
+    
+    private int p, g, selfPriv, pub;
 }
