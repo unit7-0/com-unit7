@@ -1,6 +1,7 @@
 package com.unit7.study.cryptography.labs.lab2;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
+import com.unit7.study.cryptography.labs.lab3.Algorithm;
 import com.unit7.study.cryptography.labs.lab3.Signer;
 
 public class ElGamalCoder implements CoderInfo {
@@ -39,7 +40,7 @@ public class ElGamalCoder implements CoderInfo {
     
     @Override
     public String getAlgorithm() {
-        return Signer.CYPHER_EL_GAMAL;
+        return Algorithm.EL_GAMAL.getValue();
     }
     
     private int p, g, selfPriv, pub;
