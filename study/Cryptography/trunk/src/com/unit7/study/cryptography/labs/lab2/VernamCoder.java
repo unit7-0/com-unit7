@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.unit7.study.cryptography.labs.lab3.Algorithm;
 import com.unit7.study.cryptography.labs.lab3.Signer;
 
 /**
@@ -57,6 +58,6 @@ public class VernamCoder implements CoderInfo {
 
     @Override
     public String getAlgorithm() {
-        return Signer.CYPHER_GOST;
+        return Algorithm.VERNAM.getValue();
     }
 }

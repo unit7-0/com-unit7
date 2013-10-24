@@ -26,6 +26,8 @@ import com.unit7.study.cryptography.labs.lab2.DecodingInputStream;
 import com.unit7.study.cryptography.labs.lab2.IntOutputStream;
 import com.unit7.study.cryptography.labs.lab2.RSACoder;
 import com.unit7.study.cryptography.labs.lab2.Rewriter;
+import com.unit7.study.cryptography.labs.lab3.ElGamalSignAlgorithm;
+import com.unit7.study.cryptography.labs.lab3.RSASignAlgorithm;
 import com.unit7.study.cryptography.labs.lab3.SignProcessor;
 import com.unit7.study.cryptography.labs.lab3.SignedData;
 import com.unit7.study.cryptography.labs.lab3.Signer;
@@ -233,23 +235,13 @@ public class Lab3Tests {
     
     @Test
     public void rsaSignature() {
-        CoderInfo coder = coderInfoFactory.createCoderInfo(Signer.CYPHER_RSA, null);
-        Signer signer = new SignerImpl(coder);
+        Signer signer = new SignerImpl(new RSASignAlgorithm());
         signAndVerify(signer);
     }
     
     @Test
     public void ElGamalSignature() {
-        Pair<Integer, Integer> pg = Utils.generatePG(13335);
-        int p = pg.getFirst();
-        int g = pg.getSecond();
-        
-        CryptoData cryptoData = new CryptoData(p, g);
-        int privA = cryptoData.getPrivate();
-        int pubA = cryptoData.getPublic();
-        
-        CoderInfo coder = coderInfoFactory.createCoderInfo(Signer.CYPHER_EL_GAMAL, p, g, privA, pubA);
-        Signer signer = new SignerImpl(coder);
+        Signer signer = new SignerImpl(new ElGamalSignAlgorithm());
         signAndVerify(signer);
     }
 

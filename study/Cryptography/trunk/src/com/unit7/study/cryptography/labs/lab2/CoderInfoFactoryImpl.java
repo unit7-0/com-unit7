@@ -8,7 +8,7 @@ import com.unit7.study.cryptography.tools.CoderInfoFactory;
 public class CoderInfoFactoryImpl implements CoderInfoFactory {
 	@Override
 	public CoderInfo createCoderInfo(String type, Object... args) {
-		switch (type) {
+		/*switch (type) {
 		case Signer.CYPHER_RSA:
 			return new RSACoder();
 		case Signer.CYPHER_EL_GAMAL:
@@ -25,6 +25,9 @@ public class CoderInfoFactoryImpl implements CoderInfoFactory {
 		default:
 			return null;
 		}
+	}*/
+	    
+	    return null;
 	}
 
 }
