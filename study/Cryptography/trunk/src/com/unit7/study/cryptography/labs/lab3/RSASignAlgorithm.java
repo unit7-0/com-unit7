@@ -1,6 +1,7 @@
 package com.unit7.study.cryptography.labs.lab3;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
 import com.unit7.study.cryptography.tools.Pair;
@@ -51,7 +52,7 @@ public class RSASignAlgorithm implements SignAlgorithm {
      * decode each 4 bytes of data to 1 byte decoded
      */
     @Override
-    public byte[] verify(byte[] data, byte[] hash) {
+    public boolean verify(byte[] data, byte[] hash) {
         byte[] decoded = new byte[data.length / 4];
         ByteBuffer buffer = ByteBuffer.allocate(4);
         for (int i = 0; i + 4 <= data.length; i += 4) {
@@ -62,7 +63,7 @@ public class RSASignAlgorithm implements SignAlgorithm {
             decoded[i / 4] = (byte) MathUtils.binpow(encoded, d, n);
         }
         
-        return decoded;
+        return Arrays.equals(decoded, hash);
     }
 
     @Override

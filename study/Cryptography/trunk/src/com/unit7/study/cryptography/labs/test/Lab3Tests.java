@@ -27,6 +27,7 @@ import com.unit7.study.cryptography.labs.lab2.IntOutputStream;
 import com.unit7.study.cryptography.labs.lab2.RSACoder;
 import com.unit7.study.cryptography.labs.lab2.Rewriter;
 import com.unit7.study.cryptography.labs.lab3.ElGamalSignAlgorithm;
+import com.unit7.study.cryptography.labs.lab3.Gost94SignAlgorithm;
 import com.unit7.study.cryptography.labs.lab3.RSASignAlgorithm;
 import com.unit7.study.cryptography.labs.lab3.SignProcessor;
 import com.unit7.study.cryptography.labs.lab3.SignedData;
@@ -230,7 +231,8 @@ public class Lab3Tests {
 
     @Test
     public void gostSignature() {
-        
+        Signer signer = new SignerImpl(new Gost94SignAlgorithm());
+        signAndVerify(signer);
     }
     
     @Test
