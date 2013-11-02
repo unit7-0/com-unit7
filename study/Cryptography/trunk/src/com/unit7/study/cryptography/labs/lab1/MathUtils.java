@@ -34,6 +34,15 @@ public class MathUtils {
         return d;
     }
     
+    public static int getRandIntWithoutZero(int n) {
+        int buf = 0;
+        while (buf == 0) {
+            buf = rand.nextInt(n);
+        }
+        
+        return buf;
+    }
+    
     public static int getRandPrime(int n) {
         BigInteger test;
         int val;

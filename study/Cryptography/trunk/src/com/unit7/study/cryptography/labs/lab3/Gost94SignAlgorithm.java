@@ -1,8 +1,13 @@
 package com.unit7.study.cryptography.labs.lab3;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import com.unit7.study.cryptography.labs.lab1.MathUtils;
 
 public class Gost94SignAlgorithm implements SignAlgorithm {
     public Gost94SignAlgorithm() {
@@ -13,40 +18,165 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
         BigInteger[] pq = B();
         p = pq[0];
         q = pq[1];
-    }
-    
-    /**
-     * returns p and q by procedure A'
-     * @return
-     */
-    public BigInteger[] A(int t) {
-        
-    }
-        
-    /**
-     * returns
-     * @return
-     */
-    public BigInteger[] B() {
-        
-    }
-    
-    /**
-     * returns a by given p and q
-     * @return
-     */
-    public BigInteger C() {
-        
+        a = C();
     }
 
     /**
-     * first four bytes is an integer whose represent bytes count of r number and
-     * next parts of data array is a r and s numbers
+     * returns p and q by procedure A'
+     * 
+     * @return
+     */
+    public BigInteger[] A(int t, Integer defaultY) {
+        /**
+         * 0 < x<sub>0</sub> < 2<sup>32</sup> 0 < c < 2<sup>32</sup> and
+         * <b>c</b> not even
+         */
+        int x0 = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        int c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        while ((c & 1) == 0) {
+            c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        }
+
+        int[] y = new int[(int) Math.ceil(t / 32)];
+        y[0] = defaultY == null ? x0 : defaultY;
+        List<Integer> tList = new ArrayList<Integer>();
+        tList.add(t);
+        for (int i = 0; tList.get(i) >= 33; ++i) {
+            tList.add(tList.get(i) / 2);
+        }
+
+        int s = tList.size();
+        int ts = tList.get(s);
+        int n = (int) MathUtils.binpow(2, ts - 1, Integer.MAX_VALUE);
+        int m = s - 1;
+        /**
+         * <b>p<sub>s</sub></b> min probable prime of length t<sub>s</sub>
+         */
+        BigInteger[] p = new BigInteger[s + 1];
+        p[s] = BigInteger.valueOf(n).nextProbablePrime();
+
+        long maxInt = MathUtils.binpow(2, 32, Long.MAX_VALUE);
+        // step 5
+        stepFive: while (true) {
+            int r = (int) Math.ceil(tList.get(m) / 32);
+            // step 6
+            stepSix: while (true) {
+                for (int i = 0; i < r; ++i) {
+                    y[i + 1] = BigInteger.valueOf(97781173).multiply(BigInteger.valueOf(y[i]))
+                            .add(BigInteger.valueOf(c)).mod(BigInteger.valueOf(maxInt)).intValue();
+                }
+
+                BigInteger Ym = BigInteger.ZERO;
+                for (int i = 0; i < r; ++i) {
+                    Ym = Ym.add(BigInteger.valueOf(2).pow(i * 32).multiply(BigInteger.valueOf(y[i])));
+                }
+
+                y[0] = y[r];
+                BigDecimal twoPow = BigDecimal.valueOf(2).pow(tList.get(m) - 1);
+                BigInteger first = twoPow.divide(new BigDecimal(p[m + 1]), BigDecimal.ROUND_CEILING).toBigInteger();
+                BigInteger second = twoPow
+                        .multiply(new BigDecimal(Ym))
+                        .divide(new BigDecimal(p[m + 1].multiply(BigInteger.valueOf(2).pow(32 * r))),
+                                BigDecimal.ROUND_FLOOR).toBigInteger();
+                BigInteger N = first.add(second);
+                if (N.testBit(0))
+                    N = N.add(BigInteger.ONE);
+                int k = 0;
+                // step 11
+                while (true) {
+                    p[m] = p[m + 1].multiply(N.add(BigInteger.valueOf(k))).add(BigInteger.ONE);
+                    if (p[m].compareTo(BigInteger.valueOf(2).pow(tList.get(m))) > 0)
+                        continue stepSix;
+
+                    BigInteger firstCondition = pow(BigInteger.valueOf(2), p[m + 1].add(N.add(BigInteger.valueOf(k))))
+                            .mod(p[m]);
+                    BigInteger secondCondition = pow(BigInteger.valueOf(2), N.add(BigInteger.valueOf(k))).mod(p[m]);
+                    if (firstCondition.compareTo(BigInteger.ONE) == 0 && secondCondition.compareTo(BigInteger.ONE) != 1) {
+                        m -= 1;
+                    } else {
+                        k += 2;
+                        continue;
+                    }
+                    if (m >= 0)
+                        continue stepFive;
+                    else {
+                        return new BigInteger[] { p[0], p[1], BigInteger.valueOf(y[0]) };
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * returns
+     * 
+     * @return
+     */
+    public BigInteger[] B() {
+        /**
+         * 0 < x<sub>0</sub> < 2<sup>32</sup> 0 < c < 2<sup>32</sup> and
+         * <b>c</b> not even
+         */
+        int x0 = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        int c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        while ((c & 1) == 0) {
+            c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        }
+        
+        BigInteger[] res = A(256, null);
+        BigInteger q = res[0];
+        res = A(512, res[2].intValue());
+        BigInteger Q = res[0];
+
+        // step 3
+        int[] y = new int[33];
+        long maxInt = MathUtils.binpow(2, 32, Long.MAX_VALUE);
+        stepThree: while (true) {
+            for (int i = 0; i < y.length - 1; ++i) {
+                y[i + 1] = BigInteger.valueOf(97781173).multiply(BigInteger.valueOf(y[i]))
+                        .add(BigInteger.valueOf(c)).mod(BigInteger.valueOf(maxInt)).intValue();
+            }
+            
+            BigInteger Y = BigInteger.ZERO;
+            for (int i = 0; i < 32; ++i) {
+                Y = Y.add(BigInteger.valueOf(y[i]).pow(32 * i));
+            }
+            
+            y[0] = y[32];
+            BigInteger first =  
+        }
+
+        return new BigInteger[2];
+    }
+
+    /**
+     * returns a by given p and q
+     * 
+     * @return
+     */
+    public BigInteger C() {
+        return new BigInteger("0");
+    }
+
+    BigInteger pow(BigInteger base, BigInteger exponent) {
+        BigInteger result = BigInteger.ONE;
+        while (exponent.signum() > 0) {
+            if (exponent.testBit(0))
+                result = result.multiply(base);
+            base = base.multiply(base);
+            exponent = exponent.shiftRight(1);
+        }
+        return result;
+    }
+
+    /**
+     * first four bytes is an integer whose represent bytes count of r number
+     * and next parts of data array is a r and s numbers
      */
     @Override
     public byte[] sign(byte[] data) {
         BigInteger hash = new BigInteger(data);
-        
+
         BigInteger k;
         BigInteger r;
 
@@ -56,13 +186,11 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
         } while (r.compareTo(BigInteger.ZERO) == 0);
 
         BigInteger s = k.multiply(hash).add(x.multiply(r)).mod(q);
-        
+
         byte[] rBytes = r.toByteArray();
         byte[] sBytes = s.toByteArray();
-        ByteBuffer buffer = ByteBuffer.allocate(rBytes.length + sBytes.length + 4).
-                putInt(rBytes.length).
-                put(rBytes).
-                put(sBytes);
+        ByteBuffer buffer = ByteBuffer.allocate(rBytes.length + sBytes.length + 4).putInt(rBytes.length).put(rBytes)
+                .put(sBytes);
 
         return buffer.array();
     }
