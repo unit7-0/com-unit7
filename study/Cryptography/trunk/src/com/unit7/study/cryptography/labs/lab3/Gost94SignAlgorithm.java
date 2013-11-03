@@ -119,10 +119,11 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
          */
         int x0 = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
         int c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
+        int tp = 1024;
         while ((c & 1) == 0) {
             c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
         }
-        
+
         BigInteger[] res = A(256, null);
         BigInteger q = res[0];
         res = A(512, res[2].intValue());
@@ -131,22 +132,44 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
         // step 3
         int[] y = new int[33];
         long maxInt = MathUtils.binpow(2, 32, Long.MAX_VALUE);
+        BigDecimal qQ = new BigDecimal(q.multiply(Q));
+        BigDecimal two1024 = BigDecimal.valueOf(2).pow(1024);
         stepThree: while (true) {
             for (int i = 0; i < y.length - 1; ++i) {
-                y[i + 1] = BigInteger.valueOf(97781173).multiply(BigInteger.valueOf(y[i]))
-                        .add(BigInteger.valueOf(c)).mod(BigInteger.valueOf(maxInt)).intValue();
+                y[i + 1] = BigInteger.valueOf(97781173).multiply(BigInteger.valueOf(y[i])).add(BigInteger.valueOf(c))
+                        .mod(BigInteger.valueOf(maxInt)).intValue();
             }
-            
+
             BigInteger Y = BigInteger.ZERO;
             for (int i = 0; i < 32; ++i) {
                 Y = Y.add(BigInteger.valueOf(y[i]).pow(32 * i));
             }
-            
-            y[0] = y[32];
-            BigInteger first =  
-        }
 
-        return new BigInteger[2];
+            y[0] = y[32];
+            BigDecimal twoPow = BigDecimal.valueOf(2).pow(tp - 1);
+            BigInteger first = twoPow.divide(qQ, BigDecimal.ROUND_CEILING).toBigInteger();
+            BigInteger second = twoPow.multiply(new BigDecimal(Y)).divide(qQ.multiply(two1024), BigDecimal.ROUND_FLOOR)
+                    .toBigInteger();
+            BigInteger N = first.add(second);
+            if (N.testBit(0))
+                N = N.add(BigInteger.ONE);
+            int k = 0;
+            // step eight
+            stepEight: while (true) {
+                BigInteger p = qQ.toBigInteger().multiply(N.add(BigInteger.valueOf(k))).add(BigInteger.ONE);
+                if (p.compareTo(BigInteger.valueOf(2).pow(tp)) > 0)
+                    continue stepThree;
+
+                first = pow(BigInteger.valueOf(2), qQ.toBigInteger().multiply(N.add(BigInteger.valueOf(k)))).mod(p);
+                second = pow(BigInteger.valueOf(2), q.multiply(N.add(BigInteger.valueOf(k)))).mod(p);
+                if (first.compareTo(BigInteger.ONE) == 0 && second.compareTo(BigInteger.ONE) != 1) {
+                    return new BigInteger[] { p, q };
+                } else {
+                    k += 2;
+                    continue stepEight;
+                }
+            }
+        }
     }
 
     /**
@@ -155,7 +178,23 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
      * @return
      */
     public BigInteger C() {
-        return new BigInteger("0");
+        /**
+         * 1 < d
+         * < p
+         * - 1
+         */
+        BigInteger d = null;
+        while (true) {
+            while ((d = new BigInteger(p.bitLength() - 1, rnd))
+                    .compareTo(BigInteger.ZERO) == 0) {
+            }
+            
+            BigInteger f = pow(d, p.subtract(BigInteger.ONE).divide(q));
+            if (f.compareTo(BigInteger.ONE) == 0)
+                continue;
+            
+            return f;
+        }
     }
 
     BigInteger pow(BigInteger base, BigInteger exponent) {
