@@ -117,13 +117,17 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 						continue stepFive;
 					else {
 						log.info(String
-								.format("results:\n\tp: %s, q: %s, (p - 1) / q = %s, (p - 1) % q = %s",
+								.format("results:\n\tp: %s, \n\tq: %s, \n\t(p - 1) / q = %s, \n\t(p - 1) %% q = %s"
+										+ "\n\tp is probable prime: %s, q is probable prime: %s,\n\tp bit count: %d, q bit count: %d",
 										p[0],
 										p[1],
 										p[0].subtract(BigInteger.ONE).divide(
 												p[1]),
 										p[0].subtract(BigInteger.ONE)
-												.divideAndRemainder(p[1])));
+												.divideAndRemainder(p[1])[1], p[0]
+												.isProbablePrime(100), p[1]
+												.isProbablePrime(100), p[0]
+												.bitLength(), p[1].bitLength()));
 						return new BigInteger[] { p[0], p[1],
 								BigInteger.valueOf(y[0]) };
 					}
