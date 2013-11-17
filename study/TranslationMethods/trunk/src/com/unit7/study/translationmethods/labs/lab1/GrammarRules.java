@@ -8,6 +8,10 @@ public class GrammarRules {
     public static final String GRAMMAR_DELIMETER = "\\" + PURE_GRAMMAR_DELIMITER;
     public static final String GRAMMAR_EMPTY = "&";
     
+    public enum State {
+        TERMINAL, NOT_TERMINAL;
+    }
+    
     public static boolean isTerminal(char target) {
         return TERMINALS.indexOf(target) != -1;
     }
