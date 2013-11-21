@@ -158,8 +158,9 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 		BigInteger[] res = A(tp / 2, null);
 		BigInteger q = res[1];
 		 res = A(tp, null/*res[2].intValue()*/);    /// ????
-		// получаем Q длины 512. Его битность равна 
-		BigInteger Q = res[0].subtract(BigInteger.ONE).divide(q);// res[0];
+		// получаем Q длины 512. Его битность равна половине длины p
+		BigInteger Q = res[0].subtract(BigInteger.ONE).divide(res[1]);// res[0];
+		log.info("Q: " + Q + " \r\nQ.bitLength: " + Q.bitLength());
 
 		// step 3
 		long[] y = new long[33];
