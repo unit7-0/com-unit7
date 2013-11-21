@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.unit7.study.cryptography.labs.lab1.MathUtils;
+import com.unit7.study.cryptography.labs.lab2.CoderInfo;
+import com.unit7.study.cryptography.labs.lab2.CoderInfoFactoryImpl;
+import com.unit7.study.cryptography.labs.lab3.Algorithm;
+import com.unit7.study.cryptography.tools.CoderInfoFactory;
 import com.unit7.study.cryptography.tools.Pair;
 
 
@@ -35,7 +40,9 @@ public class MentalPoker extends Game {
      */
     protected void generateUsers(int n) {
         for (int i = 0; i < n; ++i) {
-            addGamer(new Gamer());
+            Gamer gamer = (Gamer) gamerFactory.createUser();
+            addGamer(gamer);
+            gamerDigits.put(gamer, coderInfoFactory.createCoderInfo(Algorithm.RSA, null));
         }
     }
     
@@ -43,7 +50,14 @@ public class MentalPoker extends Game {
      * Генерирует карты
      */
     protected void generateCards(int n) {
-        // генерация
+        int start = 100;
+        int initial = MathUtils.getRandInt(start);
+        for (int i = 0; i < n; ++i) {
+            Card card = new Card();
+            cards.add(card);
+            initial = initial + MathUtils.getRandInt(100) + 1;
+            cardMap.put(card, initial);
+        }
     }
     
     /**
@@ -57,7 +71,9 @@ public class MentalPoker extends Game {
 
     private List<Card> cards = new ArrayList<Card>(); 
     
-    private Map<Gamer, Pair<Integer, Integer>> gamerDigits = new HashMap<Gamer, Pair<Integer, Integer>>();
+    private Map<Gamer, CoderInfo> gamerDigits = new HashMap<Gamer, CoderInfo>();
     private Map<Card, Integer> cardMap = new HashMap<Card, Integer>();
+    private UserFactory gamerFactory = new GamerFactory();
+    private CoderInfoFactory coderInfoFactory = new CoderInfoFactoryImpl();
 }
 
