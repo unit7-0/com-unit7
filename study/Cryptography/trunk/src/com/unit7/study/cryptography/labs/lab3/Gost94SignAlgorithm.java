@@ -44,7 +44,7 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 			c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
 		}
 
-		int[] y = new int[(int) Math.ceil(t / 32) + 1];
+		long[] y = new long[(int) Math.ceil(t / 32) + 1];
 		y[0] = defaultY == null ? x0 : defaultY;
 		List<Integer> tList = new ArrayList<Integer>();
 		tList.add(t);
@@ -72,7 +72,8 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 					y[i + 1] = BigInteger.valueOf(97781173)
 							.multiply(BigInteger.valueOf(y[i]))
 							.add(BigInteger.valueOf(c))
-							.mod(BigInteger.valueOf(maxInt)).intValue();
+							.mod(BigInteger.valueOf(maxInt)).longValue();
+					// mod = 2^32. Инта не хватит, берем лонг
 				}
 
 				BigInteger Ym = BigInteger.ZERO;
@@ -153,9 +154,11 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 			c = MathUtils.getRandIntWithoutZero(Integer.MAX_VALUE);
 		}
 
-		BigInteger[] res = A(tp, null);
+		// получаем q длины 256. его битность равна половине битности числа p
+		BigInteger[] res = A(tp / 2, null);
 		BigInteger q = res[1];
-		// res = A(512, res[2].intValue());
+		 res = A(tp, null/*res[2].intValue()*/);    /// ????
+		// получаем Q длины 512. Его битность равна 
 		BigInteger Q = res[0].subtract(BigInteger.ONE).divide(q);// res[0];
 
 		// step 3
@@ -176,7 +179,7 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 
 			BigInteger Y = BigInteger.valueOf(0);
 			for (int i = 0; i < 32; ++i) {
-				Y = Y.add(BigInteger.valueOf(y[i]).pow(32 * i)).mod(two1024.toBigInteger());
+				Y = Y.add(BigInteger.valueOf(y[i]).pow(32 * i)).mod(res[0]);   //// ??????
 				log.info(String.format("step %d: Y = %d", i, Y));
 			}
 
@@ -192,12 +195,13 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 				N = N.add(BigInteger.ONE);
 			int k = 0;
 			// step eight
+			int step8Iter = 1;
 			stepEight: while (true) {
 				BigInteger p = qQ.toBigInteger()
 						.multiply(N.add(BigInteger.valueOf(k)))
 						.add(BigInteger.ONE);
 				if (p.compareTo(twoTp) > 0) {
-					log.info("step three iter: " + step3IterCount++ + String.format(" p: %s, 2^%d: %s", p, tp, twoTp));
+					log.info("step three iter: " + step3IterCount++ + String.format(" p: %s\r\n2^%d: %s", p, tp, twoTp));
 					continue stepThree;
 				}
 
@@ -207,10 +211,11 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 				second = BigInteger.valueOf(2).modPow(
 						q.multiply(N.add(BigInteger.valueOf(k))), p);
 				if (first.compareTo(BigInteger.ONE) == 0
-						&& second.compareTo(BigInteger.ONE) != 1) {
+						&& second.compareTo(BigInteger.ONE) != 0) {
 					return new BigInteger[] { p, q };
 				} else {
 					k += 2;
+					log.info(String.format("step eight iter: %d\r\nfirst: %s\r\nsecond: %s\r\nk: %d", step8Iter++, first, second, k));
 					continue stepEight;
 				}
 			}
