@@ -164,6 +164,8 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 		long maxInt = MathUtils.binpow(2, 32, Long.MAX_VALUE);
 		BigDecimal qQ = new BigDecimal(q.multiply(Q));
 		BigDecimal two1024 = BigDecimal.valueOf(2).pow(1024);
+		int step3IterCount = 1;
+		BigInteger twoTp = BigInteger.valueOf(2).pow(tp);
 		stepThree: while (true) {
 			for (int i = 0; i < y.length - 1; ++i) {
 				y[i + 1] = BigInteger.valueOf(97781173)
@@ -172,9 +174,10 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 						.mod(BigInteger.valueOf(maxInt)).longValue();
 			}
 
-			BigInteger Y = BigInteger.ZERO;
+			BigInteger Y = BigInteger.valueOf(0);
 			for (int i = 0; i < 32; ++i) {
-				Y = Y.add(BigInteger.valueOf(y[i]).pow(32 * i));
+				Y = Y.add(BigInteger.valueOf(y[i]).pow(32 * i)).mod(two1024.toBigInteger());
+				log.info(String.format("step %d: Y = %d", i, Y));
 			}
 
 			y[0] = y[32];
@@ -193,8 +196,10 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 				BigInteger p = qQ.toBigInteger()
 						.multiply(N.add(BigInteger.valueOf(k)))
 						.add(BigInteger.ONE);
-				if (p.compareTo(BigInteger.valueOf(2).pow(tp)) > 0)
+				if (p.compareTo(twoTp) > 0) {
+					log.info("step three iter: " + step3IterCount++ + String.format(" p: %s, 2^%d: %s", p, tp, twoTp));
 					continue stepThree;
+				}
 
 				first = BigInteger.valueOf(2).modPow(
 						qQ.toBigInteger()
