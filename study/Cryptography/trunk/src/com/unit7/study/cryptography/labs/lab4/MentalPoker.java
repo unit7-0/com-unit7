@@ -1,19 +1,23 @@
 package com.unit7.study.cryptography.labs.lab4;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.unit7.study.cryptography.tools.Pair;
 
 
 public class MentalPoker extends Game {
     public MentalPoker(int n) {
-        distributeCards();
+        distributeCards(n);
     }
     
     /**
      * раздает карты игрокам
      */
-    public void distributeCards() {
-        generate();
+    public void distributeCards(int n) {
+        generate(n);
         
         // раздача
     }
@@ -21,22 +25,24 @@ public class MentalPoker extends Game {
     /**
      * генерирует колоду и пользователей
      */
-    protected void generate() {
-        generateUsers();
-        generateCards();
+    protected void generate(int n) {
+        generateUsers(n);
+        generateCards(n);
     }
     
     /**
      * Генерирует пользователей
      */
-    protected void generateUsers() {
-        // генерация
+    protected void generateUsers(int n) {
+        for (int i = 0; i < n; ++i) {
+            addGamer(new Gamer());
+        }
     }
     
     /**
      * Генерирует карты
      */
-    protected void generateCards() {
+    protected void generateCards(int n) {
         // генерация
     }
     
@@ -50,5 +56,8 @@ public class MentalPoker extends Game {
     }
 
     private List<Card> cards = new ArrayList<Card>(); 
+    
+    private Map<Gamer, Pair<Integer, Integer>> gamerDigits = new HashMap<Gamer, Pair<Integer, Integer>>();
+    private Map<Card, Integer> cardMap = new HashMap<Card, Integer>();
 }
 
