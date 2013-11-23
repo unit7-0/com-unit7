@@ -2,8 +2,10 @@ package com.unit7.study.cryptography.labs.lab4;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.unit7.study.cryptography.labs.lab1.MathUtils;
@@ -13,6 +15,16 @@ import com.unit7.study.cryptography.labs.lab3.Algorithm;
 import com.unit7.study.cryptography.tools.CoderInfoFactory;
 import com.unit7.study.cryptography.tools.Pair;
 
+/**
+ * Абстракция сервера, у которого есть карты и подключенные клиенты. Каждый
+ * пользователь имеет пару чисел, сервер ставит в соответствие каждой карте
+ * число, это число шифруется всеми игроками, таким образом карты до снятия
+ * шифра никому неизвестны и можно свободно их пересылать, не опасаясь перехвата
+ * третьей стороной.
+ * 
+ * @author unit7
+ * 
+ */
 public class MentalPoker extends Game {
     public MentalPoker(int n) {
         distributeCards(n);
@@ -26,43 +38,63 @@ public class MentalPoker extends Game {
         cypherCards();
 
         // shuffle
-        // раздаем каждому по userCardCount
-        for (int i = 0; i < userCardCount; ++i) {
-            // берем случайную карту
-            cardMap.keySet().
-            // и ее кодированное значение
-            
-            // каждый пользователь декодирует
-            for (Gamer gamer : getGamers()) {
-                
+
+        // для каждого пользователя
+        for (Gamer target : getGamers()) {
+            // раздаем каждому по userCardCount
+            for (int i = 0; i < userCardCount; ++i) {
+                // берем случайную число
+                Integer[] arr = cypheredCards.toArray(new Integer[cypheredCards.size()]);
+                int num = MathUtils.getRandInt(arr.length);
+                int selected = arr[num];
+                log.info("selected value: " + selected);
+
+                // удаляем его из колоды
+                cypheredCards.remove(selected);
+
+                // каждый пользователь декодирует
+                selected = decodeValue(selected);
+
+                // исходное число, получаем карту
+                Card card = sourceMap.get(selected);
+                if (card == null)
+                    log.info("Error while decoding, card == null, decoded value == " + selected);
+                else
+                    log.info("selected card: " + card);
+
+                // отдаем карту
+                target.addCard(card);
             }
         }
+    }
+
+    protected int decodeValue(int value) {
+        for (Gamer gamer : getGamers()) {
+            CoderInfo coder = gamerDigits.get(gamer);
+            String msg = "value: " + value;
+            value = coder.getDecoded(value);
+            msg += " decoded to: " + value + " by gamer: " + gamer.getName();
+            log.info(msg);
+        }
+
+        return value;
     }
 
     /**
      * Ширфует карты от каждого пользователя
      */
     protected void cypherCards() {
-        for (Integer value : cardMap.keySet()) {
-            Card card = cardMap.remove(value);
+        for (Integer value : sourceMap.keySet()) {
+            Card card = sourceMap.get(value);
             for (Map.Entry<Gamer, CoderInfo> gamerEntry : gamerDigits.entrySet()) {
                 int start = value;
                 value = (int) gamerEntry.getValue().getEncoded(start);
                 log.info(String.format("Gamer %s coded card %s with value %d to vaue %d", gamerEntry.getKey(), card,
                         start, value));
             }
-            
-            cardMap.put(value, card);
+
+            cypheredCards.add(value);
         }
-    }
-
-    /**
-     * Дешифрует карту от каждого пользователя
-     * 
-     * @return
-     */
-    protected Card decypherCard(Card card) {
-
     }
 
     /**
@@ -92,9 +124,8 @@ public class MentalPoker extends Game {
         int initial = MathUtils.getRandInt(start);
         for (int i = 0; i < n; ++i) {
             Card card = new Card();
-            cards.add(card);
             initial = initial + MathUtils.getRandInt(100) + 1;
-            cardMap.put(initial, card);
+            sourceMap.put(initial, card);
         }
     }
 
@@ -104,8 +135,20 @@ public class MentalPoker extends Game {
      * @return
      */
     public List<Card> getRemainCards() {
-        // just a stub yet
-        return cards;
+        List<Card> result = new ArrayList<Card>();
+        for (int value : cypheredCards) {
+            int selected = decodeValue(value);
+            // исходное число, получаем карту
+            Card card = sourceMap.get(selected);
+            if (card == null)
+                log.info("Error while decoding, card == null, decoded value == " + selected);
+            else
+                log.info("selected card: " + card);
+            
+            result.add(card);
+        }
+
+        return result;
     }
 
     public int getUserCardCount() {
@@ -124,10 +167,9 @@ public class MentalPoker extends Game {
         this.remainCardCount = remainCardCount;
     }
 
-    private List<Card> cards = new ArrayList<Card>();
-
     private Map<Gamer, CoderInfo> gamerDigits = new HashMap<Gamer, CoderInfo>();
-    private Map<Integer, Card> cardMap = new HashMap<Integer, Card>();
+    private Map<Integer, Card> sourceMap = new HashMap<Integer, Card>();
+    private Set<Integer> cypheredCards = new HashSet<Integer>();
     private UserFactory gamerFactory = new GamerFactory();
     private CoderInfoFactory coderInfoFactory = new CoderInfoFactoryImpl();
 
