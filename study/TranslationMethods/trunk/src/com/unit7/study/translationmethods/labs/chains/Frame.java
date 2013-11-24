@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import com.unit7.study.translationmethods.labs.lab2.TreeBuilder;
+
 /**
  * Делегирует построение контента билдеру и отображает результаты. Реализация
  * отображения достается наследникам
@@ -19,7 +21,7 @@ public abstract class Frame<T> extends JFrame {
         this.target = target;
     }
     
-    public abstract void show();
+    public abstract void showContent();
 
     protected List<T> build(Container container) {
         return builder.build(container);

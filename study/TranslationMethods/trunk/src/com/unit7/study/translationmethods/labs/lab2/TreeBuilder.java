@@ -22,7 +22,7 @@ public class TreeBuilder implements Builder<Container> {
             count = (Integer) args[0];
         }
 
-        if (count > maxIter) {
+        if (count++ > maxIter) {
             return total;
         }
 
@@ -56,7 +56,7 @@ public class TreeBuilder implements Builder<Container> {
                         Container cur = copyContainer(result);
                         cur.setRulePos(i + 1);
                         cur.setCurrent(new Vertex(name));
-                        List<Container> anotherResults = build(cur);
+                        List<Container> anotherResults = build(cur, count);
                         for (Container cont : anotherResults) {
                             if (cont.isResult()) {
                                 // цепочка должна была законочиться, так как
@@ -81,7 +81,7 @@ public class TreeBuilder implements Builder<Container> {
                     cur.setRule(possible);
                     cur.setRulePos(0);
                     cur.setCurrent(newNode);
-                    List<Container> res = build(cur);
+                    List<Container> res = build(cur, count);
 
                     for (Container cont : res) {
                         if (cont.isResult()) {
@@ -106,7 +106,7 @@ public class TreeBuilder implements Builder<Container> {
                                     curCont.setRulePos(i + 1);
                                     curCont.getCurrent().addChild(cont.getCurrent());
                                     curCont.setChainPos(cont.getChainPos());
-                                    List<Container> anotherResults = build(curCont);
+                                    List<Container> anotherResults = build(curCont, count);
                                     for (Container anRes : anotherResults) {
                                         // обработка терминалов была
                                         // недопустима, могли только в пустые
@@ -133,13 +133,14 @@ public class TreeBuilder implements Builder<Container> {
                                     List<Vertex> resultChilds = resultCopy.getCurrent().getChilds();
                                     resultChilds.add(cont.getCurrent());
                                     resultCopy.setRulePos(i + 1);
-                                    List<Container> anRes = build(resultCopy);
+                                    resultCopy.setChainPos(cont.getChainPos());
+                                    List<Container> anRes = build(resultCopy, count);
                                     for (Container resCont : anRes) {
                                         if (resCont.isResult()) {
                                             Container resultCopy2 = copyContainer(resultCopy);
-                                            resultCopy2.getCurrent().addChild(resCont.getCurrent());
+//                                            resultCopy2.getCurrent().addChild(resCont.getCurrent());
                                             resultCopy2.setResult(true);
-                                            total.add(resultCopy2);
+                                            total.add(resCont);
                                         }
                                     }
                                 }
@@ -153,9 +154,9 @@ public class TreeBuilder implements Builder<Container> {
         }
 
         // выражение кончилось и цепочка тоже
-        if (result.getChainPos() == result.getChain().length()) {
+//        if (result.getChainPos() == result.getChain().length()) {
             result.setResult(true);
-        }
+//        }
         
         return total;
     }
@@ -176,7 +177,7 @@ public class TreeBuilder implements Builder<Container> {
 
         Container copy = new Container.Builder().setChain(src.getChain()).setChainPos(src.getChainPos())
                 .setcType(src.getcType()).setResult(src.isResult()).setRule(src.getRule()).setRulePos(src.getRulePos())
-                .setCurrent(vertCopy).build();
+                .setCurrent(vertCopy).setRules(src.getRules()).build();
 
         return copy;
     }
@@ -192,6 +193,7 @@ public class TreeBuilder implements Builder<Container> {
         for (Vertex v : vert.getChilds()) {
             Vertex copy = new Vertex(v.getName());
             copy.setChilds(copyTree(v));
+            list.add(copy);
         }
 
         return list;
@@ -199,5 +201,5 @@ public class TreeBuilder implements Builder<Container> {
 
     // фиктивное поле, для нормальной реализации не требуется, заменить если
     // появится надобность и время.
-    private int maxIter = 5000;
+    private int maxIter = 1000;
 }

@@ -31,7 +31,7 @@ public class TreeFrame extends Frame<Container> {
     }
 
     @Override
-    public void show() {
+    public void showContent() {
         String[] vars = rules.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
         for (String rule : vars) {
             GrammarRules.State cType;
@@ -43,7 +43,7 @@ public class TreeFrame extends Frame<Container> {
             }
 
             Container container = new Container.Builder().setChain(chain).setChainPos(0).setcType(cType)
-                    .setCurrent(new Vertex(target)).setRule(rule).setRulePos(0).build();
+                    .setCurrent(new Vertex(target)).setRule(rule).setRulePos(0).setRules(rules).build();
 
             List<Container> toShow = build(container);
 
@@ -62,12 +62,15 @@ public class TreeFrame extends Frame<Container> {
                         public void mouseClicked(MouseEvent e) {
                             JFrame frame = new JFrame("Дерево вывода для " + cont.getChain());
                             JPanel tree = showTree(cont.getCurrent());
-                            frame.add(tree);
+                            frame.getContentPane().add(tree);
+                            frame.setSize(tree.getSize());
                             frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                            frame.pack();
+//                            frame.pack();
                             frame.setVisible(true);
                         }
                     });
+                    
+                    trees.add(label);
                 }
             }
 
@@ -85,10 +88,10 @@ public class TreeFrame extends Frame<Container> {
 
             for (JLabel tree : trees) {
                 content.add(tree);
-            }
+            }      
 
+            this.getContentPane().add(content);
             pack();
-            setContentPane(content);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         }
     }
@@ -107,28 +110,29 @@ public class TreeFrame extends Frame<Container> {
         
         vertexLevelCount = new int[levelsCount];
         countVertexOnLevels(vertex, 0);
+        final int maxVCount = getMaxVCount(vertex);
+        final int maxWidth = distance * (maxVCount - 1) + maxVCount * vertexRadius;
         
         JPanel result = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
                 Graphics2D gr = (Graphics2D) g;
-                int maxVCount = getMaxVCount(vertex);
+                
                 Dimension screeSize = Toolkit.getDefaultToolkit().getScreenSize();
-                if (screeSize.width - (maxVCount - 1) * distance - maxVCount * vertexRadius < 0) {
+                if (screeSize.width - (maxVCount - 1) * distance - maxVCount * vertexRadius * 2 < 0) {
                     JOptionPane.showMessageDialog(null, "Слишком толстое дерево, показывать не буду");
                     return;
                 }
-
-                int maxWidth = distance * (maxVCount - 1) + maxVCount * vertexRadius;
-                Point mainPoint = new Point(maxWidth / 2 - vertexRadius / 2, 0);
+                
+                Point mainPoint = new Point(maxWidth / 2 - vertexRadius, 0);
                 drawVertex(gr, vertex, mainPoint);
 
-                drawTree(gr, vertex, mainPoint, maxWidth, 0);
-                
-                super.paintComponent(g);
+                drawTree(gr, vertex, mainPoint, maxWidth, 0);                
             }
         };
 
+        result.setSize(maxWidth, levelsCount * vertexRadius * 2 + (levelsCount - 1) * yDist);
         return result;
     }
 
@@ -156,7 +160,7 @@ public class TreeFrame extends Frame<Container> {
         
         int max = 1;
         for (Vertex vert : v.getChilds()) {
-            max = Math.max(max, getLevelsCount(vert));
+            max = Math.max(max, getLevelsCount(vert) + 1);
         }
         
         return max;
@@ -164,6 +168,7 @@ public class TreeFrame extends Frame<Container> {
     
     private void drawVertex(Graphics2D g, Vertex v, Point p) {
         g.drawOval(p.x, p.y, vertexRadius, vertexRadius);
+        g.drawString(v.getName(), p.x + 5, p.y + vertexRadius / 2);
     }
 
     private int getMaxVCount(Vertex v) {
@@ -187,28 +192,29 @@ public class TreeFrame extends Frame<Container> {
      * @param level
      */
     private void drawTree(Graphics2D g, Vertex v, Point parent, int maxWidth, int level) {
-        if (v == null)
+        if (v == null || v.getChilds().size() == 0)
             return;
         
         int curDist = maxWidth / vertexLevelCount[level];
         int curX = maxWidth / vertexLevelCount[level] - curDist / 2;
         
-        for (Vertex vert : v.getChilds()) {
+        for (Vertex vert : v.getChilds()) {            
             // рисуем
-            Point point = new Point(curX, yDist);
+            Point point = new Point(curX, yDist + parent.y);
             drawVertex(g, vert, point);
             // TODO draw to center
             g.drawLine(parent.x, parent.y, point.x, point.y);
             
             log.info(String.format("vertex: %s drawed, tree draw started", point));
             drawTree(g, vert, point, maxWidth, level + 1);
+            curX += curDist;
         }
     }
 
     private String chain;
-    private int distance = 20;
-    private int yDist = 20;
-    private int vertexRadius = 10;
+    private int distance = 40;
+    private int yDist = 40;
+    private int vertexRadius = 30;
     private int[] vertexLevelCount;
     private static final Logger log = Logger.getLogger(TreeFrame.class.getName());
 }

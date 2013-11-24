@@ -87,7 +87,8 @@ public class BuildListener implements ActionListener {
                 expr = new StringBuilder();
                 for (String part : parts) {
                     try {
-                        if (analizer.analize(new String[] { name, part })) {
+                        // кажется это больше не нужно, поэтому true
+                        if (true || analizer.analize(new String[] { name, part })) {
                             expr.append(part).append("|");
                         }
                     } catch (InformationMessageException e1) {
@@ -110,13 +111,13 @@ public class BuildListener implements ActionListener {
             expressions.put(pair[0], pair[1]);
         }
 
-        SwingUtilities.invokeLater(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 new ChainsShower(expressions, target.getText().trim(), Integer
                         .parseInt(lenField.getText().trim())).setVisible(true);
             }
-        });
+        }).start();
     }
 
     private JTextField terminal;

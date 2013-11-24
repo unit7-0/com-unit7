@@ -1,5 +1,6 @@
 package com.unit7.study.translationmethods.labs.lab1;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
@@ -22,29 +24,48 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.unit7.study.translationmethods.labs.lab2.TreeBuilder;
+import com.unit7.study.translationmethods.labs.lab2.TreeFrame;
+
 public class ChainsShower extends JFrame {
-    public ChainsShower(Map<String, String> exprs, String target, int lens) {
+    public ChainsShower(final Map<String, String> exprs, final String target, int lens) {
         super("Цепочки");
-        this.expressions = exprs;
+        this.expressions = new ConcurrentHashMap<String, String>() {
+            {
+                for (Map.Entry<String, String> entry : exprs.entrySet()) {
+                    put(entry.getKey(), entry.getValue());
+                }
+            }
+        };
+        this.sourceExpr = new HashMap<String, String>() {
+            {
+                for (Map.Entry<String, String> entry : exprs.entrySet()) {
+                    put(entry.getKey(), entry.getValue());
+                }
+            }
+        };
+        
         this.maxLen = lens;
         recursiveRemover.remove(expressions);
 
-        JTextArea area = new JTextArea();
+        // JTextArea area = new JTextArea();
         JPanel panel = new JPanel();
-        JScrollPane pane = new JScrollPane(area);
+        JScrollPane pane = new JScrollPane(panel);
         String[] vars = exprs.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
         // for each rule we call doBuild and get some chain
         Set<String> finalAnswer = new HashSet<String>();
         for (String var : vars) {
             // if there is a repeats...
             finalAnswer.addAll(doBuild(var, 0));
-//            log.put(var, target);
+            // log.put(var, target);
         }
 
         for (String res : finalAnswer) {
             if (!res.isEmpty()) {
-                area.append(res + "\n");
+                // area.append(res + "\n");
                 final JLabel label = new JLabel(res);
+                label.setBackground(Color.WHITE);
+                label.setOpaque(false);
                 label.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
@@ -73,29 +94,31 @@ public class ChainsShower extends JFrame {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         String chain = label.getText();
-                        List<String> path = new ArrayList<String>();
-                        String begin = chain;
-/*                        do {
-                            path.add(begin);
-                        } while ();
-*/
-                        Collections.reverse(path);
-                        StringBuilder result = new StringBuilder();
-                        for (String comp : path) {
-                            result.append(comp).append("->");
-                        }
+                        /*
+                         * List<String> path = new ArrayList<String>(); String
+                         * begin = chain; do { path.add(begin); } while ();
+                         * 
+                         * Collections.reverse(path); StringBuilder result = new
+                         * StringBuilder(); for (String comp : path) {
+                         * result.append(comp).append("->"); }
+                         * 
+                         * result.delete(result.length() - 2, result.length());
+                         * JFrame window = new JFrame(); window.add(new
+                         * JLabel(result.toString()));
+                         * window.setDefaultCloseOperation
+                         * (JFrame.DISPOSE_ON_CLOSE); window.setVisible(true);
+                         * window.pack();
+                         */
 
-                        result.delete(result.length() - 2, result.length());
-                        JFrame window = new JFrame();
-                        window.add(new JLabel(result.toString()));
-                        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        window.setVisible(true);
-                        window.pack();
+                        TreeFrame frame = new TreeFrame(sourceExpr, target, chain);
+                        frame.setBuilder(new TreeBuilder());
+                        frame.showContent();
+                        frame.setVisible(true);
                     }
                 });
 
                 panel.add(label);
-//                log.put(res, var);
+                // log.put(res, var);
             }
         }
 
@@ -103,7 +126,7 @@ public class ChainsShower extends JFrame {
         setSize(new Dimension(400, 300));
         try {
             FileOutputStream out = new FileOutputStream("/home/unit7/log.txt");
-            PrintWriter writer  = new PrintWriter(out);
+            PrintWriter writer = new PrintWriter(out);
             writer.println(log.toString());
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
@@ -150,7 +173,7 @@ public class ChainsShower extends JFrame {
                         List<String> anotherChains = doBuild(result.toString() + expr.substring(i + name.length()),
                                 result.length());
                         totalResult.addAll(anotherChains);
-//                        log.put(expr, result.toString());
+                        // log.put(expr, result.toString());
                         continue;
                     }
 
@@ -165,7 +188,7 @@ public class ChainsShower extends JFrame {
 
                     // log all manipulations
                     for (String chain : chains) {
-//                        log.put(chain, expr);
+                        // log.put(chain, expr);
                     }
 
                     totalResult.addAll(chains);
@@ -187,6 +210,7 @@ public class ChainsShower extends JFrame {
     private RecursionRemover recursiveRemover = new LeftRecursionRemover();
     private NameToolz nameToolz = new DigitNameToolz();
     private Map<String, String> expressions;
-    
+    private Map<String, String> sourceExpr;
+
     private static final Logger log = Logger.getLogger(ChainsShower.class.getName());
 }
