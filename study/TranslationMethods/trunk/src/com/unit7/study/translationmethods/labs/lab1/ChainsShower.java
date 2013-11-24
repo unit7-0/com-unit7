@@ -2,6 +2,9 @@ package com.unit7.study.translationmethods.labs.lab1;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
@@ -26,6 +29,7 @@ import javax.swing.JTextArea;
 
 import com.unit7.study.translationmethods.labs.lab2.TreeBuilder;
 import com.unit7.study.translationmethods.labs.lab2.TreeFrame;
+import com.unit7.study.translationmethods.labs.utils.Utils;
 
 public class ChainsShower extends JFrame {
     public ChainsShower(final Map<String, String> exprs, final String target, int lens) {
@@ -49,8 +53,6 @@ public class ChainsShower extends JFrame {
         recursiveRemover.remove(expressions);
 
         // JTextArea area = new JTextArea();
-        JPanel panel = new JPanel();
-        JScrollPane pane = new JScrollPane(panel);
         String[] vars = exprs.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
         // for each rule we call doBuild and get some chain
         Set<String> finalAnswer = new HashSet<String>();
@@ -60,12 +62,15 @@ public class ChainsShower extends JFrame {
             // log.put(var, target);
         }
 
+        JPanel panel = new JPanel(new GridLayout((int) Math.ceil(finalAnswer.size() / 15.0), 15, 10, 10));
+        JScrollPane pane = new JScrollPane(panel);
         for (String res : finalAnswer) {
             if (!res.isEmpty()) {
                 // area.append(res + "\n");
                 final JLabel label = new JLabel(res);
                 label.setBackground(Color.WHITE);
-                label.setOpaque(false);
+                label.setFont(Font.getFont(Font.MONOSPACED));
+                label.setOpaque(true);
                 label.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
@@ -113,6 +118,7 @@ public class ChainsShower extends JFrame {
                         TreeFrame frame = new TreeFrame(sourceExpr, target, chain);
                         frame.setBuilder(new TreeBuilder());
                         frame.showContent();
+                        Utils.centreFrame(ChainsShower.this, frame);
                         frame.setVisible(true);
                     }
                 });
