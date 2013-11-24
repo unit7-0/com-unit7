@@ -43,8 +43,6 @@ public class TreeBuilder implements Builder<Container> {
                 // possible chains
                 String name = expr.substring(i, i + 1);
                 String[] possibleChains = expandChain(name, container.getRules());
-                Vertex current = new Vertex(name);
-                // result.getCurrent().addChild(current);
                 // each chain may present as before = result[pos..i - 1],
                 // current = one of chains[]
                 // and after = before + each of chains[] + remain
@@ -55,19 +53,32 @@ public class TreeBuilder implements Builder<Container> {
                         // продолжом анализировать после текущего нетерминала
                         Container cur = copyContainer(result);
                         cur.setRulePos(i + 1);
-                        cur.setCurrent(new Vertex(name));
+                        // покажем разворот в пустой символ тоже
+                        Vertex empty = new Vertex(name);
+                        empty.addChild(new Vertex(GrammarRules.GRAMMAR_EMPTY));
+                        cur.getCurrent().addChild(empty);
                         List<Container> anotherResults = build(cur, count);
                         for (Container cont : anotherResults) {
                             if (cont.isResult()) {
                                 // цепочка должна была законочиться, так как
                                 // обработали в build оставшееся правило, иначе
                                 // цепочка не подходит и результаты не добавляем
-                                if (cont.getChainPos() == cont.getChain().length()) {
-                                    Container resultCopy = copyContainer(result);
+                                // fix : но мы можем находиться на большом
+                                // уровне вложенности и тогда часть цепочки
+                                // соответствует одному из правил, а остальная
+                                // часть может быть получены вышестоящим вызовом
+                                // функции с оставшейся частью правила, поэтому
+                                // проверим также, что правило с которым
+                                // сопоставляли закончилось, если это так, то
+                                // контейнер нам подходит — отсечем на верхнем
+                                // уровне
+                                if (cont.getChainPos() == cont.getChain().length() || cont.getRulePos() >= cont.getRule().length()) {
+                                    /*Container resultCopy = copyContainer(result);
+                                    resultCopy.setChainPos(cont.getChainPos());
                                     List<Vertex> resultChilds = resultCopy.getCurrent().getChilds();
                                     resultChilds.add(cont.getCurrent());
-                                    resultCopy.setResult(true);
-                                    total.add(resultCopy);
+                                    resultCopy.setResult(true);*/
+                                    total.add(cont);
                                 }
                             }
                         }
@@ -84,8 +95,10 @@ public class TreeBuilder implements Builder<Container> {
                     List<Container> res = build(cur, count);
 
                     for (Container cont : res) {
+                        // часть цепочки соответствовала правилу
                         if (cont.isResult()) {
-                            // цепочка закончилась после анализирования
+                            // цепочка полностью закончилась после
+                            // анализирования
                             if (cont.getChainPos() == cont.getChain().length()) {
                                 // проверим, что и остальное выражение
                                 // закончилось, тогда наш контейнер хороший и
@@ -99,6 +112,8 @@ public class TreeBuilder implements Builder<Container> {
                                     List<Vertex> resultChilds = resultCopy.getCurrent().getChilds();
                                     resultChilds.add(cont.getCurrent());
                                     resultCopy.setResult(true);
+                                    resultCopy.setChainPos(resultCopy.getChain().length());
+                                    resultCopy.setRulePos(resultCopy.getRule().length());
                                     total.add(resultCopy);
                                 } else {
                                     // разворачиваются в пустой символ
@@ -137,9 +152,10 @@ public class TreeBuilder implements Builder<Container> {
                                     List<Container> anRes = build(resultCopy, count);
                                     for (Container resCont : anRes) {
                                         if (resCont.isResult()) {
-                                            Container resultCopy2 = copyContainer(resultCopy);
-//                                            resultCopy2.getCurrent().addChild(resCont.getCurrent());
-                                            resultCopy2.setResult(true);
+                                            // Container resultCopy2 =
+                                            // copyContainer(resultCopy);
+                                            // resultCopy2.getCurrent().addChild(resCont.getCurrent());
+                                            // resultCopy2.setResult(true);
                                             total.add(resCont);
                                         }
                                     }
@@ -150,14 +166,19 @@ public class TreeBuilder implements Builder<Container> {
                 }
 
                 return total;
+            } else {
+                // пустой символ не может встречаться посреди правила
+                result.setResult(false);
+                return total;
             }
         }
 
         // выражение кончилось и цепочка тоже
-//        if (result.getChainPos() == result.getChain().length()) {
-            result.setResult(true);
-//        }
-        
+        // if (result.getChainPos() == result.getChain().length()) {
+        result.setResult(true);
+        result.setRulePos(expr.length());
+        // }
+
         return total;
     }
 
@@ -201,5 +222,5 @@ public class TreeBuilder implements Builder<Container> {
 
     // фиктивное поле, для нормальной реализации не требуется, заменить если
     // появится надобность и время.
-    private int maxIter = 1000;
+    private int maxIter = 100;
 }

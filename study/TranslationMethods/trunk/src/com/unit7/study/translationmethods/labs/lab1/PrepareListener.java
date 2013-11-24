@@ -68,7 +68,7 @@ public class PrepareListener implements ActionListener {
         terminal.setEnabled(false);
         notTerminal.setEnabled(false);
         target.setEnabled(false);
-        lenField.setEnabled(false);
+//        lenField.setEnabled(false);
         clearButton.setEnabled(false);
     }
 
