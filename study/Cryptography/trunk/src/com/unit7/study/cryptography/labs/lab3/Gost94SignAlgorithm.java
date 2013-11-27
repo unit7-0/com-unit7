@@ -302,7 +302,47 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 		return v.compareTo(r) == 0;
 	}
 
-	@Override
+	public BigInteger getP() {
+        return p;
+    }
+
+    public void setP(BigInteger p) {
+        this.p = p;
+    }
+
+    public BigInteger getQ() {
+        return q;
+    }
+
+    public void setQ(BigInteger q) {
+        this.q = q;
+    }
+
+    public BigInteger getA() {
+        return a;
+    }
+
+    public void setA(BigInteger a) {
+        this.a = a;
+    }
+
+    public BigInteger getX() {
+        return x;
+    }
+
+    public void setX(BigInteger x) {
+        this.x = x;
+    }
+
+    public BigInteger getY() {
+        return y;
+    }
+
+    public void setY(BigInteger y) {
+        this.y = y;
+    }
+
+    @Override
 	public String getName() {
 		return Algorithm.GOST_94.getValue();
 	}
