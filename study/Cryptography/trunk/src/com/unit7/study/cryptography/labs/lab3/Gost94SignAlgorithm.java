@@ -308,7 +308,7 @@ public class Gost94SignAlgorithm implements SignAlgorithm {
 	}
 
 	private BigInteger p, q, a, x, y;
-	private Random rnd = new Random(System.currentTimeMillis());
+	protected Random rnd = new Random(System.currentTimeMillis());
 
 	private static final Logger log = Logger
 			.getLogger(Gost94SignAlgorithm.class.getName());
