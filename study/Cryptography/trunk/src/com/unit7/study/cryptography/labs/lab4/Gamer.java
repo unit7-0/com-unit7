@@ -29,7 +29,10 @@ public class Gamer extends User {
         return super.equals(obj);
     }
 
-
+    @Override
+    public String toString() {
+        return getName();
+    }
 
     private List<Card> cards = new ArrayList<Card>();
 }

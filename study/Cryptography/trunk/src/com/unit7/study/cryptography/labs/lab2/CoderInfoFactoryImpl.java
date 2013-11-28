@@ -9,7 +9,10 @@ public class CoderInfoFactoryImpl implements CoderInfoFactory {
 	@Override
 	public CoderInfo createCoderInfo(Algorithm type, Object... args) {
 	    if (Algorithm.RSA.equals(type)) {
-	        return new RSACoder();
+	        RSACoder coder = new RSACoder();
+	        coder.setDb(coder.getD());
+	        coder.setNb(coder.getN());
+	        return coder;
 	    } else if (Algorithm.EL_GAMAL.equals(type)) {
 	        if (!(args instanceof Integer[]) && ((Integer[]) args).length != 4)
                 throw new RuntimeException("args must be int array and his length == 4");
