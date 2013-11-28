@@ -1,5 +1,6 @@
 package com.unit7.study.cryptography.labs.lab4.forms;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -67,15 +68,15 @@ public class GameTable extends AbstractForm {
         table.add(gamerCards[4], c);
 
         c.gridx = 3;
-        c.gridy = 3;
+        c.gridy = 4;
         table.add(gamerCards[5], c);
 
-        c.gridx = 3;
-        c.gridy = 2;
+        c.gridx = 2;
+        c.gridy = 4;
         table.add(gamerCards[6], c);
 
-        c.gridx = 3;
-        c.gridy = 1;
+        c.gridx = 1;
+        c.gridy = 4;
         table.add(gamerCards[7], c);
 
         c.gridx = 0;
@@ -83,7 +84,7 @@ public class GameTable extends AbstractForm {
         table.add(gamerCards[8], c);
 
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         table.add(gamerCards[9], c);
 
         int k = 0;
@@ -92,14 +93,20 @@ public class GameTable extends AbstractForm {
             for (int j = 0; j < cards.size(); ++j) {
                 Card card = cards.get(j);
                 JPanel panel = new JPanel();
+                panel.setBackground(new Color(200, 200, 200 + k * 5));
+                panel.setOpaque(true);
+                panel.add(new JLabel(card.getValueType()));
                 gamerCards[k].add(panel);
-
-                k = (k + 2) % gamerCards.length;
-                if (k == 0)
-                    k += 1;
             }
+            
+            System.out.println("k: " + k);
+            k = (k + 2) % gamerCards.length;
+            if (k == 0)
+                k += 1;
         }
 
+        tableCards.setBackground(Color.white);
+        tableCards.setOpaque(true);
         for (int i = 0; i < 5; ++i) {
             List<Card> cards = poker.getRemainCards();
             Card card = cards.get(i);
