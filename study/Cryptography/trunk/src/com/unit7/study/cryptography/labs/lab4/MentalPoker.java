@@ -1,10 +1,12 @@
 package com.unit7.study.cryptography.labs.lab4;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -72,9 +74,8 @@ public class MentalPoker extends Game {
         List<Gamer> gamers = getGamers();
         for (int i = gamers.size() - 1; i >= 0; --i) {
             Gamer gamer = gamers.get(i);
-            CoderInfo coder = gamerDigits.get(gamer);
             String msg = "value: " + value;
-            value = coder.getDecoded(value);
+            value = gamer.getDecoded(value);
             msg += " decoded to: " + value + " by gamer: " + gamer.getName();
             log.info(msg);
         }
@@ -89,9 +90,8 @@ public class MentalPoker extends Game {
         for (Integer value : sourceMap.keySet()) {
             Card card = sourceMap.get(value);
             for (Gamer gamer : getGamers()) {
-                CoderInfo coder = gamerDigits.get(gamer);
                 int start = value;
-                value = (int) coder.getEncoded(start);
+                value = (int) gamer.getEncoded(start);
                 log.info(String.format("Gamer %s coded card %s with value %d to vaue %d", gamer, card,
                         start, value));
             }
@@ -113,10 +113,9 @@ public class MentalPoker extends Game {
      */
     protected void generateUsers(int n) {
         for (int i = 0; i < n; ++i) {
-            Gamer gamer = (Gamer) gamerFactory.createUser();
+            Gamer gamer = new Gamer(p);
             gamer.setName("name" + i);
             addGamer(gamer);
-            gamerDigits.put(gamer, coderInfoFactory.createCoderInfo(Algorithm.RSA, null));
         }
     }
 
@@ -172,14 +171,14 @@ public class MentalPoker extends Game {
         this.remainCardCount = remainCardCount;
     }
 
-    private Map<Gamer, CoderInfo> gamerDigits = new HashMap<Gamer, CoderInfo>();
     private Map<Integer, Card> sourceMap = new HashMap<Integer, Card>();
     private Set<Integer> cypheredCards = new HashSet<Integer>();
-    private UserFactory gamerFactory = new GamerFactory();
     private CoderInfoFactory coderInfoFactory = new CoderInfoFactoryImpl();
 
     private static final Logger log = Logger.getLogger(MentalPoker.class.getName());
 
     private int userCardCount = 2;
     private int remainCardCount = 5;
+    private Random rnd = new Random();
+    private int p = new BigInteger(30, 100, rnd).intValue();
 }
