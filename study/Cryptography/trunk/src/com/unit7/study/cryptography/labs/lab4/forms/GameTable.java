@@ -28,6 +28,7 @@ public class GameTable extends AbstractForm {
 		JPanel table = new JPanel(new GridBagLayout());
 		JPanel tableCards = new JPanel(new GridLayout(1, 5, 5, 5));
 		JPanel[] gamerCards = new JPanel[10];
+		
 		for (int i = 0; i < gamerCards.length; ++i) {
 			gamerCards[i] = new JPanel(new GridLayout(1, 2, 5, 5));
 		}
@@ -46,39 +47,39 @@ public class GameTable extends AbstractForm {
 		
 		c.gridx = 2;
 		c.gridy = 0;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[1], c);
 		
 		c.gridx = 3;
 		c.gridy = 0;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[2], c);
 		
 		c.gridx = 4;
 		c.gridy = 1;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[3], c);
 		
 		c.gridx = 4;
 		c.gridy = 3;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[4], c);
 		
 		c.gridx = 3;
 		c.gridy = 3;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[5], c);
 		
 		c.gridx = 3;
 		c.gridy = 2;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[6], c);
 		
 		c.gridx = 3;
 		c.gridy = 1;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[7], c);
 		
 		c.gridx = 0;
 		c.gridy = 1;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[8], c);
 		
 		c.gridx = 0;
 		c.gridy = 2;
-		table.add(gamerCards[0], c);
+		table.add(gamerCards[9], c);
 		
 		content.add(table);
 		getContentPane().add(content);
