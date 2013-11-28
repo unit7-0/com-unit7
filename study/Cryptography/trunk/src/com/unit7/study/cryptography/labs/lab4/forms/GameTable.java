@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.unit7.study.cryptography.labs.lab4.Card;
+import com.unit7.study.cryptography.labs.lab4.CardImage;
 import com.unit7.study.cryptography.labs.lab4.MentalPoker;
 
 public class GameTable extends AbstractForm {
@@ -24,6 +26,8 @@ public class GameTable extends AbstractForm {
 	
 	@Override
 	public JFrame createGUI() {
+		loadImages();
+		
 		JPanel content = new JPanel();
 		JPanel table = new JPanel(new GridBagLayout());
 		JPanel tableCards = new JPanel(new GridLayout(1, 5, 5, 5));
@@ -80,6 +84,26 @@ public class GameTable extends AbstractForm {
 		c.gridx = 0;
 		c.gridy = 2;
 		table.add(gamerCards[9], c);
+		
+		int k = 0;
+		for (int i = 0; i < gamersCount; ++i) {
+			List<Card> cards = poker.getGamers().get(i).getCards();
+			for (int j = 0; j < cards.size(); ++j) {
+				Card card = cards.get(j);
+				JPanel panel = new CardImage(cardImages.get(card));
+				gamerCards[k].add(panel);
+				
+				k = (k + 2) % gamerCards.length;
+				if (k == 0)
+					k += 1;
+			}
+		}
+		
+		for (int i = 0; i < 5; ++i) {
+			List<Card> cards = poker.getRemainCards();
+			Card card = cards.get(i);
+			tableCards.add(new CardImage(cardImages.get(card)));
+		}
 		
 		content.add(table);
 		getContentPane().add(content);
