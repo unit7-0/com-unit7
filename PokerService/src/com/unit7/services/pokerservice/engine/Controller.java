@@ -8,4 +8,17 @@ public class Controller {
 	public void addListener(EventListener listener) {
 		
 	}
+	
+	/*
+	 * TODO верно оформить
+	 */
+	public void createNewGame() {
+		
+	}
+	
+	public Controller getInstance() {
+		return instance;
+	}
+	
+	private static final Controller instance = new Controller();
 }
