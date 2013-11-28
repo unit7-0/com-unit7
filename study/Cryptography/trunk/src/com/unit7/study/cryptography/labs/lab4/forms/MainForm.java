@@ -1,6 +1,8 @@
 package com.unit7.study.cryptography.labs.lab4.forms;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,17 +39,23 @@ public class MainForm extends AbstractForm {
 					return;
 				}
 				
-				
+				JFrame table = new GameTable(count).createGUI();
+				table.setVisible(true);
 			}
 		});
-
+		
 		controls.add(gamersField);
 		controls.add(acceptButton);
 
 		content.add(controls);
 		getContentPane().add(content);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setTitle("Покер");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
+		
+		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2);
+		setResizable(false);
 		return this;
 	}
 
