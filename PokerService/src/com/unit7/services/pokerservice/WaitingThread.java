@@ -39,6 +39,12 @@ public class WaitingThread implements Runnable {
 			try {
 				while ((clientSocket = socket.accept()) != null) {
 					clients.add(clientSocket);
+					
+					// TODO добавить константу
+					if (clients.size() > 9) {
+						// начать игру
+						break;
+					}
 				}
 			} catch (SocketTimeoutException ex) {
 				// проверить игроков, начать игру
