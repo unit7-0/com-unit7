@@ -69,7 +69,9 @@ public class MentalPoker extends Game {
     }
 
     protected int decodeValue(int value) {
-        for (Gamer gamer : getGamers()) {
+        List<Gamer> gamers = getGamers();
+        for (int i = gamers.size() - 1; i >= 0; --i) {
+            Gamer gamer = gamers.get(i);
             CoderInfo coder = gamerDigits.get(gamer);
             String msg = "value: " + value;
             value = coder.getDecoded(value);
@@ -86,10 +88,11 @@ public class MentalPoker extends Game {
     protected void cypherCards() {
         for (Integer value : sourceMap.keySet()) {
             Card card = sourceMap.get(value);
-            for (Map.Entry<Gamer, CoderInfo> gamerEntry : gamerDigits.entrySet()) {
+            for (Gamer gamer : getGamers()) {
+                CoderInfo coder = gamerDigits.get(gamer);
                 int start = value;
-                value = (int) gamerEntry.getValue().getEncoded(start);
-                log.info(String.format("Gamer %s coded card %s with value %d to vaue %d", gamerEntry.getKey(), card,
+                value = (int) coder.getEncoded(start);
+                log.info(String.format("Gamer %s coded card %s with value %d to vaue %d", gamer, card,
                         start, value));
             }
 
@@ -111,6 +114,7 @@ public class MentalPoker extends Game {
     protected void generateUsers(int n) {
         for (int i = 0; i < n; ++i) {
             Gamer gamer = (Gamer) gamerFactory.createUser();
+            gamer.setName("name" + i);
             addGamer(gamer);
             gamerDigits.put(gamer, coderInfoFactory.createCoderInfo(Algorithm.RSA, null));
         }
@@ -123,7 +127,7 @@ public class MentalPoker extends Game {
         int start = 100;
         int initial = MathUtils.getRandInt(start);
         for (int i = 0; i < n; ++i) {
-            Card card = new Card();
+            Card card = Card.randCard();
             initial = initial + MathUtils.getRandInt(100) + 1;
             sourceMap.put(initial, card);
         }
@@ -137,15 +141,16 @@ public class MentalPoker extends Game {
     public List<Card> getRemainCards() {
         List<Card> result = new ArrayList<Card>();
         for (int value : cypheredCards) {
+            log.info("value: " + value);
             int selected = decodeValue(value);
             // исходное число, получаем карту
             Card card = sourceMap.get(selected);
             if (card == null)
                 log.info("Error while decoding, card == null, decoded value == " + selected);
-            else
+            else {
                 log.info("selected card: " + card);
-            
-            result.add(card);
+                result.add(card);
+            }
         }
 
         return result;
