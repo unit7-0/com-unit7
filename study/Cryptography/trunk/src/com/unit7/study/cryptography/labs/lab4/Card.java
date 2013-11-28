@@ -14,4 +14,8 @@ public class Card {
         return super.equals(obj);
     }
 
+    // stub
+    public static Card valueOf(String type) {
+    	return new Card();
+    } 
 }
