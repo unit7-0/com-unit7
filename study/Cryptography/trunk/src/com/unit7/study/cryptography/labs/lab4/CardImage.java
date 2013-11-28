@@ -12,8 +12,8 @@ public class CardImage extends JPanel {
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paintComponent(g);
+		g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
 	}
 
 	private BufferedImage image;
