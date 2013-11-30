@@ -70,6 +70,11 @@ public class MentalPoker extends Game {
         }
     }
 
+    /**
+     * порядок важен = расшифруют в обратном порядке
+     * @param value
+     * @return
+     */
     protected int decodeValue(int value) {
         List<Gamer> gamers = getGamers();
         for (int i = gamers.size() - 1; i >= 0; --i) {
@@ -85,6 +90,7 @@ public class MentalPoker extends Game {
 
     /**
      * Ширфует карты от каждого пользователя
+     * порядок важен = по часовой шифруют
      */
     protected void cypherCards() {
         for (Integer value : sourceMap.keySet()) {
@@ -125,8 +131,14 @@ public class MentalPoker extends Game {
     protected void generateCards(int n) {
         int start = 100;
         int initial = MathUtils.getRandInt(start);
+        Set<Card> cards = new HashSet<Card>();
         for (int i = 0; i < n; ++i) {
             Card card = Card.randCard();
+            while (cards.contains(card)) {
+                card = Card.randCard();
+            }
+            
+            cards.add(card);
             initial = initial + MathUtils.getRandInt(100) + 1;
             sourceMap.put(initial, card);
         }

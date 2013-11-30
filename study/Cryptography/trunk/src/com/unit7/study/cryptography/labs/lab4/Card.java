@@ -9,14 +9,14 @@ public class Card {
     
     @Override
     public int hashCode() {
-        // TODO Auto-generated method stub
-        return super.hashCode();
+        int hash = 31 * type;
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        // TODO Auto-generated method stub
-        return super.equals(obj);
+        Card other = (Card) obj;
+        return type == other.type;
     }
     
     public static Card randCard() {
