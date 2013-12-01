@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.unit7.services.pokerservice.client.model.Card;
+
 public class PokerGamer extends User implements Net {
     
     public void addCard(Card card) {
@@ -26,5 +28,14 @@ public class PokerGamer extends User implements Net {
         return socket;
     }
     
+    public double getBet() {
+        return bet;
+    }
+
+    public void setBet(double bet) {
+        this.bet = bet;
+    }
+
     private Socket socket;
+    private double bet;
 }
