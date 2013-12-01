@@ -47,7 +47,11 @@ public class WaitingThread implements Runnable {
 					}
 				}
 			} catch (SocketTimeoutException ex) {
-				// проверить игроков, начать игру
+				if (clients.size() < 2) {
+				    // TODO послать сообщение
+				} else {
+				    new Thread(new GameThread(clients)).start();
+				}
 			}
 			
 			socket.setSoTimeout(0);
