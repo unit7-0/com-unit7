@@ -8,6 +8,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.unit7.services.pokerservice.client.model.Card;
+import com.unit7.services.pokerservice.client.model.CardType;
+
 public class PokerModel {
 	public PokerModel(int gamersCount) {
 		Random random = new Random();
