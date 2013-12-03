@@ -94,8 +94,9 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         double maxBet = gamers.get((lastButton + 2) % gamers.size()).getBet();
         boolean wasChanged = true;
         
+        // 1 2 3 4 5
         while (wasChanged) {
-            // TODO
+            
         }
     }
 
