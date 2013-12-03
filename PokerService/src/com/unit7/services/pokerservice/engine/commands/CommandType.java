@@ -2,10 +2,17 @@ package com.unit7.services.pokerservice.engine.commands;
 
 public enum CommandType {
     REQUEST_NAME("REQUEST_NAME"),
-    REQUEST_SMALL_BLIND("REQUEST_SMALL_BLIND"),
-    REQUEST_BIG_BLIND("REQUEST_BIG_BLIND"),
-    REQUEST_BET("REQUEST_BET"),
-    GET_CARD("GET_CARD");
+    SMALL_BLIND("SMALL_BLIND"),
+    BIG_BLIND("BIG_BLIND"),
+    BET("BET"),
+    CALL("CALL"),
+    RAISE("RAISE"),
+    FOLD("FOLD"),
+    GET_CARD("GET_CARD"), 
+    PREFLOP("PREFLOP"), 
+    RIVER("RIVER"), 
+    TURN("TURN"), 
+    FLOP("FLOP");
     
     private CommandType(String value) {
         this.value = value;
