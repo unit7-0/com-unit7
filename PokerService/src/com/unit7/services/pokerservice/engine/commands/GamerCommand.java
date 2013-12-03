@@ -1,6 +1,6 @@
 package com.unit7.services.pokerservice.engine.commands;
 
-import com.unit7.services.pokerservice.engine.Controller;
+import com.unit7.services.pokerservice.engine.framework.Controller;
 import com.unit7.services.pokerservice.model.PokerGamer;
 
 public class GamerCommand extends AbstractCommand {

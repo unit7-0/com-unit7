@@ -1,8 +1,13 @@
 package com.unit7.services.pokerservice.engine;
 
+import java.util.Map;
+
+import com.unit7.services.pokerservice.engine.commands.Command;
+import com.unit7.services.pokerservice.engine.commands.GamerCommand;
+import com.unit7.services.pokerservice.engine.framework.Subject;
 import com.unit7.services.pokerservice.model.PokerGamer;
 
-public interface PokerGameInterface {
+public interface PokerGameInterface extends Subject<Map<PokerGamer, GamerCommand>> {
     PokerGamer selectButton();
 
     void distributeCards();

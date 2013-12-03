@@ -1,22 +1,34 @@
 package com.unit7.services.pokerservice.engine;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.BigBlindCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;
+import com.unit7.services.pokerservice.engine.commands.CommandType;
+import com.unit7.services.pokerservice.engine.commands.FlopCommand;
 import com.unit7.services.pokerservice.engine.commands.GamerCommand;
 import com.unit7.services.pokerservice.engine.commands.GetCardCommand;
+import com.unit7.services.pokerservice.engine.commands.PreflopCommand;
 import com.unit7.services.pokerservice.engine.commands.RequestNameCommand;
+import com.unit7.services.pokerservice.engine.commands.RiverCommand;
 import com.unit7.services.pokerservice.engine.commands.SmallBlindCommand;
+import com.unit7.services.pokerservice.engine.commands.TurnCommand;
+import com.unit7.services.pokerservice.engine.framework.CommandExecutor;
+import com.unit7.services.pokerservice.engine.framework.Controller;
+import com.unit7.services.pokerservice.engine.framework.Executor;
+import com.unit7.services.pokerservice.engine.framework.GamerCommandListener;
 import com.unit7.services.pokerservice.model.PokerGamer;
 
 public class PokerGameInterfaceImpl implements PokerGameInterface {
     public PokerGameInterfaceImpl(List<PokerGamer> gamers) {
         this.gamers = gamers;
+        Controller.getInstance().addListener(new GamerCommandListener().add(this));
     }
 
     @Override
@@ -75,6 +87,25 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         betRound();
         
         // step seven - pre-flop
+        preFlop();
+        
+        // step eight - get bets
+        betRound();
+        
+        // step nine - flop
+        flop();
+        
+        // step ten - get bets
+        betRound();
+        
+        // step eleven - turn
+        turn();
+        
+        // step twelve - get bets
+        betRound();
+        
+        // step thirteen - river
+        river();
     }
 
     @Override
@@ -100,38 +131,41 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         while (wasChanged) {
         	wasChanged = false;
         	while (gamerIndex != smallBlindIndex_1) {
-        		double curBet = gamers.get(gamerIndex).getBet();
-        		command.setGamer(gamers.get(gamerIndex));
+        	    PokerGamer gamer = gamers.get(gamerIndex++);
+        		command.setGamer(gamer);
+        		// комманда выполняется не в отдельном потоке, значит результат у нас уже будет
         		executor.execute(command);
         		
-        		if (curBet != gamers.get(gamerIndex).getBet())
-        			wasChanged = true;
+        		GamerCommand selectedCommand = gamerChoice.get(gamer);
+        		// не должно быть
+        		assert selectedCommand != null : "selectedCommand == null";
+        		
+        		// игрок повысил ставку - продолжаем круг торгов
+        		if (CommandType.RAISE.equals(selectedCommand.getCommandType())) {
+        		    wasChanged = true;
+        		}
         	}
         }
     }
 
     @Override
     public void preFlop() {
-        // TODO Auto-generated method stub
-        
+        executor.execute(new PreflopCommand());
     }
 
     @Override
     public void flop() {
-        // TODO Auto-generated method stub
-        
+        executor.execute(new FlopCommand());
     }
 
     @Override
     public void turn() {
-        // TODO Auto-generated method stub
-        
+        executor.execute(new TurnCommand());
     }
 
     @Override
     public void river() {
-        // TODO Auto-generated method stub
-        
+        executor.execute(new RiverCommand());
     }
     
     protected void requestNames() {
@@ -142,8 +176,18 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         }
     }
     
+    @Override
+    public void update(Map<PokerGamer, GamerCommand> data) {
+        if (data == null)
+            throw new IllegalArgumentException("method=PokerGameInterfaceImpl.update: data == null");
+        
+        gamerChoice.putAll(data);
+    }
+    
     private Set<Card> cards = new HashSet<Card>();
     private Executor executor = new CommandExecutor();
     private List<PokerGamer> gamers;
     private int lastButton = -1;
+    
+    private Map<PokerGamer, GamerCommand> gamerChoice = new HashMap<PokerGamer, GamerCommand>();
 }

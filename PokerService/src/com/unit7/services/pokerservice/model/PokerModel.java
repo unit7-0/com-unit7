@@ -25,7 +25,15 @@ public class PokerModel {
 		}
 	}  
 	
-	private Map<Integer, Card> cards = new HashMap<Integer, Card>();
+	public int getBetValue() {
+        return betValue;
+    }
+
+    public void setBetValue(int betValue) {
+        this.betValue = betValue;
+    }
+
+    private Map<Integer, Card> cards = new HashMap<Integer, Card>();
 	private Set<PokerGamer> gamers = new HashSet<PokerGamer>();
 	private Card[] tableCards = new Card[CARDS_PRIKUP];
 	
@@ -33,6 +41,8 @@ public class PokerModel {
 	
 	public static final int CARDS_COUNT = 52;
 	public static final int CARDS_PRIKUP = 5;
+	
+	private int betValue = 1; 
 	
 	private static final Logger log = Logger.getLogger(PokerModel.class);
 }

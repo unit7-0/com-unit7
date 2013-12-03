@@ -1,4 +1,4 @@
-package com.unit7.services.pokerservice.engine;
+package com.unit7.services.pokerservice.engine.framework;
 
 import com.unit7.services.pokerservice.engine.commands.Command;
 
