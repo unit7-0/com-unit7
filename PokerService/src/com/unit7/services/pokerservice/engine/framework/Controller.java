@@ -49,38 +49,10 @@ public class Controller {
             // TODO try to cast
         } else if (CommandType.GET_CARD.equals(command.getCommandType())) {
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            id addListener(EventListener listener) {
+        }
+    }
+
+    public void addListener(EventListener listener) {
         listeners.add(listener);
     }
 
