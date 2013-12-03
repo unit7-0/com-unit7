@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.unit7.services.pokerservice.client.model.Card;
+import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.BigBlindCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;
 import com.unit7.services.pokerservice.engine.commands.GamerCommand;
@@ -91,12 +92,21 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     public void betRound() {
         // next to big blind
         int gamerIndex = (lastButton + 3) % gamers.size();
+        int smallBlindIndex_1 = (lastButton + 2) % gamers.size();
         double maxBet = gamers.get((lastButton + 2) % gamers.size()).getBet();
         boolean wasChanged = true;
         
-        // 1 2 3 4 5
+        BetCommand command = new BetCommand();
         while (wasChanged) {
-            
+        	wasChanged = false;
+        	while (gamerIndex != smallBlindIndex_1) {
+        		double curBet = gamers.get(gamerIndex).getBet();
+        		command.setGamer(gamers.get(gamerIndex));
+        		executor.execute(command);
+        		
+        		if (curBet != gamers.get(gamerIndex).getBet())
+        			wasChanged = true;
+        	}
         }
     }
 
