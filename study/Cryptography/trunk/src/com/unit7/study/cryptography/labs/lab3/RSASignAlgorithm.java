@@ -71,5 +71,9 @@ public class RSASignAlgorithm implements SignAlgorithm {
         return Algorithm.RSA.getValue();
     }
 
+    public int getN() {
+        return n;
+    }
+    
     private int c, d, n;
 }
