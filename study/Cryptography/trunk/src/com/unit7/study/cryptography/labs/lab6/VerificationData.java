@@ -1,6 +1,5 @@
 package com.unit7.study.cryptography.labs.lab6;
 
-
-public class Answer implements VerificationData {
+public interface VerificationData {
 
 }
