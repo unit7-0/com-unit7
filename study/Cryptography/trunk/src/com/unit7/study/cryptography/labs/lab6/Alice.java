@@ -1,6 +1,5 @@
 package com.unit7.study.cryptography.labs.lab6;
 
-import com.unit7.study.cryptography.labs.lab6.interfaces.Answer;
 import com.unit7.study.cryptography.labs.lab6.interfaces.Question;
 import com.unit7.study.cryptography.labs.lab6.interfaces.QuestionType;
 import com.unit7.study.cryptography.labs.lab6.interfaces.Subject;
@@ -30,11 +29,11 @@ public class Alice implements Subject {
 	}
 	
 	private void updateH() {
-		
+		// TODO
 	}
 	
 	private void updateF() {
-		
+		// TODO
 	}
 	
 	private Answer decypherCycle() {
