@@ -1,8 +1,5 @@
 package com.unit7.study.cryptography.labs.lab6;
 
-import com.unit7.study.cryptography.labs.lab6.interfaces.Question;
-import com.unit7.study.cryptography.labs.lab6.interfaces.VerificationData;
-import com.unit7.study.cryptography.labs.lab6.interfaces.Verifier;
 
 public class Bob implements Verifier {
 	@Override

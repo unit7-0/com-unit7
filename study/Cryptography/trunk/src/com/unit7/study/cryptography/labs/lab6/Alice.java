@@ -1,9 +1,6 @@
 package com.unit7.study.cryptography.labs.lab6;
 
-import com.unit7.study.cryptography.labs.lab6.interfaces.Question;
 import com.unit7.study.cryptography.labs.lab6.interfaces.QuestionType;
-import com.unit7.study.cryptography.labs.lab6.interfaces.Subject;
-import com.unit7.study.cryptography.labs.lab6.interfaces.VerificationData;
 
 public class Alice implements Subject {
 	public Alice(GraphObject object) {
