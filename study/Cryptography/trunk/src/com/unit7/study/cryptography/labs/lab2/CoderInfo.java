@@ -6,4 +6,6 @@ public interface CoderInfo {
     int getDecoded(Object coded);
 
     public String getAlgorithm();
+    
+    public Object clone() throws CloneNotSupportedException;
 }

@@ -54,10 +54,16 @@ public class VernamCoder implements CoderInfo {
         }
     }
 
-    private InputStream keyEnc, keyDec;
-
     @Override
+	public Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
+
+	@Override
     public String getAlgorithm() {
         return Algorithm.VERNAM.getValue();
     }
+    
+    private InputStream keyEnc, keyDec;
 }

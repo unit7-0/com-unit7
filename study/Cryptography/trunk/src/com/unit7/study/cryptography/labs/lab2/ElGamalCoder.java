@@ -43,5 +43,11 @@ public class ElGamalCoder implements CoderInfo {
         return Algorithm.EL_GAMAL.getValue();
     }
     
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
+	}
+    
     private int p, g, selfPriv, pub;
 }
