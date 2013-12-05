@@ -25,11 +25,15 @@ public class Alice implements Subject {
 
     @Override
     public VerificationData beginVerification() {
-        makeIsomorph();
+        int[][] g = graph.getG();
+        int[][] iso = makeIsomorph();
+        graph.setG(iso);
+        
         updateH();
         updateF();
 
         graph.setH(null);
+        graph.setG(g);
         return graph;
     }
 
@@ -44,8 +48,16 @@ public class Alice implements Subject {
         throw new IllegalArgumentException("no realisations for input question types");
     }
 
-    private void makeIsomorph() {
-        int[][] g = graph.getG();
+    private int[][] makeIsomorph() {
+        int[][] gt = graph.getG();
+        int[][] g = new int[gt.length][gt.length];
+        // copy
+        for (int i = 0; i < gt.length; ++i) {
+            for (int j = 0; j < gt.length; ++j) {
+                g[i][j] = gt[i][j];
+            }
+        }
+        
         int count = g.length * g.length;
         swaped = new ArrayList<Pair<Integer, Integer>>();
 
@@ -54,10 +66,19 @@ public class Alice implements Subject {
         for (int i = 0; i < toSwap; ++i) {
             int first = MathUtils.getRandInt(g.length);
             int second = MathUtils.getRandInt(g.length);
-
-            if (first == second)
+            
+            boolean contained = false;
+            for (Pair<Integer, Integer> pair : swaped) {
+                int f = pair.getFirst(), s = pair.getSecond();
+                if (first == f || first == s || second == s || second == f) {
+                    contained = true;
+                    break;
+                }
+            }
+            
+            if (first == second || contained)
                 continue;
-
+            
             // меняем строки first и second
             int[] tmp = g[first];
             g[first] = g[second];
@@ -86,14 +107,16 @@ public class Alice implements Subject {
             // добавим в список обменянных
             swaped.add(new Pair(first, second));
         }
+        
+        return g;
     }
 
     private void updateH() {
         int[][] g = graph.getG();
         h = new int[g.length][g[0].length];
         for (int i = 0; i < g.length; ++i) {
-            for (int j = 0; j < g[i].length; ++i) {
-                h[i][j] = MathUtils.getRandInt(102314120) * 10 + g[i][j];
+            for (int j = 0; j < g[i].length; ++j) {
+                h[i][j] = MathUtils.getRandInt(coder.getNb() / 10 - 1) * 10 + g[i][j];
             }
         }
 
@@ -131,11 +154,11 @@ public class Alice implements Subject {
         int[][] f = graph.getF();
          h = new int[f.length][f[0].length];
 
-        /*for (int i = 0; i < f.length; ++i) {
+        for (int i = 0; i < f.length; ++i) {
             for (int j = 0; j < f[i].length; ++j) {
                 h[i][j] = coder.getDecoded(f[i][j]);
             }
-        }*/
+        }
 
         answer.setSwaped(swaped);
         answer.setCoder(coder);

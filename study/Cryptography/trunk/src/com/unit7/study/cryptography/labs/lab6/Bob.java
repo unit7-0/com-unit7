@@ -49,12 +49,13 @@ public class Bob implements Verifier {
         List<Pair<Integer, Integer>> swaped = answer.getSwaped();
 
         if ((QuestionType.GAMILTONS_CYCLE.equals(qType) && (indicies == null || indicies.size() == 0))
-                || (QuestionType.ISOMORPHIC_GRAPH.equals(qType) && (h == null) || swaped == null) || coder == null) {
+                || ((QuestionType.ISOMORPHIC_GRAPH.equals(qType) && (h == null || swaped == null))) || coder == null) {
             throw new Exception("answer not matched with question");
         }
 
         int[][] f = this.data.getF();
         if (QuestionType.GAMILTONS_CYCLE.equals(qType)) {
+            System.out.println("Проверка с помощью цикла");
             Map<Integer, Integer> vertexes = new HashMap<Integer, Integer>();
             // проверяем, что прислали именно то, что нужно
             for (Pair<Integer, Integer> pair : indicies.keySet()) {
@@ -65,13 +66,13 @@ public class Bob implements Verifier {
                 if (vertexes.containsKey(pair.getFirst()))
                     start = vertexes.get(pair.getFirst());
 
-                vertexes.put(pair.getFirst(), start);
+                vertexes.put(pair.getFirst(), start + 1);
 
                 start = 0;
                 if (vertexes.containsKey(pair.getSecond()))
                     start = vertexes.get(pair.getSecond());
 
-                vertexes.put(pair.getSecond(), start);
+                vertexes.put(pair.getSecond(), start + 1);
 
                 if (f[pair.getFirst()][pair.getSecond()] != coded) {
                     System.out.println("Не соответствует значение в цикле и матрице F");
@@ -101,6 +102,7 @@ public class Bob implements Verifier {
                 return false;
             }
         } else if (QuestionType.ISOMORPHIC_GRAPH.equals(qType)) {
+            System.out.println("Проверка с помощью матрицы");
             // проверяем, что кодированные значения верны
             for (int i = 0; i < h.length; ++i) {
                 for (int j = 0; j < h.length; ++j) {
@@ -144,7 +146,7 @@ public class Bob implements Verifier {
             throw new Exception("type of answer is incorrect");
         }
 
-        return false;
+        return true;
     }
 
     private GraphObject data;
