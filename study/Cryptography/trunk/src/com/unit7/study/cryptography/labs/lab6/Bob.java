@@ -1,12 +1,14 @@
 package com.unit7.study.cryptography.labs.lab6;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.unit7.study.cryptography.labs.lab6.interfaces.Question;
 import com.unit7.study.cryptography.labs.lab6.interfaces.QuestionType;
 import com.unit7.study.cryptography.labs.lab6.interfaces.VerificationData;
 import com.unit7.study.cryptography.labs.lab6.interfaces.Verifier;
+import com.unit7.study.cryptography.tools.Pair;
 
 
 public class Bob implements Verifier {
@@ -40,7 +42,7 @@ public class Bob implements Verifier {
 		
 		Answer answer = (Answer) data;
 		
-		List<int[][]> indicies = answer.getIndicies();
+		Map<Pair<Integer, Integer>, Integer> indicies = answer.getIndicies();
 		int[][] F = answer.getF();
 		
 		if (indicies == null || indicies.size() == 0 || (QuestionType.ISOMORPHIC_GRAPH.equals(qType) && F == null)) {

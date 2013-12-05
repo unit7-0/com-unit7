@@ -1,8 +1,10 @@
 package com.unit7.study.cryptography.labs.lab6;
 
 import java.util.List;
+import java.util.Map;
 
 import com.unit7.study.cryptography.labs.lab6.interfaces.VerificationData;
+import com.unit7.study.cryptography.tools.Pair;
 
 public class Answer implements VerificationData {
 	public int[][] getF() {
@@ -13,14 +15,14 @@ public class Answer implements VerificationData {
 		F = f;
 	}
 
-	public List<int[][]> getIndicies() {
+	public Map<Pair<Integer, Integer>, Integer> getIndicies() {
 		return indicies;
 	}
 
-	public void setIndicies(List<int[][]> indicies) {
+	public void setIndicies(Map<Pair<Integer, Integer>, Integer> indicies) {
 		this.indicies = indicies;
 	}
 
 	private int[][] F;
-	private List<int[][]> indicies;
+	private Map<Pair<Integer, Integer>, Integer> indicies;
 }
