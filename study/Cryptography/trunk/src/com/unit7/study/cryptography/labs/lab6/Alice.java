@@ -15,8 +15,9 @@ import com.unit7.study.cryptography.labs.lab6.interfaces.VerificationData;
 import com.unit7.study.cryptography.tools.Pair;
 
 public class Alice implements Subject {
-    public Alice(GraphObject object) {
+    public Alice(GraphObject object, List<Pair<Integer, Integer>> cycle) {
         this.graph = object;
+        this.cycle = cycle;
         this.coder = new RSACoder();
         this.coder.setDb(this.coder.getD());
         this.coder.setNb(this.coder.getN());
