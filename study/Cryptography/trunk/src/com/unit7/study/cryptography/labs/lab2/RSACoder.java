@@ -56,10 +56,31 @@ public class RSACoder implements CoderInfo {
         this.nb = nb;
     }
 
-    private int c, n, d;
-    private int db, nb;
-    @Override
+    public int getDb() {
+		return db;
+	}
+
+	public int getNb() {
+		return nb;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		RSACoder other = new RSACoder();
+		other.c = c;
+		other.n = n;
+		other.d = d;
+		other.db = db;
+		other.nb = nb;
+		
+		return other;
+	}
+
+	@Override
     public String getAlgorithm() {
         return Algorithm.RSA.getValue();
     }
+    
+    private int c, n, d;
+    private int db, nb;
 }

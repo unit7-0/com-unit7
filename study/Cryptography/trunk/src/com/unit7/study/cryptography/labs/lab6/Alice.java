@@ -1,5 +1,8 @@
 package com.unit7.study.cryptography.labs.lab6;
 
+import com.unit7.study.cryptography.labs.lab1.MathUtils;
+import com.unit7.study.cryptography.labs.lab2.CoderInfo;
+import com.unit7.study.cryptography.labs.lab2.RSACoder;
 import com.unit7.study.cryptography.labs.lab6.interfaces.Question;
 import com.unit7.study.cryptography.labs.lab6.interfaces.QuestionType;
 import com.unit7.study.cryptography.labs.lab6.interfaces.Subject;
@@ -8,6 +11,9 @@ import com.unit7.study.cryptography.labs.lab6.interfaces.VerificationData;
 public class Alice implements Subject {
 	public Alice(GraphObject object) {
 		this.graph = object;
+		this.coder = new RSACoder();
+		this.coder.setDb(this.coder.getD());
+		this.coder.setNb(this.coder.getN());
 	}
 	
 	@Override
@@ -29,11 +35,28 @@ public class Alice implements Subject {
 	}
 	
 	private void updateH() {
-		// TODO
+		int[][] g = graph.getG();
+		int[][] h = new int[g.length][g[0].length];
+		for (int i = 0; i < g.length; ++i) {
+			for (int j = 0; j < g[i].length; ++i) {
+				h[i][j] = MathUtils.getRandInt(1021314120) * 10 + g[i][j];
+			}
+		}
+		
+		graph.setH(h);
 	}
 	
 	private void updateF() {
-		// TODO
+		int[][] h = graph.getH();
+		int[][] f = new int[h.length][h[0].length];
+		
+		for (int i = 0; i < h.length; ++i) {
+			for (int j = 0; j < h[i].length; ++j) {
+				f[i][j] = (int) coder.getEncoded(h[i][j]);
+			}
+		}
+		
+		graph.setF(f);
 	}
 	
 	private Answer decypherCycle() {
@@ -46,5 +69,13 @@ public class Alice implements Subject {
 		return new Answer();
 	}
 	
+	public CoderInfo getCoderInfo() {
+		RSACoder other = new RSACoder();
+		other.setDb(coder.getDb());
+		other.setNb(coder.getNb());
+		return other;
+	}
+	
 	private GraphObject graph;
+	private RSACoder coder;
 }
