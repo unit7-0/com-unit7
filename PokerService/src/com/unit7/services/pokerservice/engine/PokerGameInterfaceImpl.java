@@ -87,10 +87,10 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         betRound();
         
         // step seven - pre-flop
-        preFlop();
+//        preFlop();
         
         // step eight - get bets
-        betRound();
+//        betRound();
         
         // step nine - flop
         flop();
