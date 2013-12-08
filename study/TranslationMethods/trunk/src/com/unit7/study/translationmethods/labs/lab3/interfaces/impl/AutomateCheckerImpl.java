@@ -6,12 +6,13 @@ import java.util.Map;
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.Automate;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.AutomateChecker;
+import com.unit7.study.translationmethods.labs.lab3.interfaces.State;
 
 public class AutomateCheckerImpl implements AutomateChecker {
     @Override
     public boolean checkAutomate(Automate automate) throws InformationException {
-        // TODO Auto-generated method stub
-        return false;
+        // stub       
+        return true;
     }
 
     @Override
@@ -48,8 +49,7 @@ public class AutomateCheckerImpl implements AutomateChecker {
 
     @Override
     public boolean checkChain(Automate automate, String chain) throws InformationException {
-        // TODO Auto-generated method stub
-        return false;
+        return automate.checkChain(chain);
     }
 
 }
