@@ -26,3 +26,4 @@ public class Lab1Tests extends TestCase {
     
     private boolean quite = false;
 }
+ 

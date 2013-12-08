@@ -20,8 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import jogamp.opengl.glu.nurbs.Renderhints;
-
 import com.unit7.study.translationmethods.labs.chains.Container;
 import com.unit7.study.translationmethods.labs.chains.Frame;
 import com.unit7.study.translationmethods.labs.chains.Vertex;
@@ -104,7 +102,6 @@ public class TreeFrame extends Frame<Container> {
         pack();
         setSize(new Dimension(getWidth() + 100, getHeight() + 100));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
     }
 
     /**
