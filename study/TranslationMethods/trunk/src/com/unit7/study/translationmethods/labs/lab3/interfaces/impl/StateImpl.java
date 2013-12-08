@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.State;
 
 public class StateImpl implements State {
@@ -14,10 +15,13 @@ public class StateImpl implements State {
      * результате перехода.
      * 
      * @param rawStates
-     * @param states мапа состояний, имя -> состояние
+     * @param states
+     *            мапа состояний, имя -> состояние
      * @return та же мапа с новыми состояниями
+     * @throws InformationException
      */
-    public static Map<String, State> createState(String[][] rawStates, Map<String, State> states) {
+    public static Map<String, State> createState(String[][] rawStates, Map<String, State> states)
+            throws InformationException {
         for (int i = 0; i < rawStates.length; ++i) {
             String name = rawStates[i][0];
             String jump = rawStates[i][1];
@@ -29,7 +33,17 @@ public class StateImpl implements State {
                 states.put(name, state);
             }
 
-            State jumpToState = new StateImpl(next);
+            // возможно переход уже есть => ошибка
+            if (state.jumps.get(jump) != null)
+                throw new InformationException(String.format(JUMP_EXIST, jump, name));
+
+            // возможно состояние уже есть
+            State jumpToState = states.get(next);
+            if (jumpToState == null) {
+                jumpToState = new StateImpl(next);
+                states.put(next, jumpToState);
+            }
+
             state.jumps.put(jump, jumpToState);
         }
 
@@ -54,7 +68,20 @@ public class StateImpl implements State {
     public State nextState(String c) {
         return jumps.get(c);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof StateImpl))
+            return false;
+        
+        StateImpl other = (StateImpl) obj;
+        return name.equals(other.name) && jumps.equals(other.jumps);
+    }
+
+
 
     private String name;
     private Map<String, State> jumps = new HashMap<String, State>();
+    
+    public static final String JUMP_EXIST = "Переход %s из состояния %s уже есть";
 }
