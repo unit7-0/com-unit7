@@ -1,9 +1,12 @@
 package com.unit7.study.translationmethods.labs.lab3.interfaces;
 
+import java.util.List;
+
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
 
 public interface AutomateApp {
     boolean execute() throws InformationException;
+    List<String> getLog();
     
     public static final String PARAM_NULL = "Параметр %s не задан";
     public static final String PARAM_NOT_DESCRIBED = "Параметр %s не описан";

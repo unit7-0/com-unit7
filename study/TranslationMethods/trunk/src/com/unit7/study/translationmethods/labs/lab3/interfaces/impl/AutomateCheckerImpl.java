@@ -23,6 +23,9 @@ public class AutomateCheckerImpl implements AutomateChecker {
         String[] terms = terminals.split("");
         Map<String, Integer> counter = new HashMap<String, Integer>();
         for (String term : terms) {
+            if (term.equals("&"))
+                throw new InformationException(AutomateChecker.EMPTY_NOT_NEED);
+            
             Integer count = counter.get(term);
             if (count == null)
                 count = 0;

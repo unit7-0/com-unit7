@@ -3,9 +3,11 @@ package com.unit7.study.translationmethods.labs.lab3.interfaces.impl;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +18,14 @@ import com.unit7.study.translationmethods.labs.lab3.interfaces.State;
 public class DataBuilder {
     public String parseChain(Map<String, String> request) throws InformationException {
         String str = request.get(AutomateApp.PARAM_CHAIN);
-        return parseString(str, "цепочка");
+        
+        if (str == null)
+            throw new InformationException(String.format(AutomateApp.PARAM_NULL, "Цепочка"));
+        
+        str = str.trim();
+        str = str.replaceAll("\\s", "");
+        
+        return str.equals("") ? "&" : str;
     }
     
     public String parseTerminals(Map<String, String> request) throws InformationException {
@@ -96,8 +105,30 @@ public class DataBuilder {
         return state;
     }
     
-    public State parseFinalState(Map<String, String> request, Map<String, State> states) throws InformationException {
-        return parseState(AutomateApp.PARAM_FINAL_STATE, "конечное состояние", request, states);
+    public List<State> parseFinalState(Map<String, String> request, Map<String, State> states) throws InformationException {
+        String str = request.get(AutomateApp.PARAM_FINAL_STATE);
+        if (str == null || (str = str.trim()).equals(""))
+            throw new InformationException(String.format(AutomateApp.PARAM_NOT_DESCRIBED, "конечное состояние"));
+        
+        String[] finals = str.split("\\s");
+        Set<String> finalsSet = new HashSet<String>();
+        for (String fin : finals) {
+            if (!fin.equals("")) {
+                finalsSet.add(fin);
+            }
+        }
+        
+        List<State> result = new ArrayList<State>();
+        for (String s : finalsSet) {
+            if (!states.containsKey(s)) {
+                throw new InformationException(String.format(AutomateApp.PARAM_NOT_DESCRIBED, s));
+            }
+            
+            State state = states.get(s);
+            result.add(state);
+        }
+        
+        return result;
     }
     
     private String parseString(String str, String name) throws InformationException {
