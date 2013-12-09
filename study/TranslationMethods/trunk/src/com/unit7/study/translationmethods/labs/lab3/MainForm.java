@@ -82,6 +82,7 @@ public class MainForm extends JFrame {
 					if (comps[i] instanceof JPanel) {
 						JPanel comp = (JPanel) comps[i];
 						comp = (JPanel) comp.getComponents()[0];
+						comp = (JPanel) comp.getComponents()[0];
 						Component[] comps1 = comp.getComponents();
 
 						for (int p = 0; p < comps1.length; ++p) {
@@ -176,7 +177,9 @@ public class MainForm extends JFrame {
 	}
 
 	private JPanel buildStatesPanel() {
+		JPanel main = new JPanel();
 		JPanel states = new JPanel(new GridLayout(1, 6, 15, 15));
+		main.add(states);
 
 		JLabel stateLabel = new JLabel("Состояние: ");
 		JTextField stateField = new JTextField(10);
@@ -196,7 +199,7 @@ public class MainForm extends JFrame {
 		states.add(toStateLabel);
 		states.add(toStateField);
 
-		return states;
+		return main;
 	}
 
 	private void addRemoveButton(final JComponent root, JPanel relative) {
