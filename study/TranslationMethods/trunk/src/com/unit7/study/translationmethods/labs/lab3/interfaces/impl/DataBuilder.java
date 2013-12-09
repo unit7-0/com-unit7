@@ -56,8 +56,8 @@ public class DataBuilder {
             
             try {
                 stateName = parseString(stateName, "состояние");
-                jump = parseString(jump, "переход из состояния");
-                toState = parseString(toState, "состояние");
+                jump = parseString(jump, "переход из состояния " + stateName);
+                toState = parseString(toState, "состояние " + stateName);
             } catch (InformationException e) {
                 appendStr(message, e.getLocalizedMessage());
                 continue;
@@ -106,6 +106,9 @@ public class DataBuilder {
         
         str = str.trim();
         str = str.replaceAll("\\s", "");
+        
+        if (str.equals(""))
+        	throw new InformationException(String.format(AutomateApp.PARAM_NULL, name));
         
         return str;
     }
