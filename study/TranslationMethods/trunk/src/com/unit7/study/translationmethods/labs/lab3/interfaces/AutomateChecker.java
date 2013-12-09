@@ -10,4 +10,5 @@ public interface AutomateChecker {
     boolean checkChain(Automate automate, String chain) throws InformationException;
     
     public static final String TERMINALS_EXCEPTION = "Терминалы не удовлетворяют условиям: %s";
+    public static final String EMPTY_NOT_NEED = "Пустой символ не требуется вводить в список терминалов";
 }
