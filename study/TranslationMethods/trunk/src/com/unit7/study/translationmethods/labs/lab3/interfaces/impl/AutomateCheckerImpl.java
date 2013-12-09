@@ -36,7 +36,7 @@ public class AutomateCheckerImpl implements AutomateChecker {
                 if (message.length() != 0)
                     message.append("\r\n");
                 
-                message.append("символ " + entry.getKey() + " встречается " + entry.getValue());
+                message.append("символ " + entry.getKey() + " встречается " + entry.getValue() + " раз(а)");
             }
         }
         

@@ -7,6 +7,7 @@ public interface AutomateApp {
     
     public static final String PARAM_NULL = "Параметр %s не задан";
     public static final String PARAM_NOT_DESCRIBED = "Параметр %s не описан";
+    public static final String STATE_IS_NOT_FINAL = "Разбор остановлен не в конечном состоянии";
     
     public static final String PARAM_CHAIN = "chain_field";
     public static final String PARAM_TERMINALS = "terminals_field";
