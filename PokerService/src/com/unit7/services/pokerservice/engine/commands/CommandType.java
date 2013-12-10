@@ -12,7 +12,9 @@ public enum CommandType {
     PREFLOP("PREFLOP"), 
     RIVER("RIVER"), 
     TURN("TURN"), 
-    FLOP("FLOP");
+    FLOP("FLOP"), 
+    SHOWDOWN("SHOWDOWN"), 
+    END_ROUND("END_ROUND");
     
     private CommandType(String value) {
         this.value = value;

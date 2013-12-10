@@ -36,6 +36,28 @@ public class PokerGamer extends User implements Net {
         this.bet = bet;
     }
 
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
+
+    public void addMoney(double money) {
+        this.money += money;
+    }
+    
     private Socket socket;
     private double bet;
+    private double money;
+    private boolean inGame = true;
 }
