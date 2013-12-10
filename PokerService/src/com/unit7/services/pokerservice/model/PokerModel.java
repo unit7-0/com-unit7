@@ -1,7 +1,9 @@
 package com.unit7.services.pokerservice.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -25,11 +27,11 @@ public class PokerModel {
 		}
 	}  
 	
-	public int getBetValue() {
+	public double getBetValue() {
         return betValue;
     }
 
-    public void setBetValue(int betValue) {
+    public void setBetValue(double betValue) {
         this.betValue = betValue;
     }
 
@@ -41,16 +43,32 @@ public class PokerModel {
         deck.add(card);
     }
 
+    public void addToBank(double value) {
+        bank += value;
+    }
+    
+    public void resetBank() {
+        bank = 0;
+    }
+    
+    public double getBank() {
+        return bank;
+    }
+    
+    public List<PokerGamer> getGamers() {
+        return gamers;
+    }
+    
     private Map<Integer, Card> cards = new HashMap<Integer, Card>();
-	private Set<PokerGamer> gamers = new HashSet<PokerGamer>();
+	private List<PokerGamer> gamers = new ArrayList<PokerGamer>();
 	private Card[] tableCards = new Card[CARDS_PRIKUP];
 	
-	private int bank;
+	private double bank;
 	
 	public static final int CARDS_COUNT = 52;
 	public static final int CARDS_PRIKUP = 5;
 	
-	private int betValue = 1; 
+	private double betValue = 1; 
 	
 	/**
 	 * Уже отданные карты
