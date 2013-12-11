@@ -19,4 +19,8 @@ public interface AutomateApp {
     public static final String PARAM_JUMP_BEG = "jump$";
     public static final String PARAM_START_STATE = "start_state_field";
     public static final String PARAM_FINAL_STATE = "final_state_field";
+    
+    // МПА
+    public static final String PARAM_STACK_BEG = "stack$";
+    public static final String PARAM_STACK_TO_BEG = "stack_to$";
 }
