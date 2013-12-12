@@ -20,7 +20,12 @@ public interface AutomateApp {
     public static final String PARAM_START_STATE = "start_state_field";
     public static final String PARAM_FINAL_STATE = "final_state_field";
     
+    public static final String NO_JUMP_FOR_CURRENT_STATE = "Отсутствует состояние для перехода %s из состояния %s";
+    public static final String EMPTY_STACK_ON_OPERATION = "Стек был пуст на момент выполнения операции.";
+    
     // МПА
     public static final String PARAM_STACK_BEG = "stack$";
     public static final String PARAM_STACK_TO_BEG = "stack_to$";
+    
+    public static final String INVALID_OPEARTION_TYPE = "Неверный тип операции [из состояние %s, вход: %s, стек: %s в состояние: %s, стек: %s]";
 }

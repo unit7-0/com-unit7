@@ -52,7 +52,7 @@ public class StringStack implements Stack<String> {
 	@Override
 	public String top() throws EmptyStackException {
 		if (stack.size() < 1)
-			return GrammarRules.GRAMMAR_EMPTY;
+			return EMPTY_STACK;
 		
 		return stack.get(stack.size() - 1);
 	}
@@ -88,4 +88,6 @@ public class StringStack implements Stack<String> {
 	}
 
 	private List<String> stack = new ArrayList<String>();
+	
+	public static final String EMPTY_STACK = "Z";
 }
