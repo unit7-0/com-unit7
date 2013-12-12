@@ -131,7 +131,7 @@ public class DataBuilder {
         return result;
     }
     
-    private String parseString(String str, String name) throws InformationException {
+    public String parseString(String str, String name) throws InformationException {
         if (str == null)
             throw new InformationException(String.format(AutomateApp.PARAM_NULL, name));
         

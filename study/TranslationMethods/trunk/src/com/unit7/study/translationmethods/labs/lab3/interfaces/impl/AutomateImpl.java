@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.Automate;
+import com.unit7.study.translationmethods.labs.lab3.interfaces.AutomateApp;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.State;
 
 public class AutomateImpl implements Automate {
@@ -19,7 +20,7 @@ public class AutomateImpl implements Automate {
             String jump = chain.substring(i, i + 1);
             log.add(currentState.getName() + ": " + chain.substring(i));
             if (!currentState.hasNextState(jump)) {
-                throw new InformationException(String.format(NO_JUMP_FOR_CURRENT_STATE, jump, currentState.getName()));
+                throw new InformationException(String.format(AutomateApp.NO_JUMP_FOR_CURRENT_STATE, jump, currentState.getName()));
             }
             
             currentState = currentState.nextState(jump);
@@ -43,6 +44,4 @@ public class AutomateImpl implements Automate {
     private State currentState;
     
     private List<String> log = new ArrayList<String>();
-    
-    public static final String NO_JUMP_FOR_CURRENT_STATE = "Отсутствует состояние для перехода %s из состояния %s";
 }

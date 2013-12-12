@@ -7,6 +7,8 @@
 
 package com.unit7.study.translationmethods.labs.lab4.interfaces;
 
+import java.util.List;
+
 import com.unit7.study.cryptography.tools.Pair;
 
 public interface State {
@@ -19,4 +21,6 @@ public interface State {
 	boolean isFinal();
 	
 	void setFinal(boolean state);
+	
+	List<State> getStatesByStackState(String stack);
 }

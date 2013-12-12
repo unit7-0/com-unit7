@@ -32,9 +32,9 @@ import javax.swing.JTextField;
 
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.AutomateApp;
-import com.unit7.study.translationmethods.labs.lab3.interfaces.State;
-import com.unit7.study.translationmethods.labs.lab3.interfaces.impl.AutomateAppImpl;
-import com.unit7.study.translationmethods.labs.lab3.interfaces.impl.DataBuilder;
+import com.unit7.study.translationmethods.labs.lab4.interfaces.State;
+import com.unit7.study.translationmethods.labs.lab4.interfaces.impl.AutomateAppImpl;
+import com.unit7.study.translationmethods.labs.lab4.interfaces.impl.DataBuilder;
 
 /**
  * @author unit7
@@ -47,8 +47,8 @@ public class MainForm extends JFrame {
     }
 
     public MainForm() {
-        JPanel content = new JPanel(new GridLayout(3, 1, 10, 10));
-        JPanel top = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel content = new JPanel(new GridBagLayout());//new GridLayout(3, 1, 10, 10));
+        JPanel top = new JPanel(new GridLayout(3, 2, 10, 10));
         final Box statesPanel = new Box(BoxLayout.PAGE_AXIS);// new JPanel(new
                                                              // FlowLayout());
         JPanel controls = new JPanel();
@@ -65,8 +65,8 @@ public class MainForm extends JFrame {
         JLabel finalStateLabel = new JLabel("Конечное состояние: ");
         final JTextField finalStateField = new JTextField();
 
-        top.add(termsLabel);
-        top.add(termsField);
+//        top.add(termsLabel);
+//        top.add(termsField);
 
         top.add(chainLabel);
         top.add(chainField);
@@ -149,7 +149,7 @@ public class MainForm extends JFrame {
                               
                                 p = j;
 
-                                params.put(AutomateApp.PARAM_STATE_BEG + k2, stateField.getText());
+                                params.put(AutomateApp.PARAM_TO_STATE_BEG + k2, stateField.getText());
                                 params.put(AutomateApp.PARAM_STACK_TO_BEG + k2++, stackField.getText());
                             }
                         }
@@ -184,9 +184,28 @@ public class MainForm extends JFrame {
         controls.add(check);
         controls.add(add);
 
-        content.add(top);
-        content.add(pane);
-        content.add(controls);
+        GridBagConstraints c = new GridBagConstraints();
+        
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weighty = 1;
+        content.add(top, c);
+        
+        c.gridwidth = 3;
+        c.gridheight = 5;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weighty = c.gridheight;
+        content.add(pane, c);
+        
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.gridx = 1;
+        c.gridy = 6;
+        c.gridheight = 1;
+        content.add(controls, c);
 
         getContentPane().add(content);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -195,22 +214,24 @@ public class MainForm extends JFrame {
 
     private String check(Map<String, String> params) {
         try {
-            String terms = builder.parseTerminals(params);
+//            String terms = builder.parseTerminals(params);
             String chain = builder.parseChain(params);
             Map<String, State> states = builder.parseStates(params);
             State startState = builder.parseStartState(params, states);
             List<State> finalState = builder.parseFinalState(params, states);
 
-            app = new AutomateAppImpl(terms, chain, startState, finalState);
+            app = new AutomateAppImpl(chain, startState);
 
             if (app.execute()) {
-                return ACCEPTED_CHAIN  + "\r\n" + app.getLog();
+                return ACCEPTED_CHAIN  + "\r\n" + log(app.getLog());
             } else
-                return DECLINED_CHAIN + "\r\n" + app.getLog();
+                return DECLINED_CHAIN + "\r\n" + log(app.getLog());
 
             // return AutomateApp.STATE_IS_NOT_FINAL;
         } catch (InformationException e) {
-            return e.getLocalizedMessage() + "\r\n" + (app == null ? "" : app.getLog());
+            return e.getLocalizedMessage() + "\r\n" + (app == null ? "" : log(app.getLog()));
+        } finally {
+            
         }
     }
 
@@ -299,6 +320,18 @@ public class MainForm extends JFrame {
         });
     }
 
+    private String log(List<String> log) {
+        StringBuilder builder = new StringBuilder("\r\n[ ");
+        for (String str : log) {
+            if (builder.length() > 4)
+                builder.append("\r\n");
+            
+            builder.append(str);
+        }
+        
+        return builder.append(" ]").toString();
+    }
+    
     public static final String ACCEPTED_CHAIN = "Цепочка принята";
     public static final String DECLINED_CHAIN = "Цепочка отвергнута";
 

@@ -7,6 +7,10 @@
 
 package com.unit7.study.translationmethods.labs.lab4.interfaces.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.unit7.study.cryptography.tools.Pair;
@@ -15,6 +19,36 @@ import com.unit7.study.translationmethods.labs.lab4.interfaces.State;
 import com.unit7.study.translationmethods.labs.lab4.interfaces.Operation;
 
 public class StateImpl implements State {
+    public StateImpl(String name) {
+        this.name = name;
+    }
+    
+    public static Map<String, State> createStates(String[][] rawStates, List<Operation> operations, Map<String, State> states) {
+        for (int i = 0; i < rawStates.length; ++i) {
+            String name = rawStates[i][0];
+            String jump = rawStates[i][1];
+            String stack = rawStates[i][2];
+            String toName = rawStates[i][3];
+            Operation op = operations.get(i);
+            
+            StateImpl state = (StateImpl) states.get(name);
+            if (state == null) {
+                state = new StateImpl(name);
+                states.put(name, state);
+            }
+            
+            State toState = states.get(toName);
+            if (toState == null) {
+                toState = new StateImpl(toName);
+                states.put(toName, toState);
+            }
+            
+            state.jumps.put(new Pair(jump, stack),  new Pair(toState, op));
+        }
+        
+        return states;
+    }
+    
 	@Override
 	public boolean hasNextState(String c, Stack<String> stack) {
 		Pair<String, String> trying = new Pair<String, String>(c, stack.top());
@@ -42,7 +76,7 @@ public class StateImpl implements State {
 		this.isFinal = state;
 	}
 
-	private String name;
+    private String name;
 	private boolean isFinal;
-	private Map<Pair<String, String>, Pair<State, Operation>> jumps;
+	private Map<Pair<String, String>, Pair<State, Operation>> jumps = new HashMap<Pair<String,String>, Pair<State,Operation>>();
 }
