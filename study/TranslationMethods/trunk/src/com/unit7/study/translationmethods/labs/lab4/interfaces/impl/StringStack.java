@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 
+import com.unit7.study.translationmethods.labs.lab1.GrammarRules;
 import com.unit7.study.translationmethods.labs.lab4.interfaces.Stack;
 
 /**
@@ -51,7 +52,7 @@ public class StringStack implements Stack<String> {
 	@Override
 	public String top() throws EmptyStackException {
 		if (stack.size() < 1)
-			throw new EmptyStackException();
+			return GrammarRules.GRAMMAR_EMPTY;
 		
 		return stack.get(stack.size() - 1);
 	}
@@ -79,6 +80,11 @@ public class StringStack implements Stack<String> {
 	@Override
 	public int size() {
 		return stack.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return stack.size() == 0;
 	}
 
 	private List<String> stack = new ArrayList<String>();

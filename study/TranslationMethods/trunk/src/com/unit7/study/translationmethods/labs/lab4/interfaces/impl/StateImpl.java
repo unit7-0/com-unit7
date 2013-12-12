@@ -32,6 +32,17 @@ public class StateImpl implements State {
 		return name;
 	}
 
+	@Override
+	public boolean isFinal() {
+		return isFinal;
+	}
+
+	@Override
+	public void setFinal(boolean state) {
+		this.isFinal = state;
+	}
+
 	private String name;
+	private boolean isFinal;
 	private Map<Pair<String, String>, Pair<State, Operation>> jumps;
 }
