@@ -167,7 +167,7 @@ public class MainForm extends JFrame {
         });
 
         final JScrollPane pane = new JScrollPane(statesPanel);
-        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         add.addActionListener(new ActionListener() {
             @Override
