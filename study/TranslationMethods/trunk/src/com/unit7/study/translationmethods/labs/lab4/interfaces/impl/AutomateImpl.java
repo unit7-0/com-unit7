@@ -57,14 +57,26 @@ public class AutomateImpl implements Automate {
 		operand.setFirst(firstChar);
 		operand.setSecond(globalStack);
 		
+		log.add("state: " + current.getFirst().getName() + " symbol: " + firstChar + " stack top: " + globalStack.top());
 		current.getSecond().execute(operand);
 		
 		// remain chain
 		for (int i = 0; i < chain.length(); ++i) {
-			// TODO
+			String c = chain.substring(i, i + 1);
+			State state = current.getFirst();
+			
+			log.add("state: " + state.getName() + " symbol: " + c + " stack top: " + globalStack.top());
+			if (state.hasNextState(c, globalStack)) {
+				current = state.nextState(c, globalStack);
+				operand.setFirst(c);
+				current.getSecond().execute(operand);
+			} else {
+				// TODO
+				throw new InformationException();
+			}
 		}		
 		
-		return true;
+		return current.getFirst().isFinal() && globalStack.isEmpty();
 	}
 
 	/*

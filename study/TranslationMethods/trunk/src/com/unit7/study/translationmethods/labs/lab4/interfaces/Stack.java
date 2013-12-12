@@ -19,4 +19,6 @@ public interface Stack<T> {
 	boolean compareTop(T e) throws EmptyStackException;
 
 	int size();
+	
+	boolean isEmpty();
 }

@@ -15,4 +15,8 @@ public interface State {
 	Pair<State, Operation> nextState(String c, Stack<String> stack);
 	
 	String getName();
+	
+	boolean isFinal();
+	
+	void setFinal(boolean state);
 }
