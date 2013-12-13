@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Random;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -60,4 +61,10 @@ public class Utils {
         
         return result;
     }
+    
+    public static int getRandInt(int n) {
+        return rnd.nextInt(n);
+    }
+    
+    private static final Random rnd = new Random();
 }

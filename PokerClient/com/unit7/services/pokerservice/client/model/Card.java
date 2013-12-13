@@ -3,6 +3,8 @@ package com.unit7.services.pokerservice.client.model;
 import java.util.Random;
 import java.util.Set;
 
+import com.unit7.services.pokerservice.client.tools.Utils;
+
 public class Card {
 	public Card(CardType type) {
 		this.type = type;
@@ -13,15 +15,15 @@ public class Card {
 	}
 	
 	public static Card getRandCard(Set<Card> cards) {
-	    CardType[] types = CardType.values();
-	    int len = types.length;
+	    Suit[] suits = Suit.values();
+	    int len = suits.length;
 	    
 	    if (cards == null) {
-	        return new Card(CardType.valueOf(types[rnd.nextInt(len)].name()));
+	        return new Card(CardType.valueOf(suits[Utils.getRandInt(len)].name()));
 	    } else {
 	        Card card = null;
 	        do {
-	            card = new Card(CardType.valueOf(types[rnd.nextInt(len)].name()));
+	            card = new Card(CardType.createCardType(suits[Utils.getRandInt(suits.length)]));
 	        } while (cards.contains(card));
 	        
 	        return card;
@@ -29,5 +31,4 @@ public class Card {
 	}
 
 	private CardType type;
-	private static final Random rnd = new Random(System.currentTimeMillis());
 }
