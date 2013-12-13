@@ -1,9 +1,11 @@
 package com.unit7.services.pokerservice.engine.framework;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.unit7.services.pokerservice.GameThread;
 import com.unit7.services.pokerservice.PokerRequestListener;
 import com.unit7.services.pokerservice.Request;
 import com.unit7.services.pokerservice.RequestImpl;
@@ -153,6 +155,8 @@ public class Controller {
                     gamer.setBet(gamer.getBet() + bet);
                 } else if (CommandContainerType.FOLD.equals(type)) {
                     gamer.setInGame(false);
+                } else if (CommandContainerType.CHECK.equals(type)) {
+                	// TODO
                 }
             } catch (Exception e) {
                 // TODO handle exception
@@ -177,7 +181,7 @@ public class Controller {
             Request request = new RequestImpl();
             List<PokerGamer> winners = ((EndRoundCommand) command).getGamers();
             double win = model.getBank() / winners.size();
-            model.resetBank();
+            model.resetBank();	
             for (PokerGamer winner : winners) {
                 winner.addMoney(win);
                 container.setCurrentWin(winner.getMoney());
@@ -215,12 +219,10 @@ public class Controller {
         container.setCards(cards);
         return container;
     }
-
-    /*
-     * TODO верно оформить
-     */
-    public void createNewGame() {
-
+    
+    public void createNewGame(List<Socket> clients) {
+    	model = new PokerModel(clients);
+    	new Thread(new GameThread(model.getGamers())).start();
     }
 
     public static Controller getInstance() {

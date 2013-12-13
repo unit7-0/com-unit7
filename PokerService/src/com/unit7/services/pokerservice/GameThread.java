@@ -18,14 +18,7 @@ import com.unit7.services.pokerservice.model.PokerGamer;
  * 
  */
 public class GameThread implements Runnable {
-    public GameThread(List<Socket> clients) {
-        List<PokerGamer> gamers = new ArrayList<PokerGamer>();
-        for (Socket sock : clients) {
-            PokerGamer gamer = new PokerGamer();
-            gamer.setSocket(sock);
-            gamers.add(gamer);
-        }
-        
+    public GameThread(List<PokerGamer> gamers) {        
         gameInterface = new PokerGameInterfaceImpl(gamers);
     }
     

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import com.unit7.services.pokerservice.engine.framework.Controller;
+
 /**
  * Поток ожидает новых подключений для создания игры, если вышел таймаут
  * подключения берется доступное количество игроков и начинаетя игра, если их
@@ -50,7 +52,7 @@ public class WaitingThread implements Runnable {
 				if (clients.size() < 2) {
 				    // TODO послать сообщение
 				} else {
-				    new Thread(new GameThread(clients)).start();
+					Controller.getInstance().createNewGame(clients);
 				}
 			}
 			

@@ -1,5 +1,6 @@
 package com.unit7.services.pokerservice.model;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,18 +13,21 @@ import org.apache.log4j.Logger;
 
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.client.model.CardType;
+import com.unit7.services.pokerservice.client.model.Suit;
 
 public class PokerModel {
-	public PokerModel(int gamersCount) {
+	public PokerModel(List<Socket> clients) {
 		Random random = new Random();
-		for (int i = 0; i < gamersCount; ++i) {
+		for (int i = 0; i < clients.size(); ++i) {
 			// FIX replace with factory
-			gamers.add(new PokerGamer());
+			PokerGamer gamer = new PokerGamer();
+			gamer.setSocket(clients.get(i));
+			gamers.add(gamer);
 		}
 		
 		for (int i = 0; i < CARDS_COUNT; ++i) {
 			// TODO may be replace with factory
-			cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new Card(CardType.getRandType()));
+			cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new Card(CardType.createCardType(Suit.rand())));
 		}
 	}  
 	
