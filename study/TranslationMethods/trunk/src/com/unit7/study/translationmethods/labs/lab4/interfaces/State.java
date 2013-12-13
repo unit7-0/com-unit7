@@ -21,6 +21,4 @@ public interface State {
 	boolean isFinal();
 	
 	void setFinal(boolean state);
-	
-	List<State> getStatesByStackState(String stack);
 }
