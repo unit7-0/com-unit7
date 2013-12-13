@@ -208,6 +208,7 @@ public class MainForm extends JFrame {
         content.add(controls, c);
 
         getContentPane().add(content);
+        setTitle("unit7©");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
     }
