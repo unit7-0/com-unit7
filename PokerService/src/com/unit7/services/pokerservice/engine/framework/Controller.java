@@ -11,6 +11,7 @@ import com.unit7.services.pokerservice.Request;
 import com.unit7.services.pokerservice.RequestImpl;
 import com.unit7.services.pokerservice.RequestListener;
 import com.unit7.services.pokerservice.Response;
+import com.unit7.services.pokerservice.ServerThread;
 import com.unit7.services.pokerservice.client.commands.CardContainer;
 import com.unit7.services.pokerservice.client.commands.CommandContainer;
 import com.unit7.services.pokerservice.client.commands.CommandContainerType;
@@ -192,6 +193,10 @@ public class Controller {
         }
     }
 
+    public void upServer(int port) {
+    	new Thread(new ServerThread(port)).start();
+    }
+    
     public void addListener(EventListener listener) {
         listeners.add(listener);
     }
