@@ -69,6 +69,21 @@ public class AutomateImpl implements Automate {
 			}
 		}		
 		
+		while (!globalStack.isEmpty()) {
+			// try empty tact
+		    String trying = GrammarRules.GRAMMAR_EMPTY;
+		    State state = current.getFirst();
+		    log.add("state: [ " + state.getName() + " ] symbol: [ " + trying + " ] stack top: [ " + globalStack.top() + " ] ");
+		    if (state.hasNextState(trying, globalStack)) {
+		        current = state.nextState(trying, globalStack);
+                operand.setFirst(trying);
+                current.getSecond().execute(operand);
+                continue;
+		    }
+		    
+		    throw new InformationException(String.format(AutomateApp.NO_JUMP_FOR_CURRENT_STATE, trying, state.getName()));
+		}
+		
 		} catch (EmptyStackException e) {
 		    throw new InformationException(AutomateApp.EMPTY_STACK_ON_OPERATION);
 		}
