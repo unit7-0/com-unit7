@@ -98,4 +98,14 @@ public class StringStack implements Stack<String> {
     public void clear() {
         stack.clear();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (String str : stack) {
+            builder.append(str);
+        }
+        
+        return builder.reverse().toString();
+    }
 }
