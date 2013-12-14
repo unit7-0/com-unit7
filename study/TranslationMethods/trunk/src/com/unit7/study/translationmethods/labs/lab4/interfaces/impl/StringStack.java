@@ -89,5 +89,13 @@ public class StringStack implements Stack<String> {
 
 	private List<String> stack = new ArrayList<String>();
 	
-	public static final String EMPTY_STACK = "Z";
+	public static final String EMPTY_STACK = " ";
+
+    /* (non-Javadoc)
+     * @see com.unit7.study.translationmethods.labs.lab4.interfaces.Stack#clear()
+     */
+    @Override
+    public void clear() {
+        stack.clear();
+    }
 }

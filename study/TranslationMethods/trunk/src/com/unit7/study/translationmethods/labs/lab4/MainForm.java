@@ -9,6 +9,7 @@ package com.unit7.study.translationmethods.labs.lab4;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -48,12 +49,12 @@ public class MainForm extends JFrame {
 
     public MainForm() {
         JPanel content = new JPanel(new GridBagLayout());//new GridLayout(3, 1, 10, 10));
-        JPanel top = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPanel top = new JPanel(new GridLayout(4, 2, 10, 10));
         final Box statesPanel = new Box(BoxLayout.PAGE_AXIS);// new JPanel(new
                                                              // FlowLayout());
         JPanel controls = new JPanel();
 
-        JLabel termsLabel = new JLabel("Список терминалов:");
+        JLabel termsLabel = new JLabel("Начальный стек:");
         final JTextField termsField = new JTextField();
 
         JLabel chainLabel = new JLabel("Цепочка:");
@@ -65,8 +66,8 @@ public class MainForm extends JFrame {
         JLabel finalStateLabel = new JLabel("Конечное состояние: ");
         final JTextField finalStateField = new JTextField();
 
-//        top.add(termsLabel);
-//        top.add(termsField);
+        top.add(termsLabel);
+        top.add(termsField);
 
         top.add(chainLabel);
         top.add(chainField);
@@ -85,7 +86,7 @@ public class MainForm extends JFrame {
         check.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String terms = termsField.getText();
+                String stack = termsField.getText();
                 String chain = chainField.getText();
                 String startState = startStateField.getText();
                 String finalState = finalStateField.getText();
@@ -156,10 +157,11 @@ public class MainForm extends JFrame {
                     }
                 }
 
-                params.put(AutomateApp.PARAM_TERMINALS, terms);
+//                params.put(AutomateApp.PARAM_TERMINALS, terms);
                 params.put(AutomateApp.PARAM_CHAIN, chain);
                 params.put(AutomateApp.PARAM_START_STATE, startState);
                 params.put(AutomateApp.PARAM_FINAL_STATE, finalState);
+                params.put(AutomateApp.PARAM_STACK_START, stack);
 
                 String result = check(params);
                 JOptionPane.showMessageDialog(MainForm.this, result);
@@ -167,17 +169,22 @@ public class MainForm extends JFrame {
         });
 
         final JScrollPane pane = new JScrollPane(statesPanel);
-//        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JPanel states = buildStatesPanel();
                 addRemoveButton(statesPanel, states);
-                statesPanel.validate();
-                statesPanel.repaint();
                 pane.revalidate();
+//              MainForm.this.pack();
+//              MainForm.this.repaint();
+//                statesPanel.revalidate();
+//                statesPanel.repaint();
                 pane.repaint();
+                
+//                MainForm.this.repaint();
+//                MainForm.this.pack();
             }
         });
 
@@ -198,6 +205,7 @@ public class MainForm extends JFrame {
         c.gridx = 0;
         c.gridy = 1;
         c.weighty = c.gridheight;
+        c.fill = GridBagConstraints.BOTH;
         content.add(pane, c);
         
         c.gridwidth = 1;
@@ -205,6 +213,7 @@ public class MainForm extends JFrame {
         c.gridx = 1;
         c.gridy = 6;
         c.gridheight = 1;
+//        c.fill = GridBagConstraints.HORIZONTAL;
         content.add(controls, c);
 
         getContentPane().add(content);
@@ -220,8 +229,9 @@ public class MainForm extends JFrame {
             Map<String, State> states = builder.parseStates(params);
             State startState = builder.parseStartState(params, states);
             List<State> finalState = builder.parseFinalState(params, states);
+            String stack = builder.getStartStackState(params);
 
-            app = new AutomateAppImpl(chain, startState);
+            app = new AutomateAppImpl(chain, startState, stack);
 
             if (app.execute()) {
                 return ACCEPTED_CHAIN  + "\r\n" + log(app.getLog());
@@ -239,8 +249,8 @@ public class MainForm extends JFrame {
     private JPanel buildStatesPanel() {
         JPanel main = new JPanel();
         
-        JPanel start = new JPanel(new GridLayout(1, 6, 15, 15));
-        JPanel end = new JPanel(new GridLayout(1, 4, 15, 15));
+        JPanel start = new JPanel(new FlowLayout());//new GridLayout(1, 6, 15, 15));
+        JPanel end = new JPanel(new FlowLayout());//new GridLayout(1, 4, 15, 15));
         
         JPanel states = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -261,13 +271,13 @@ public class MainForm extends JFrame {
         states.add(end, c);
         
         JLabel stateLabel = new JLabel("Начальное: ");
-        JTextField stateField = new JTextField();
+        JTextField stateField = new JTextField(10);
 
         JLabel jumpLabel = new JLabel("Входной символ: ");
-        JTextField jumpField = new JTextField();
+        JTextField jumpField = new JTextField(10);
 
         JLabel toStateLabel = new JLabel("На стеке: ");
-        JTextField toStateField = new JTextField();
+        JTextField toStateField = new JTextField(10);
 
         start.add(stateLabel);
         start.add(stateField);
@@ -279,10 +289,10 @@ public class MainForm extends JFrame {
         start.add(toStateField);
 
         toStateLabel = new JLabel("Конечное: ");
-        toStateField = new JTextField();
+        toStateField = new JTextField(10);
         
         JLabel stackLabel = new JLabel("На стеке");
-        JTextField stackField = new JTextField();
+        JTextField stackField = new JTextField(10);
         
         end.add(toStateLabel);
         end.add(toStateField);
