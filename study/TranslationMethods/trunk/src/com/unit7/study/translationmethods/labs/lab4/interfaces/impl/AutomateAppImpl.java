@@ -20,9 +20,9 @@ import com.unit7.study.translationmethods.labs.lab4.interfaces.State;
  *
  */
 public class AutomateAppImpl implements AutomateApp {
-    public AutomateAppImpl(String chain, State startState) {
+    public AutomateAppImpl(String chain, State startState, String stack) {
         this.chain = chain;
-        automate = new AutomateImpl(startState);
+        automate = new AutomateImpl(startState, stack);
     }
     
     /* (non-Javadoc)

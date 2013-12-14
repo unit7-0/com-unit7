@@ -27,5 +27,7 @@ public interface AutomateApp {
     public static final String PARAM_STACK_BEG = "stack$";
     public static final String PARAM_STACK_TO_BEG = "stack_to$";
     
+    public static final String PARAM_STACK_START = "stack_start_field";
+    
     public static final String INVALID_OPEARTION_TYPE = "Неверный тип операции [из состояние %s, вход: %s, стек: %s в состояние: %s, стек: %s]";
 }

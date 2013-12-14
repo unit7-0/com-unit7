@@ -50,6 +50,10 @@ public class DataBuilder {
        return state; 
     }
 
+    public String getStartStackState(Map<String, String> request) throws InformationException {
+        return parseString(request.get(AutomateApp.PARAM_STACK_START), "начальное содержимое стека");
+    }
+    
     public List<State> parseFinalState(Map<String, String> request, Map<String, State> states)
             throws InformationException {
         String str = request.get(AutomateApp.PARAM_FINAL_STATE);
