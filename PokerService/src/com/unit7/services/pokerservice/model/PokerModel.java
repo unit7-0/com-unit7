@@ -27,7 +27,7 @@ public class PokerModel {
 		
 		for (int i = 0; i < CARDS_COUNT; ++i) {
 			// TODO may be replace with factory
-			cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new Card(CardType.createCardType(Suit.rand())));
+			cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new Card(CardType.createCardType(Suit.getRandSuit())));
 		}
 	}  
 	

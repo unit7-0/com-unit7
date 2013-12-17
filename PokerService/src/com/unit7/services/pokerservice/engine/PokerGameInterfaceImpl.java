@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.client.model.CombinationType;
+import com.unit7.services.pokerservice.client.tools.Utils;
 import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.BigBlindCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;
@@ -119,7 +120,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     @Override
     public PokerGamer selectButton() {
         if (lastButton == -1) {
-            lastButton = com.unit7.services.pokerservice.tools.Utils.getRandInt(gamers.size());
+            lastButton = Utils.getRandInt(gamers.size());
         } else {
             lastButton = ++lastButton % gamers.size();
         }
