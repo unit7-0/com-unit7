@@ -14,8 +14,8 @@ import com.unit7.services.pokerservice.client.engine.Controller;
  * 
  */
 public interface Command {
-    void execute(Controller controller);
-
+    void execute(Controller controller); 
+    
     CommandType getType();
 
     void setType(CommandType type);
