@@ -5,6 +5,8 @@ import java.util.List;
 import com.unit7.services.pokerservice.client.model.Card;
 
 public class CardContainer extends AbstractCommandContainer {
+    private static final long serialVersionUID = 3851122433840756170L;
+
     public List<Card> getCards() {
         return cards;
     }

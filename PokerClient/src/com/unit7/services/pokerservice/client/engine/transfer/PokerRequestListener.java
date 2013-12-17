@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
+import org.apache.log4j.Logger;
+
 import com.unit7.services.pokerservice.client.tools.Utils;
 
 public class PokerRequestListener implements RequestListener {
@@ -13,12 +15,22 @@ public class PokerRequestListener implements RequestListener {
     public Response executeRequest(Request request) {
         Socket socket = request.getSocket();
         Object data = request.getData();
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: host: %s, port: %d, data: %s\t]", socket.getInetAddress()
+                    .getHostAddress(), socket.getPort(), data));
+        }
+
         sendData(socket, data);
-        
+
         Response response = new ResponseImpl();
         data = receiveData(socket);
         response.setData(data);
-        
+
+        if (log.isDebugEnabled()) {
+            log.debug("[\tExecuting: received data: " + data + "\t]");
+        }
+
         return response;
     }
     
@@ -71,4 +83,6 @@ public class PokerRequestListener implements RequestListener {
         
         return result;
     }
+    
+    private Logger log = Logger.getLogger(PokerRequestListener.class);
 }

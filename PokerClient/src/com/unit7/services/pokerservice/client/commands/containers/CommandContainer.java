@@ -1,6 +1,8 @@
 package com.unit7.services.pokerservice.client.commands.containers;
 
-public interface CommandContainer {
+import java.io.Serializable;
+
+public interface CommandContainer extends Serializable {
     void setType(CommandContainerType type);
     CommandContainerType getType();
 }
