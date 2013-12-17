@@ -23,7 +23,7 @@ public class RequestNameProxy implements Proxy<Object, String> {
      */
     @Override
     public String request(Object data) {
-        return form.getName();
+        return form.getUserName();
     }
 
     private MainForm form;
