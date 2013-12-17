@@ -10,5 +10,5 @@ package com.unit7.services.pokerservice.client.tools;
 public class Settings {
 
 	public static final String SERVER_IP = "127.0.0.1";
-	public static final int SERVER_PORT = 777;
+	public static final int SERVER_PORT = 7777;
 }

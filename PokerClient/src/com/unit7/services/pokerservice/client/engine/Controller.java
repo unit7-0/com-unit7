@@ -7,6 +7,7 @@
 
 package com.unit7.services.pokerservice.client.engine;
 
+import java.net.Socket;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -67,6 +68,14 @@ public class Controller {
         }
     }
 
+    public void setServerSocket(Socket sock) {
+        model.setServerSocket(sock);
+    }
+    
+    public Socket getServerSocket() {
+        return model.getServerSocket();
+    }
+    
     public void setRequestNameProxy(RequestNameProxy proxy) {
         this.requestNameProxy = proxy;
     }
