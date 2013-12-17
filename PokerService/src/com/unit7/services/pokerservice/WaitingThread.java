@@ -27,8 +27,16 @@ public class WaitingThread implements Runnable {
         this.socket = socket;
         this.semaphore = semaphore;
         this.clients.add(clientSocket);
+        
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: before semaphore.acquire\t]", null));
+        }
+        
         try {
             semaphore.acquire();
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("[\tExecuting: semaphore acquired\t]", null));
+            }
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -76,7 +84,6 @@ public class WaitingThread implements Runnable {
                 }
             }
 
-            socket.setSoTimeout(0);
         } catch (SocketException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -84,6 +91,12 @@ public class WaitingThread implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
+            try {
+                socket.setSoTimeout(0);
+            } catch (SocketException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             semaphore.release();
         }
     }

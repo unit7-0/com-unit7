@@ -38,28 +38,30 @@ public class ServerThread implements Runnable {
         Socket clientSocket = null;
         try {
             Semaphore semaphore = new Semaphore(1);
+            semaphore.acquire();
             while ((clientSocket = socket.accept()) != null) {
                 if (log.isDebugEnabled()) {
                     log.debug("[\tListening: client connected: " + clientSocket.getInetAddress().getHostAddress()
                             + " : " + clientSocket.getPort() + "\t]");
                 }
 
+                semaphore.release();
                 WaitingThread thread = new WaitingThread(socket, clientSocket, semaphore);
                 new Thread(thread).start();
 
-                boolean tryAc = false;
-                do {
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(100);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
-                    tryAc = semaphore.tryAcquire();
-                } while (!tryAc);
+                semaphore.acquire();
             }
         } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
