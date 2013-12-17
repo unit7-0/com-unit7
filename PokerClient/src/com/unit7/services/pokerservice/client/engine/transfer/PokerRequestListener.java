@@ -1,5 +1,6 @@
 package com.unit7.services.pokerservice.client.engine.transfer;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,8 +61,16 @@ public class PokerRequestListener implements RequestListener {
         try {
             OutputStream out = socket.getOutputStream();
             byte[] binaryData = Utils.serializeObject(data);
+            int size = binaryData.length;
+            if (log.isDebugEnabled()) {
+                log.debug("[\tExecuting: write size to socket: " + size + "\t]");
+            }
+            
+            ByteBuffer buf = ByteBuffer.allocate(4);
+            buf.putInt(size);
+            out.write(buf.array());
             out.write(binaryData);
-            out.write(-1);
+            out.flush();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -78,24 +87,17 @@ public class PokerRequestListener implements RequestListener {
 
         try {
             InputStream in = socket.getInputStream();
-            ByteBuffer buffer = ByteBuffer.allocate(1);
+            DataInputStream stream = new DataInputStream(in);
+            
             int readed = -1;
-            while ((readed = in.read()) != -1) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("[\tExecuting: readed: %d\t]", readed));
-                }
-                byte readedByte = (byte) readed;
-                if (buffer.position() == buffer.capacity()) {
-                    ByteBuffer newBuffer = ByteBuffer.allocate(buffer.capacity() << 1);
-                    newBuffer.put(buffer.array());
-                    buffer = newBuffer;
-                }
-
-                buffer.put(readedByte);
+            int size = stream.readInt();
+            if (log.isDebugEnabled()) {
+                log.debug("[\tExecuting: received size of message: " + size + "\t]");
             }
-
-            byte[] data = new byte[buffer.position()];
-            buffer.get(data);
+            
+            byte[] data = new byte[size];
+            stream.readFully(data);
+            
             result = Utils.deserializerObject(data);
             
             if (log.isDebugEnabled()) {
@@ -109,5 +111,5 @@ public class PokerRequestListener implements RequestListener {
         return result;
     }
 
-    private Logger log = Logger.getLogger(PokerRequestListener.class);
+    private static Logger log = Logger.getLogger(PokerRequestListener.class);
 }

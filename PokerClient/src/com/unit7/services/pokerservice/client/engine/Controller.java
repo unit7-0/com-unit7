@@ -46,7 +46,7 @@ public class Controller {
                     log.debug("REQUEST_NAME_COMMAND: name[ " + name + " ]");
                 }
             } else {
-                System.err.println("receive not a request name container");
+                System.err.println("receive not a request name container: " + message);
                 throw new RuntimeException();
             }
         } else if (CommandType.GAMERS_INFO.equals(type)) {
