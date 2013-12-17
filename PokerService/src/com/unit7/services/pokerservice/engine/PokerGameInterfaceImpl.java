@@ -63,14 +63,14 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     public void requestSmallBlind(PokerGamer gamer) {
         GamerCommand command = new SmallBlindCommand();
         command.setGamer(gamer);
-        executor.execute(command);
+        executor.execute(new Command[] { command });
     }
 
     @Override
     public void requestBigBlind(PokerGamer gamer) {
         GamerCommand command = new BigBlindCommand();
         command.setGamer(gamer);
-        executor.execute(command);
+        executor.execute(new Command[] { command });
     }
 
     @Override
@@ -144,7 +144,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
                 command.setGamer(gamer);
                 // комманда выполняется не в отдельном потоке, значит результат
                 // у нас уже будет
-                executor.execute(command);
+                executor.execute(new Command[] { command });
 
                 GamerCommand selectedCommand = gamerChoice.get(gamer);
                 // не должно быть
@@ -160,29 +160,29 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
 
     @Override
     public void preFlop() {
-        executor.execute(new PreflopCommand());
+        executor.execute(new Command[] { new PreflopCommand() });
     }
 
     @Override
     public void flop() {
-        executor.execute(new FlopCommand());
+        executor.execute(new Command[] { new FlopCommand() });
     }
 
     @Override
     public void turn() {
-        executor.execute(new TurnCommand());
+        executor.execute(new Command[] { new TurnCommand() });
     }
 
     @Override
     public void river() {
-        executor.execute(new RiverCommand());
+        executor.execute(new Command[] { new RiverCommand() });
     }
 
     protected void requestNames() {
         for (PokerGamer gamer : gamers) {
             RequestNameCommand command = new RequestNameCommand();
             command.setGamer(gamer);
-            executor.execute(command);
+            executor.execute(new Command[] { command });
         }
     }
 
@@ -226,15 +226,15 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         if (one != null) {
             List<PokerGamer> wins = new ArrayList<PokerGamer>();
             wins.add(one);
-            
-//            TODO winners.put(key, wins);
+
+            // TODO winners.put(key, wins);
         } else {
             // open cards...
             for (PokerGamer gamer : gamers) {
                 if (gamer.isInGame()) {
                     GamerCommand command = new ShowdownCommand();
                     command.setGamer(gamer);
-                    
+
                     // TODO определить комбинацию
                     CombinationType type = null;
                     List<PokerGamer> wins;
@@ -242,15 +242,14 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
                         wins = winners.get(type);
                     } else {
                         wins = new ArrayList<PokerGamer>();
-                    }                    
-                    
+                    }
+
                     wins.add(gamer);
                     winners.put(type, wins);
                 }
             }
         }
-        
-        
+
         List<PokerGamer> realWinners = winners.get(winners.keySet().iterator().next());
         EndRoundCommand command = new EndRoundCommand();
         command.setGamers(realWinners);

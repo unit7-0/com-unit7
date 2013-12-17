@@ -8,11 +8,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.unit7.services.pokerservice.GameThread;
-import com.unit7.services.pokerservice.PokerRequestListener;
-import com.unit7.services.pokerservice.Request;
-import com.unit7.services.pokerservice.RequestImpl;
-import com.unit7.services.pokerservice.RequestListener;
-import com.unit7.services.pokerservice.Response;
 import com.unit7.services.pokerservice.ServerThread;
 import com.unit7.services.pokerservice.client.commands.containers.CardContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainer;
@@ -22,6 +17,11 @@ import com.unit7.services.pokerservice.client.commands.containers.RequestBetCont
 import com.unit7.services.pokerservice.client.commands.containers.RequestBlindContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestNameContainer;
 import com.unit7.services.pokerservice.client.commands.containers.ShowdownCommandContainer;
+import com.unit7.services.pokerservice.client.engine.transfer.PokerRequestListener;
+import com.unit7.services.pokerservice.client.engine.transfer.Request;
+import com.unit7.services.pokerservice.client.engine.transfer.RequestImpl;
+import com.unit7.services.pokerservice.client.engine.transfer.RequestListener;
+import com.unit7.services.pokerservice.client.engine.transfer.Response;
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;

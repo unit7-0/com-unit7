@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import org.apache.log4j.Logger;
+
 import com.unit7.services.pokerservice.engine.framework.Controller;
 
 /**
@@ -21,63 +23,83 @@ import com.unit7.services.pokerservice.engine.framework.Controller;
  * 
  */
 public class WaitingThread implements Runnable {
-	public WaitingThread(ServerSocket socket, Socket clientSocket, Semaphore semaphore) {
-		this.socket = socket;
-		this.semaphore = semaphore;
-		this.clients.add(clientSocket);
-		try {
-			semaphore.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public WaitingThread(ServerSocket socket, Socket clientSocket, Semaphore semaphore) {
+        this.socket = socket;
+        this.semaphore = semaphore;
+        this.clients.add(clientSocket);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void run() {
-		Socket clientSocket = null;
-		try {
-			socket.setSoTimeout(connectionTimeOut);
-			try {
-				while ((clientSocket = socket.accept()) != null) {
-					clients.add(clientSocket);
-					
-					// TODO добавить константу
-					if (clients.size() > 9) {
-						// начать игру
-						break;
-					}
-				}
-			} catch (SocketTimeoutException ex) {
-				if (clients.size() < 2) {
-				    // TODO послать сообщение
-				} else {
-					Controller.getInstance().createNewGame(clients);
-				}
-			}
-			
-			socket.setSoTimeout(0);
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			semaphore.release();
-		}
-	}
+    @Override
+    public void run() {
+        Socket clientSocket = null;
+        try {
+            socket.setSoTimeout(connectionTimeOut);
+            try {
+                if (log.isDebugEnabled()) {
+                    log.debug("[\tListening: start\t]");
+                }
 
-	public int getConnectionTimeOut() {
-		return connectionTimeOut;
-	}
+                while ((clientSocket = socket.accept()) != null) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("[\tListening: client connected: " + clientSocket.getInetAddress().getHostAddress()
+                                + " : " + clientSocket.getPort() + "\t]");
+                    }
 
-	public void setConnectionTimeOut(int connectionTimeOut) {
-		this.connectionTimeOut = connectionTimeOut;
-	}
+                    clients.add(clientSocket);
 
-	private int connectionTimeOut = 900;
-	private ServerSocket socket;
-	private Semaphore semaphore;
-	private List<Socket> clients = new ArrayList<Socket>();
+                    // TODO добавить константу
+                    if (clients.size() > 9) {
+                        Controller.getInstance().createNewGame(clients);
+                        break;
+                    }
+                }
+            } catch (SocketTimeoutException ex) {
+                ex.printStackTrace();
+                if (clients.size() < 2) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("[\tListening: timeout. connected clients < 2\t]");
+                    }
+                    
+                    // TODO послать сообщение
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("[\tListening: new game started, clients.size=" + clients.size() + "\t]");
+                    }
+                    
+                    Controller.getInstance().createNewGame(clients);
+                }
+            }
+
+            socket.setSoTimeout(0);
+        } catch (SocketException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            semaphore.release();
+        }
+    }
+
+    public int getConnectionTimeOut() {
+        return connectionTimeOut;
+    }
+
+    public void setConnectionTimeOut(int connectionTimeOut) {
+        this.connectionTimeOut = connectionTimeOut;
+    }
+
+    private int connectionTimeOut = 20000;
+    private ServerSocket socket;
+    private Semaphore semaphore;
+    private List<Socket> clients = new ArrayList<Socket>();
+
+    private Logger log = Logger.getLogger(WaitingThread.class);
 }
