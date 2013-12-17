@@ -6,6 +6,9 @@ import java.net.Socket;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
 /**
  * Основной поток сервера, сюда приходят конекшены
  * @author Zajcev
@@ -17,8 +20,15 @@ public class ServerThread implements Runnable {
 		try {
 			socket = new  ServerSocket(port);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			if (log.isEnabledFor(Priority.ERROR)) {
+			    log.error(e.getLocalizedMessage());
+			}
+			
 			e.printStackTrace();
+		}
+		
+		if (log.isDebugEnabled()) {
+		    log.debug("server socket up");
 		}
 	}
 	
@@ -51,4 +61,6 @@ public class ServerThread implements Runnable {
 
 	private ServerSocket socket;
 	private int port;
+	
+	private static final Logger log = Logger.getLogger(ServerThread.class);
 }
