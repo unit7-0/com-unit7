@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.unit7.services.pokerservice.GameThread;
 import com.unit7.services.pokerservice.PokerRequestListener;
 import com.unit7.services.pokerservice.Request;
@@ -33,6 +35,10 @@ import com.unit7.services.pokerservice.model.PokerModel;
 public class Controller {
     public void execute(final Command command) {
         if (command.getCommandType().equals(CommandType.REQUEST_NAME)) {
+            if (log.isDebugEnabled()) {
+                log.debug("[ Executing: Request name command ]");
+            }
+            
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -42,18 +48,35 @@ public class Controller {
                     request.setData(requestContainer);
                     request.setSocket(gamerCommand.getGamer().getSocket());
 
+                    if (log.isDebugEnabled()) {
+                        log.debug("[ Executing: before execute request ]");
+                    }
+                    
                     Response response = requestListener.executeRequest(request);
                     Object data = response.getData();
 
+                    if (log.isDebugEnabled()) {
+                        log.debug("[ Executing: after execute request ]");
+                    }
+                    
                     try {
                         requestContainer = (RequestNameContainer) data;
                         String name = requestContainer.getName();
+                        
+                        if (log.isDebugEnabled()) {
+                            log.debug("[ Executing: received name: " + name + " ]");
+                        }
+                        
                         gamerCommand.getGamer().setName(name);
                     } catch (Exception e) {
                         // TODO handle exception
                     }
                 }
             }).start();
+            
+            if (log.isDebugEnabled()) {
+                log.debug("[ Executing: Request name executing started ]");
+            }
         } else if (CommandType.SMALL_BLIND.equals(command.getCommandType())
                 || CommandType.BIG_BLIND.equals(command.getCommandType())) {
             Request request = new RequestImpl();
@@ -249,4 +272,6 @@ public class Controller {
     private PokerModel model;
     private RequestListener requestListener = new PokerRequestListener();
     private List<EventListener> listeners = new ArrayList<EventListener>();
+    
+    private static final Logger log = Logger.getLogger(Controller.class);
 }
