@@ -42,6 +42,12 @@ public class PokerRequestListener implements RequestListener {
         }
 
         Object data = receiveData(sock);
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: received data: %s from host: %s:%d\t]", data, sock.getInetAddress()
+                    .getHostAddress(), sock.getPort()));
+        }
+
         return data;
     }
 
@@ -55,6 +61,7 @@ public class PokerRequestListener implements RequestListener {
             OutputStream out = socket.getOutputStream();
             byte[] binaryData = Utils.serializeObject(data);
             out.write(binaryData);
+            out.write(-1);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -64,11 +71,19 @@ public class PokerRequestListener implements RequestListener {
     protected Object receiveData(Socket socket) {
         Object result = null;
 
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: receiving data from host: %s:%d\t]", socket.getInetAddress()
+                    .getHostAddress(), socket.getPort()));
+        }
+
         try {
             InputStream in = socket.getInputStream();
             ByteBuffer buffer = ByteBuffer.allocate(1);
             int readed = -1;
             while ((readed = in.read()) != -1) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("[\tExecuting: readed: %d\t]", readed));
+                }
                 byte readedByte = (byte) readed;
                 if (buffer.position() == buffer.capacity()) {
                     ByteBuffer newBuffer = ByteBuffer.allocate(buffer.capacity() << 1);
@@ -79,8 +94,13 @@ public class PokerRequestListener implements RequestListener {
                 buffer.put(readedByte);
             }
 
-            byte[] data = buffer.array();
+            byte[] data = new byte[buffer.position()];
+            buffer.get(data);
             result = Utils.deserializerObject(data);
+            
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("[\tExecuting: data received and deserialized from host: %s:%d, data: %s\t]", socket.getInetAddress().getHostAddress(), socket.getPort(), result));
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
