@@ -6,4 +6,6 @@ package com.unit7.services.pokerservice.client.commands.containers;
  *
  */
 public class RequestBetContainer extends AbstractCommandContainer {
+
+    private static final long serialVersionUID = -2138226723548420022L;
 }

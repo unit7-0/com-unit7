@@ -17,6 +17,8 @@ import com.unit7.services.pokerservice.client.model.LightweightGamer;
  */
 public class GamersInfoCommandContainer extends AbstractCommandContainer {
 
+    private static final long serialVersionUID = 6375760898675340662L;
+
     public List<LightweightGamer> getGamers() {
         return gamers;
     }
