@@ -33,9 +33,14 @@ public class PokerRequestListener implements RequestListener {
 
         return response;
     }
-    
+
     @Override
     public Object waitMessage(Socket sock) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: host: %s, port: %d\t]", sock.getInetAddress().getHostAddress(),
+                    sock.getPort()));
+        }
+
         Object data = receiveData(sock);
         return data;
     }
@@ -55,10 +60,10 @@ public class PokerRequestListener implements RequestListener {
             e.printStackTrace();
         }
     }
-    
+
     protected Object receiveData(Socket socket) {
         Object result = null;
-        
+
         try {
             InputStream in = socket.getInputStream();
             ByteBuffer buffer = ByteBuffer.allocate(1);
@@ -70,19 +75,19 @@ public class PokerRequestListener implements RequestListener {
                     newBuffer.put(buffer.array());
                     buffer = newBuffer;
                 }
-                
+
                 buffer.put(readedByte);
             }
-            
+
             byte[] data = buffer.array();
             result = Utils.deserializerObject(data);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         return result;
     }
-    
+
     private Logger log = Logger.getLogger(PokerRequestListener.class);
 }
