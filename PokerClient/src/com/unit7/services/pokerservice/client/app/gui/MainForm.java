@@ -24,6 +24,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
 import com.unit7.services.pokerservice.client.commands.Command;
 import com.unit7.services.pokerservice.client.commands.CommandType;
 import com.unit7.services.pokerservice.client.commands.SimpleCommand;
@@ -101,6 +103,10 @@ public class MainForm extends AbstractForm {
                     Socket sock = null;
                     try {
                         sock = SocketFactory.getDefault().createSocket(address, port);
+                        Controller.getInstance().setServerSocket(sock);
+                        if (log.isDebugEnabled()) {
+                            log.debug("connected to: " + sock.getInetAddress().getHostAddress() + " : " + sock.getPort());
+                        }
                     } catch (UnknownHostException e1) {
                         JOptionPane.showMessageDialog(MainForm.this, e1.getLocalizedMessage());
                         return;
@@ -118,11 +124,23 @@ public class MainForm extends AbstractForm {
                     command.setType(CommandType.REQUEST_NAME);
                     command.execute(Controller.getInstance());
                     
+                    if (log.isDebugEnabled()) {
+                        log.debug("name setted");
+                    }
+                    
                     command.setType(CommandType.GAMERS_INFO);
                     command.execute(Controller.getInstance());
                     
+                    if (log.isDebugEnabled()) {
+                        log.debug("gamers received");
+                    }
+                    
                     command.setType(CommandType.INIT_GAME);
                     command.execute(Controller.getInstance());
+                    
+                    if (log.isDebugEnabled()) {
+                        log.debug("game inited");
+                    }
                 } finally {
                     frame.dispose();
                     MainForm.this.setEnabled(true);
@@ -147,4 +165,6 @@ public class MainForm extends AbstractForm {
         this.setEnabled(true);
         return name;
     }
+    
+    private static final Logger log = Logger.getLogger(Logger.class);
 }
