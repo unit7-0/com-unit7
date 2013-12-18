@@ -13,7 +13,7 @@ import com.unit7.services.pokerservice.client.tools.Utils;
 
 public class PokerRequestListener implements RequestListener {
     @Override
-    public Response executeRequest(Request request) {
+    public synchronized Response executeRequest(Request request) {
         Socket socket = request.getSocket();
         Object data = request.getData();
 
