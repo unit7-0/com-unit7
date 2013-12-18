@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
+
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.client.model.CombinationType;
 import com.unit7.services.pokerservice.client.tools.Utils;
@@ -19,6 +21,7 @@ import com.unit7.services.pokerservice.engine.commands.CommandType;
 import com.unit7.services.pokerservice.engine.commands.EndRoundCommand;
 import com.unit7.services.pokerservice.engine.commands.FlopCommand;
 import com.unit7.services.pokerservice.engine.commands.GamerCommand;
+import com.unit7.services.pokerservice.engine.commands.GamersInfoCommand;
 import com.unit7.services.pokerservice.engine.commands.GetCardCommand;
 import com.unit7.services.pokerservice.engine.commands.PreflopCommand;
 import com.unit7.services.pokerservice.engine.commands.RequestNameCommand;
@@ -32,6 +35,7 @@ import com.unit7.services.pokerservice.engine.framework.Executor;
 import com.unit7.services.pokerservice.engine.framework.GamerCommandListener;
 import com.unit7.services.pokerservice.engine.framework.GamersChangeListener;
 import com.unit7.services.pokerservice.model.PokerGamer;
+import com.unit7.services.pokerservice.model.Stage;
 
 public class PokerGameInterfaceImpl implements PokerGameInterface {
     public PokerGameInterfaceImpl(List<PokerGamer> gamers) {
@@ -77,6 +81,19 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     public void game() {
         // step one - request usernames
         requestNames();
+        
+        Controller.getInstance().setStage(Stage.SEND_GAMERS_INFO);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: stage gamers info setted\t]", null));
+        }
+        
+        sendGamersInfo();
+        
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tExecuting: stage request blind setted\t]", null));
+        }
+        
+        Controller.getInstance().setStage(Stage.REQUEST_BLIND);
 
         // step two - select button
         PokerGamer button = selectButton();
@@ -255,6 +272,15 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         command.setGamers(realWinners);
         command.execute(Controller.getInstance());
     }
+    
+    /* (non-Javadoc)
+     * @see com.unit7.services.pokerservice.engine.PokerGameInterface#sendGamersInfo()
+     */
+    @Override
+    public void sendGamersInfo() {
+        Command command = new GamersInfoCommand();
+        executor.execute(new Command[] { command });
+    }
 
     private List<PokerGamer> gamers;
     private Set<Card> cards = new HashSet<Card>();
@@ -262,4 +288,6 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     private int lastButton = -1;
 
     private Map<PokerGamer, GamerCommand> gamerChoice = new HashMap<PokerGamer, GamerCommand>();
+    
+    private static final Logger log = Logger.getLogger(PokerGameInterfaceImpl.class);
 }

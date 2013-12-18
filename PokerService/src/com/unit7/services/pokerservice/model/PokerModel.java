@@ -63,6 +63,14 @@ public class PokerModel {
         return gamers;
     }
     
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     private Map<Integer, Card> cards = new HashMap<Integer, Card>();
 	private List<PokerGamer> gamers = new ArrayList<PokerGamer>();
 	private Card[] tableCards = new Card[CARDS_PRIKUP];
@@ -78,6 +86,8 @@ public class PokerModel {
 	 * Уже отданные карты
 	 */
 	private Set<Card> deck = new HashSet<Card>();
+	
+	private Stage stage;
 	
 	private static final Logger log = Logger.getLogger(PokerModel.class);
 }

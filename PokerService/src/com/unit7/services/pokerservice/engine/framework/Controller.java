@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -13,6 +14,7 @@ import com.unit7.services.pokerservice.client.commands.containers.CardContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
 import com.unit7.services.pokerservice.client.commands.containers.EndRoundCommandContainer;
+import com.unit7.services.pokerservice.client.commands.containers.GamersInfoCommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBetContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBlindContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestNameContainer;
@@ -23,6 +25,7 @@ import com.unit7.services.pokerservice.client.engine.transfer.RequestImpl;
 import com.unit7.services.pokerservice.client.engine.transfer.RequestListener;
 import com.unit7.services.pokerservice.client.engine.transfer.Response;
 import com.unit7.services.pokerservice.client.model.Card;
+import com.unit7.services.pokerservice.client.model.LightweightGamer;
 import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;
 import com.unit7.services.pokerservice.engine.commands.CommandType;
@@ -31,6 +34,7 @@ import com.unit7.services.pokerservice.engine.commands.GamerCommand;
 import com.unit7.services.pokerservice.engine.commands.RequestNameCommand;
 import com.unit7.services.pokerservice.model.PokerGamer;
 import com.unit7.services.pokerservice.model.PokerModel;
+import com.unit7.services.pokerservice.model.Stage;
 
 public class Controller {
     public void execute(final Command command) {
@@ -38,7 +42,7 @@ public class Controller {
             if (log.isDebugEnabled()) {
                 log.debug("[ Executing: Request name command ]");
             }
-            
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -51,34 +55,91 @@ public class Controller {
                     if (log.isDebugEnabled()) {
                         log.debug("[ Executing: before execute request ]");
                     }
-                    
+
                     Response response = requestListener.executeRequest(request);
                     Object data = response.getData();
 
                     if (log.isDebugEnabled()) {
                         log.debug("[ Executing: after execute request ]");
                     }
-                    
+
                     try {
                         requestContainer = (RequestNameContainer) data;
                         String name = requestContainer.getName();
-                        
+
                         if (log.isDebugEnabled()) {
                             log.debug("[ Executing: received name: " + name + " ]");
                         }
-                        
+
                         gamerCommand.getGamer().setName(name);
                     } catch (Exception e) {
                         // TODO handle exception
                     }
                 }
             }).start();
-            
+
             if (log.isDebugEnabled()) {
                 log.debug("[ Executing: Request name executing started ]");
             }
+        } else if (CommandType.GAMERS_INFO.equals(command.getCommandType())) {
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("[\tExecuting: Gamers info command started\t]", null));
+            }
+            
+            while (!Stage.SEND_GAMERS_INFO.equals(model.getStage())) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(300);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            // get all gamers
+            List<PokerGamer> gamers = model.getGamers();
+            List<LightweightGamer> lightweightGamers = new ArrayList<LightweightGamer>();
+            for (PokerGamer pokerGamer : gamers) {
+                LightweightGamer gamer = new LightweightGamer();
+                gamer.setName(pokerGamer.getName());
+                gamer.setId(1);
+                lightweightGamers.add(gamer);
+            }
+
+            GamersInfoCommandContainer container = new GamersInfoCommandContainer();
+            container.setGamers(lightweightGamers);
+
+            Request request = new RequestImpl();
+            request.setData(container);
+
+            // send to each gamer
+            for (PokerGamer pokerGamer : gamers) {
+                request.setSocket(pokerGamer.getSocket());
+                int index = gamers.indexOf(pokerGamer);
+                LightweightGamer gamer = lightweightGamers.get(index);
+                try {
+                    gamer.setCards(pokerGamer.getCards());
+                    Response response = requestListener.executeRequest(request);
+
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("[\tExecuting: received gamers info response from gamer: %s\t]",
+                                gamer.getName()));
+                    }
+                } finally {
+                    gamer.setCards(null);
+                }
+            }
         } else if (CommandType.SMALL_BLIND.equals(command.getCommandType())
                 || CommandType.BIG_BLIND.equals(command.getCommandType())) {
+
+            while (!Stage.REQUEST_BLIND.equals(model.getStage())) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(300);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
             Request request = new RequestImpl();
             RequestBlindContainer container = new RequestBlindContainer();
             container
@@ -164,7 +225,7 @@ public class Controller {
 
             Object data = response.getData();
             PokerGamer gamer = gamerCommand.getGamer();
-            
+
             try {
                 container = (RequestBetContainer) data;
                 CommandContainerType type = container.getType();
@@ -180,7 +241,7 @@ public class Controller {
                 } else if (CommandContainerType.FOLD.equals(type)) {
                     gamer.setInGame(false);
                 } else if (CommandContainerType.CHECK.equals(type)) {
-                	// TODO
+                    // TODO
                 }
             } catch (Exception e) {
                 // TODO handle exception
@@ -188,24 +249,24 @@ public class Controller {
         } else if (CommandType.SHOWDOWN.equals(command.getCommandType())) {
             CommandContainer container = new ShowdownCommandContainer();
             container.setType(CommandContainerType.SHOWDOWN);
-            
+
             Request request = new RequestImpl();
             request.setData(container);
-            
+
             for (PokerGamer gamer : model.getGamers()) {
                 request.setSocket(gamer.getSocket());
                 Response response = requestListener.executeRequest(request);
                 // TODO log response
             }
-            
+
         } else if (CommandType.END_ROUND.equals(command.getCommandType())) {
             EndRoundCommandContainer container = new EndRoundCommandContainer();
             container.setType(CommandContainerType.END_ROUND);
-            
+
             Request request = new RequestImpl();
             List<PokerGamer> winners = ((EndRoundCommand) command).getGamers();
             double win = model.getBank() / winners.size();
-            model.resetBank();	
+            model.resetBank();
             for (PokerGamer winner : winners) {
                 winner.addMoney(win);
                 container.setCurrentWin(winner.getMoney());
@@ -217,9 +278,9 @@ public class Controller {
     }
 
     public void upServer(int port) {
-    	new Thread(new ServerThread(port)).start();
+        new Thread(new ServerThread(port)).start();
     }
-    
+
     public void addListener(EventListener listener) {
         listeners.add(listener);
     }
@@ -247,10 +308,11 @@ public class Controller {
         container.setCards(cards);
         return container;
     }
-    
+
     public void createNewGame(List<Socket> clients) {
-    	model = new PokerModel(clients);
-    	new Thread(new GameThread(model.getGamers())).start();
+        model = new PokerModel(clients);
+        model.setStage(Stage.REQUEST_NAME);
+        new Thread(new GameThread(model.getGamers())).start();
     }
 
     public static Controller getInstance() {
@@ -263,6 +325,10 @@ public class Controller {
         return controller;
     }
 
+    public void setStage(Stage stage) {
+        model.setStage(stage);
+    }
+
     private static final ThreadLocal<Controller> instance = new ThreadLocal<Controller>();
 
     static {
@@ -272,6 +338,6 @@ public class Controller {
     private PokerModel model;
     private RequestListener requestListener = new PokerRequestListener();
     private List<EventListener> listeners = new ArrayList<EventListener>();
-    
+
     private static final Logger log = Logger.getLogger(Controller.class);
 }
