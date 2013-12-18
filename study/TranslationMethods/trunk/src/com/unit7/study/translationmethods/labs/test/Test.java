@@ -6,6 +6,8 @@
  */
 package com.unit7.study.translationmethods.labs.test;
 
+import com.unit7.study.translationmethods.rgz.var7.processors.Tree;
+
 public class Test {
 
 	/**
@@ -13,7 +15,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		Test app = new Test();
-		String expr = "00(1+2)0((1+2)0(1+2)((0+1)1(1+2)))((0+1+2)1222((1+2)01))";
+		String expr = "00(1+2)*0((1+2)*0(1+2)*((0+1)*1(1+2))*)*((0+1+2)*1222((1+2)*01))*";
 		Tree.setTerms("012");
 		Tree tree = Tree.parseTree(expr);
 		app.printLeftToRight(tree, "", "");
@@ -24,6 +26,6 @@ public class Test {
 			printLeftToRight(tr, spaces + "\t", tree.getName());
 		}
 		
-		System.out.println(spaces  + "name: " + tree.getName() + " parent: " + parent + " node: " + tree.getNode() + " stub: " + tree.isStub() + " monolith: " + tree.isMonolith());
+		System.out.println(spaces  + "name: " + tree.getName() + " parent: " + parent + " node: " + tree.getNode() + " stub: " + tree.isStub() + " monolith: " + tree.isMonolith() + " onlyOne: " + tree.isOnlyOne());
 	}
 }

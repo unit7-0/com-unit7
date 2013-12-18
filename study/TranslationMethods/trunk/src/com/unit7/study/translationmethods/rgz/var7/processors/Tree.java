@@ -16,6 +16,7 @@ public class Tree {
     public static Tree parseTree(String expr) {
         Tree root = new Tree();
         root.stub = true;
+        root.name = "root";
 
         Tree prev = root;
         Tree cur = new Tree();
@@ -29,14 +30,19 @@ public class Tree {
 
                 --i;
                 cur.node = builder.toString();
+                cur.name = cur.node;
                 cur.monolith = true;
                 prev.addChild(cur);
                 cur = new Tree();
             } else if (expr.charAt(i) == '(') {
                 int r = getLastBracket(expr, i);
-                Tree tr = build(expr.substring(i, r + 1));
+                boolean star = false;
+                if (r + 1 < expr.length() && expr.charAt(r + 1) == '*')
+                    star = true;
+                
+                Tree tr = build(expr.substring(i, r + 1), star);
                 prev.addChild(tr);
-                i = r;
+                i = star ? r + 1 : r;
             } else {
                 System.out.println(String.format("Something wrong [index: %s]", i));
             }
@@ -64,8 +70,15 @@ public class Tree {
         return r;
     }
 
-    protected static Tree build(String expr) {
+    /**
+     * 
+     * @param expr
+     * @param star - оканчивается ли выражение на *
+     * @return
+     */
+    protected static Tree build(String expr, boolean star) {
         Tree tree = new Tree();
+        tree.onlyOne = !star;
         if (isSimple(expr, 1)) {
             StringBuilder builder = new StringBuilder();
             for (int i = 1; i < expr.length() - 1; ++i) {
@@ -75,6 +88,7 @@ public class Tree {
             }
 
             tree.node = builder.toString();
+            tree.name = tree.node;
         } else {
             tree.stub = true;
             if (term(expr)) {
@@ -84,20 +98,54 @@ public class Tree {
                         Tree tr = new Tree();
                         tr.monolith = true;
                         tr.node = str;
+                        tr.name = str;
                         tree.addChild(tr);
                     } else {
-                        tree.addChild(build(str));
+                        boolean star2 = false;
+                        if (str.endsWith("*"))
+                            star2 = true;
+                        
+                        if (!star2)
+                            tree.addChild(build(str, false));
+                        else 
+                            tree.addChild(build(str.substring(0, str.length() - 1), true));
                     }
                 }
             } else {
                 List<String> strs = split(expr.substring(1, expr.length() - 1));
                 for (String str : strs) {
-                    tree.addChild(build(str));
+                    if (str.endsWith("*")) {
+                        tree.addChild(build(str.substring(0, str.length() - 1), true));
+                    } else {
+                        tree.addChild(build(str, false));
+                    }
                 }
             }
+            
+            tree.name = expr;
         }
 
         return tree;
+    }
+
+    public List<Tree> getChilds() {
+        return childs;
+    }
+
+    public String getNode() {
+        return node;
+    }
+
+    public boolean isMonolith() {
+        return monolith;
+    }
+
+    public boolean isStub() {
+        return stub;
+    }
+
+    public String getName() {
+        return name;
     }
 
     protected static boolean onlyTerm(String expr) {
@@ -131,6 +179,11 @@ public class Tree {
             } else if (c == ')' && inExp) {
                 builder.append(')');
                 if (count == 1) {
+                    if (i + 1 < expr.length() && expr.charAt(i + 1) == '*') {
+                        i += 1;
+                        builder.append('*');
+                    }
+                    
                     inExp = false;
                     strs.add(builder.toString());
                     builder.delete(0, builder.length());
@@ -142,6 +195,9 @@ public class Tree {
             }
         }
 
+        if (builder.length() != 0)
+            strs.add(builder.toString());
+        
         return strs;
     }
 
@@ -161,6 +217,10 @@ public class Tree {
         }
 
         return false;
+    }
+
+    public boolean isOnlyOne() {
+        return onlyOne;
     }
 
     protected static boolean isSimple(String expr, int i) {
@@ -186,6 +246,8 @@ public class Tree {
     private String node;
     private boolean monolith;
     private boolean stub;
+    private boolean onlyOne;
+    private String name;
 
     private static String terms;
 }
