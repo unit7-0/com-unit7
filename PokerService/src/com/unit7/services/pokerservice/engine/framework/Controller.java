@@ -310,11 +310,15 @@ public class Controller {
     }
 
     public void createNewGame(List<Socket> clients) {
-        model = new PokerModel(clients);
-        model.setStage(Stage.REQUEST_NAME);
-        new Thread(new GameThread(model.getGamers())).start();
+        new Thread(new GameThread(clients)).start();
     }
 
+    public List<PokerGamer> initGame(List<Socket> clients) {
+    	model = new PokerModel(clients);
+        model.setStage(Stage.REQUEST_NAME);
+        return model.getGamers();
+    }
+    
     public static Controller getInstance() {
         Controller controller = instance.get();
         if (controller == null) {
