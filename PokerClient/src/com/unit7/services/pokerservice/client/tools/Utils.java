@@ -1,6 +1,7 @@
 package com.unit7.services.pokerservice.client.tools;
 
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class Utils {
         return result;
     }
     
-    public static void centreFrame(JFrame main, JFrame depend) {
+    public static void centreFrame(Window main, Window depend) {
         int x = 0, y = 0;
         if (main == null) {
             java.awt.Dimension d = Toolkit.getDefaultToolkit().getScreenSize();

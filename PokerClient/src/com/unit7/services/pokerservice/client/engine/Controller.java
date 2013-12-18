@@ -11,7 +11,6 @@ import java.net.Socket;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jcp.xml.dsig.internal.dom.ApacheCanonicalizer;
 
 import com.unit7.services.pokerservice.client.commands.Command;
 import com.unit7.services.pokerservice.client.commands.CommandType;

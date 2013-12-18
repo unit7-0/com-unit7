@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.SocketFactory;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -87,17 +88,10 @@ public class MainForm extends AbstractForm {
                 }
 
                 JFrame frame = new JFrame();
+                JDialog dialog = null;
                 try {
                     // блокируем родительское окно
-                    MainForm.this.setEnabled(false);
-                    frame.setUndecorated(true);
-                    JLabel label = new JLabel("Пожалуйста, подождите...");
-                    JPanel panel = new JPanel();
-                    panel.add(label);
-                    frame.getContentPane().add(panel);
-                    frame.pack();
-                    Utils.centreFrame(MainForm.this, frame);
-                    frame.setVisible(true);
+                    dialog = lockAndShow(MainForm.this, "Пожалуйста подождите...");
 
                     // пытаемся коннектиться
                     Socket sock = null;
@@ -142,8 +136,7 @@ public class MainForm extends AbstractForm {
                         log.debug("game inited");
                     }
                 } finally {
-                    frame.dispose();
-                    MainForm.this.setEnabled(true);
+                    unlock(MainForm.this, dialog);
                 }
             }
         });
@@ -153,6 +146,26 @@ public class MainForm extends AbstractForm {
         setTitle("Texas Holdem");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         return this;
+    }
+    
+    public JDialog lockAndShow(JFrame frame, String message) {
+    	frame.setEnabled(false);
+    	JDialog dialog = new JDialog(frame);
+        dialog.setUndecorated(true);
+        JLabel label = new JLabel("Пожалуйста, подождите...");
+        JPanel panel = new JPanel();
+        panel.add(label);
+        dialog.getContentPane().add(panel);
+        dialog.pack();
+        Utils.centreFrame(frame, dialog);
+        dialog.setVisible(true);
+        
+        return dialog;
+    }
+    
+    public void unlock(JFrame frame, JDialog dialog) {
+    	dialog.dispose();
+        frame.setEnabled(true);
     }
     
     public String getUserName() {
