@@ -7,14 +7,17 @@
 
 package com.unit7.services.pokerservice.client.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author unit7
  * 
  */
-public class LightweightGamer {
-    public int getId() {
+public class LightweightGamer implements Serializable {
+	private static final long serialVersionUID = 186996730345622387L;
+	
+	public int getId() {
         return id;
     }
 
