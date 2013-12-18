@@ -29,4 +29,6 @@ public interface PokerGameInterface extends Subject {
     void game();
     
     void determineWinner();
+    
+    void sendGamersInfo();
 }

@@ -14,7 +14,8 @@ public enum CommandType {
     TURN("TURN"), 
     FLOP("FLOP"), 
     SHOWDOWN("SHOWDOWN"), 
-    END_ROUND("END_ROUND");
+    END_ROUND("END_ROUND"),
+    GAMERS_INFO("GAMERS_INFO");
     
     private CommandType(String value) {
         this.value = value;
