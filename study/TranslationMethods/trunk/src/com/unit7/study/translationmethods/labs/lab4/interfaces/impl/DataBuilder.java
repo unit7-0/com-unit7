@@ -151,8 +151,8 @@ public class DataBuilder {
             return new OperationStub();
         } 
         // add
-        else if (stackOut.length() == 2 && stackOut.charAt(0) == in.charAt(0) && stackOut.charAt(1) == stackIn.charAt(0)) {
-            return new OperationAdd();
+        else if (stackOut.length() == 2 && /*stackOut.charAt(0) == in.charAt(0) && */stackOut.charAt(1) == stackIn.charAt(0)) {
+            return new OperationAdd(String.valueOf(stackOut.charAt(0)));
         } 
         // delete
         else if (stackOut.equals(GrammarRules.GRAMMAR_EMPTY)) {
