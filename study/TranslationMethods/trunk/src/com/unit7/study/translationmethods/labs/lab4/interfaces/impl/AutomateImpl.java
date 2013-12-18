@@ -70,7 +70,7 @@ public class AutomateImpl implements Automate {
                                 + globalStack.top() + " ] ");*/
                         if (state.hasNextState(trying, globalStack)) {
                             current = state.nextState(trying, globalStack);
-                            addLogMessage(state.getName(), current.getFirst().getName(), trying, globalStack.toString(), current.getSecond());
+                            addLogMessage(state.getName(), current.getFirst().getName(), chain.substring(i), globalStack.toString(), current.getSecond());
                             operand.setFirst(trying);
                             current.getSecond().execute(operand);
                             i -= 1;
@@ -116,7 +116,7 @@ public class AutomateImpl implements Automate {
     private String getLogRule(String startState, String finalState, String in, String stackIn, Operation op) {
         String stackOut = "";
         if (op instanceof OperationAdd) {
-            stackOut = in + stackIn;
+            stackOut = ((OperationAdd) op).getAdd() + stackIn;
         } else if (op instanceof OperationDelete) {
             stackOut = GrammarRules.GRAMMAR_EMPTY;
         } else if (op instanceof OperationReplace) {
@@ -131,7 +131,7 @@ public class AutomateImpl implements Automate {
     private String getLogConfig(String startState, String finalState, String in, String stackIn, Operation op) {
         String stackOut = "";
         if (op instanceof OperationAdd) {
-            stackOut = in.substring(0, 1) + stackIn;
+            stackOut = ((OperationAdd) op).getAdd() + stackIn;
         } else if (op instanceof OperationDelete) {
             stackOut = stackIn.substring(1);
         } else if (op instanceof OperationReplace) {
