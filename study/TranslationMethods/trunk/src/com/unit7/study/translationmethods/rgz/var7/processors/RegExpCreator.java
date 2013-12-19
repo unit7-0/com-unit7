@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -77,6 +78,9 @@ public class RegExpCreator implements Creator<RegExp>, ActionListener {
         rulesArea.append(regExp.getExpr());
         rulesArea.append("\r\n");
 
+        JMenuBar bar = Utils.createSaveFileMenu(new String[] { "Выражение" }, rulesArea);
+		frame.setJMenuBar(bar);
+        
         main.add(rules);
 
         frame.setTitle("Регулярное выражение");

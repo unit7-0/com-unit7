@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -73,6 +74,9 @@ public class ChainCreator implements Creator<Set<String>>, ActionListener {
 			}
 		}
 
+		JMenuBar bar = Utils.createSaveFileMenu(new String[] { "Цепочка", "Выражение" }, area, regExpArea);
+		frame.setJMenuBar(bar);
+		
 		pane.revalidate();
 		regExpPane.revalidate();
 
