@@ -119,6 +119,10 @@ public class RegExpCreator implements Creator<RegExp>, ActionListener {
             throw new InformationException(String.format(GrammarCreator.EMPTY_INPUT_PARAMETER, "Символ кратности"));
         }
         
+        if (beg.indexOf(character) == -1) {
+        	throw new InformationException(CHARACTER_NOT_IN_PREFIX);
+        }
+        
         int multipleChar = 0;
         if (mulChar.equals("")) {
             throw new InformationException(String.format(GrammarCreator.EMPTY_INPUT_PARAMETER, "Кратность символа"));
@@ -239,6 +243,8 @@ public class RegExpCreator implements Creator<RegExp>, ActionListener {
         return regExp;
     }
 
+    public static final String CHARACTER_NOT_IN_PREFIX = "Символ кратности не найден в начальной подцепочке";
+    
     private JTextField alph;
     private JTextField begin;
     private JTextField mulChar;
