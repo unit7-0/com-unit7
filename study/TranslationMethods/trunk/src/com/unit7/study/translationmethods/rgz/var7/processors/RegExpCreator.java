@@ -146,7 +146,7 @@ public class RegExpCreator implements Creator<RegExp>, ActionListener {
         }
 
         int fin = 0;
-        if (startLen.equals("")) {
+        if (endLen.equals("")) {
             throw new InformationException(String.format(GrammarCreator.EMPTY_INPUT_PARAMETER, "Максимальная длина"));
         } else {
             try {
@@ -159,6 +159,8 @@ public class RegExpCreator implements Creator<RegExp>, ActionListener {
 
         if (start > fin)
             throw new InformationException("Минимальная длина больше максимальной");
+        if (start < beg.length())
+        	throw new InformationException("Минимальная длина цепочки меньше длины начальной подцепочки");
 
         String[] alphArr = alph.split("");
         Set<String> terms = new HashSet<String>();
