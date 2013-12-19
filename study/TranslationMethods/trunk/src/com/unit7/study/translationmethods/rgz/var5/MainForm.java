@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -82,8 +83,7 @@ public class MainForm extends JFrame {
                 try {
                     grammar = grammarCreator.create();
                 } catch (InformationException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(MainForm.this, e1.getLocalizedMessage());
                 }
 
                 ChainsShower shower = new ChainsShower(grammar.getRules(), grammar.getTarget(), grammar.getMaxLen());

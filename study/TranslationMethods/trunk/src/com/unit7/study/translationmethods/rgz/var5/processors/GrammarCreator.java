@@ -94,6 +94,10 @@ public class GrammarCreator implements Creator<Grammar>, ActionListener {
         if (start > fin)
             throw new InformationException("Минимальная длина больше максимальной");
         
+        if (start < beg.length() + end.length()) {
+            throw new InformationException("Минимальная длина меньше чем сумма длин начальной и конечной подцепочек");
+        }
+        
         String[] alphArr = alph.split("");
         Set<String> terms = new HashSet<String>();
         for (String str : alphArr) {
