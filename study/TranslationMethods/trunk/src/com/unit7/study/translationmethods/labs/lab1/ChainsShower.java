@@ -32,191 +32,202 @@ import com.unit7.study.translationmethods.labs.lab2.TreeFrame;
 import com.unit7.study.translationmethods.labs.utils.Utils;
 
 public class ChainsShower extends JFrame {
-    public ChainsShower(final Map<String, String> exprs, final String target, int lens) {
-        super("Цепочки");
-        this.expressions = new ConcurrentHashMap<String, String>() {
-            {
-                for (Map.Entry<String, String> entry : exprs.entrySet()) {
-                    put(entry.getKey(), entry.getValue());
-                }
-            }
-        };
-        this.sourceExpr = new HashMap<String, String>() {
-            {
-                for (Map.Entry<String, String> entry : exprs.entrySet()) {
-                    put(entry.getKey(), entry.getValue());
-                }
-            }
-        };
-        
-        this.maxLen = lens;
-        recursiveRemover.remove(expressions);
+	public ChainsShower(final Map<String, String> exprs, final String target,
+			int lens) {
+		super("Цепочки");
+		this.expressions = new ConcurrentHashMap<String, String>() {
+			{
+				for (Map.Entry<String, String> entry : exprs.entrySet()) {
+					put(entry.getKey(), entry.getValue());
+				}
+			}
+		};
+		this.sourceExpr = new HashMap<String, String>() {
+			{
+				for (Map.Entry<String, String> entry : exprs.entrySet()) {
+					put(entry.getKey(), entry.getValue());
+				}
+			}
+		};
 
-        // JTextArea area = new JTextArea();
-        String[] vars = exprs.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
-        // for each rule we call doBuild and get some chain
-        Set<String> finalAnswer = new HashSet<String>();
-        for (String var : vars) {
-            // if there is a repeats...
-            finalAnswer.addAll(doBuild(var, 0));
-            // log.put(var, target);
-        }
+		this.maxLen = lens;
+		recursiveRemover.remove(expressions);
 
-        JPanel panel = new JPanel(new GridLayout((int) Math.ceil(finalAnswer.size() / 15.0), 15, 10, 10));
-        JScrollPane pane = new JScrollPane(panel);
-        for (String res : finalAnswer) {
-            if (!res.isEmpty()) {
-                // area.append(res + "\n");
-                final JLabel label = new JLabel(res);
-                label.setBackground(Color.WHITE);
-                label.setFont(Font.getFont(Font.MONOSPACED));
-                label.setOpaque(true);
-                label.addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        // TODO Auto-generated method stub
+		JTextArea area = new JTextArea();
+		String[] vars = exprs.get(target).split(GrammarRules.GRAMMAR_DELIMETER);
+		// for each rule we call doBuild and get some chain
+		Set<String> finalAnswer = new HashSet<String>();
+		for (String var : vars) {
+			// if there is a repeats...
+			finalAnswer.addAll(doBuild(var, 0));
+			// log.put(var, target);
+		}
 
-                    }
+		JPanel panel = new JPanel(new GridLayout((int) Math.ceil(finalAnswer
+				.size() / 15.0), 15, 10, 10));
+		JScrollPane pane = new JScrollPane(panel);
+		for (String res : finalAnswer) {
+			if (!res.isEmpty()) {
+				area.append(res);
+				area.append("\r\n");
+				final JLabel label = new JLabel(res);
+				label.setBackground(Color.WHITE);
+				label.setFont(Font.getFont(Font.MONOSPACED));
+				label.setOpaque(true);
+				label.addMouseListener(new MouseListener() {
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
 
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        // TODO Auto-generated method stub
+					}
 
-                    }
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub
 
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        // TODO Auto-generated method stub
+					}
 
-                    }
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
 
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        // TODO Auto-generated method stub
+					}
 
-                    }
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
 
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        String chain = label.getText();
-                        /*
-                         * List<String> path = new ArrayList<String>(); String
-                         * begin = chain; do { path.add(begin); } while ();
-                         * 
-                         * Collections.reverse(path); StringBuilder result = new
-                         * StringBuilder(); for (String comp : path) {
-                         * result.append(comp).append("->"); }
-                         * 
-                         * result.delete(result.length() - 2, result.length());
-                         * JFrame window = new JFrame(); window.add(new
-                         * JLabel(result.toString()));
-                         * window.setDefaultCloseOperation
-                         * (JFrame.DISPOSE_ON_CLOSE); window.setVisible(true);
-                         * window.pack();
-                         */
+					}
 
-                        TreeFrame frame = new TreeFrame(sourceExpr, target, chain);
-                        frame.setBuilder(new TreeBuilder());
-                        frame.showContent();
-                        Utils.centreFrame(ChainsShower.this, frame);
-                        frame.setVisible(true);
-                    }
-                });
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						String chain = label.getText();
+						/*
+						 * List<String> path = new ArrayList<String>(); String
+						 * begin = chain; do { path.add(begin); } while ();
+						 * 
+						 * Collections.reverse(path); StringBuilder result = new
+						 * StringBuilder(); for (String comp : path) {
+						 * result.append(comp).append("->"); }
+						 * 
+						 * result.delete(result.length() - 2, result.length());
+						 * JFrame window = new JFrame(); window.add(new
+						 * JLabel(result.toString()));
+						 * window.setDefaultCloseOperation
+						 * (JFrame.DISPOSE_ON_CLOSE); window.setVisible(true);
+						 * window.pack();
+						 */
 
-                panel.add(label);
-                // log.put(res, var);
-            }
-        }
+						TreeFrame frame = new TreeFrame(sourceExpr, target,
+								chain);
+						frame.setBuilder(new TreeBuilder());
+						frame.showContent();
+						Utils.centreFrame(ChainsShower.this, frame);
+						frame.setVisible(true);
+					}
+				});
 
-        setContentPane(pane);
-        setSize(new Dimension(400, 300));
-        try {
-            FileOutputStream out = new FileOutputStream("/home/unit7/log.txt");
-            PrintWriter writer = new PrintWriter(out);
-            writer.println(log.toString());
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+				panel.add(label);
+				// log.put(res, var);
+			}
+		}
 
-    /**
-     * build chains TODO improve asymptotic
-     * 
-     * @param expr
-     * @param pos
-     * @return
-     */
-    private List<String> doBuild(String expr, int pos) {
-        StringBuilder result = new StringBuilder(expr.substring(0, pos));
-        List<String> totalResult = new ArrayList<String>();
-        // step by step through expression if we met notTerminal then buid all
-        // possible chains
-        if (pos > maxLen)
-            return totalResult;
-        for (int i = pos; i < expr.length(); ++i) {
-            if (GrammarRules.isTerminal(expr.charAt(i))) {
-                if (result.length() + 1 > maxLen) {
-                    return totalResult;
-                }
+		setJMenuBar(Utils.createSaveFileMenu(new String[] { "Цепочки" }, area));
+		
+		setContentPane(pane);
+		setSize(new Dimension(400, 300));
+		Utils.centreFrame(null, this);
+		try {
+			FileOutputStream out = new FileOutputStream("/home/unit7/log.txt");
+			PrintWriter writer = new PrintWriter(out);
+			writer.println(log.toString());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-                result.append(expr.charAt(i));
-            } else if (GrammarRules.isNotTerminal(expr.charAt(i))) {
-                // possible chains
-                String name = nameToolz.getName(expr.substring(i));
-                String[] possibleChains = expandChain(name);
-                // each chain may present as before = result[pos..i - 1],
-                // current = one of chains[]
-                // and after = before + each of chains[] + remain
-                // expression(expr)
-                for (String possible : possibleChains) {
-                    if (possible.equals(GrammarRules.GRAMMAR_EMPTY)) {
-                        // add current chain to result if we find the empty
-                        // symbol
-                        // and at the end we must add all chains to the set
-                        // for construct final answer without repeats
-                        // totalResult.add(result.toString());
-                        List<String> anotherChains = doBuild(result.toString() + expr.substring(i + name.length()),
-                                result.length());
-                        totalResult.addAll(anotherChains);
-                        // log.put(expr, result.toString());
-                        continue;
-                    }
+	/**
+	 * build chains TODO improve asymptotic
+	 * 
+	 * @param expr
+	 * @param pos
+	 * @return
+	 */
+	private List<String> doBuild(String expr, int pos) {
+		StringBuilder result = new StringBuilder(expr.substring(0, pos));
+		List<String> totalResult = new ArrayList<String>();
+		// step by step through expression if we met notTerminal then buid all
+		// possible chains
+		if (pos > maxLen)
+			return totalResult;
+		for (int i = pos; i < expr.length(); ++i) {
+			if (GrammarRules.isTerminal(expr.charAt(i))) {
+				if (result.length() + 1 > maxLen) {
+					return totalResult;
+				}
 
-                    List<String> chains = null;
-                    // TODO make it normal (crazy)
-                    try {
-                        chains = doBuild(result.toString() + possible + expr.substring(i + name.length()),
-                                result.length());
-                    } catch (StackOverflowError err) {
-                        continue;
-                    }
+				result.append(expr.charAt(i));
+			} else if (GrammarRules.isNotTerminal(expr.charAt(i))) {
+				// possible chains
+				String name = nameToolz.getName(expr.substring(i));
+				String[] possibleChains = expandChain(name);
+				// each chain may present as before = result[pos..i - 1],
+				// current = one of chains[]
+				// and after = before + each of chains[] + remain
+				// expression(expr)
+				for (String possible : possibleChains) {
+					if (possible.equals(GrammarRules.GRAMMAR_EMPTY)) {
+						// add current chain to result if we find the empty
+						// symbol
+						// and at the end we must add all chains to the set
+						// for construct final answer without repeats
+						// totalResult.add(result.toString());
+						List<String> anotherChains = doBuild(result.toString()
+								+ expr.substring(i + name.length()),
+								result.length());
+						totalResult.addAll(anotherChains);
+						// log.put(expr, result.toString());
+						continue;
+					}
 
-                    // log all manipulations
-                    for (String chain : chains) {
-                        // log.put(chain, expr);
-                    }
+					List<String> chains = null;
+					// TODO make it normal (crazy)
+					try {
+						chains = doBuild(
+								result.toString() + possible
+										+ expr.substring(i + name.length()),
+								result.length());
+					} catch (StackOverflowError err) {
+						continue;
+					}
 
-                    totalResult.addAll(chains);
-                }
+					// log all manipulations
+					for (String chain : chains) {
+						// log.put(chain, expr);
+					}
 
-                return totalResult;
-            }
-        }
+					totalResult.addAll(chains);
+				}
 
-        totalResult.add(result.toString());
-        return totalResult;
-    }
+				return totalResult;
+			}
+		}
 
-    private String[] expandChain(String chain) {
-        return expressions.get(chain).split(GrammarRules.GRAMMAR_DELIMETER);
-    }
+		totalResult.add(result.toString());
+		return totalResult;
+	}
 
-    private int maxLen;
-    private RecursionRemover recursiveRemover = new LeftRecursionRemover();
-    private NameToolz nameToolz = new DigitNameToolz();
-    private Map<String, String> expressions;
-    private Map<String, String> sourceExpr;
+	private String[] expandChain(String chain) {
+		return expressions.get(chain).split(GrammarRules.GRAMMAR_DELIMETER);
+	}
 
-    private static final Logger log = Logger.getLogger(ChainsShower.class.getName());
+	private int maxLen;
+	private RecursionRemover recursiveRemover = new LeftRecursionRemover();
+	private NameToolz nameToolz = new DigitNameToolz();
+	private Map<String, String> expressions;
+	private Map<String, String> sourceExpr;
+
+	private static final Logger log = Logger.getLogger(ChainsShower.class
+			.getName());
 }
