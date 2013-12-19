@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.unit7.study.translationmethods.labs.utils.Utils;
 import com.unit7.study.translationmethods.rgz.var7.processors.ChainCreator;
 import com.unit7.study.translationmethods.rgz.var7.processors.RegExpCreator;
 
@@ -89,6 +90,8 @@ public class MainForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(main);
         pack();
+        
+        Utils.centreFrame(null, this);
         return this;
     }
 }
