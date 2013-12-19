@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
+import com.unit7.study.translationmethods.labs.utils.Utils;
 import com.unit7.study.translationmethods.rgz.var5.processors.Creator;
 import com.unit7.study.translationmethods.rgz.var5.processors.GrammarCreator;
 import com.unit7.study.translationmethods.rgz.var7.RegExp;
@@ -82,6 +83,8 @@ public class RegExpCreator implements Creator<RegExp>, ActionListener {
         frame.setContentPane(main);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
+        
+        Utils.centreFrame(null, frame);
         frame.setVisible(true);
     }
 
