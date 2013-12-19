@@ -21,7 +21,10 @@ import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -49,9 +52,9 @@ public class ChainCreator implements Creator<Set<String>>, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JFrame frame = new JFrame("Цепочки");
+		final JFrame frame = new JFrame("Цепочки");
 		JPanel main = new JPanel(new BorderLayout());
-//		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+		// main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 		JTextArea area = new JTextArea(20, 30);
 		JTextArea regExpArea = new JTextArea(5, 30);
 		JScrollPane pane = new JScrollPane(area);
@@ -74,9 +77,11 @@ public class ChainCreator implements Creator<Set<String>>, ActionListener {
 			}
 		}
 
-		JMenuBar bar = Utils.createSaveFileMenu(new String[] { "Цепочка", "Выражение" }, area, regExpArea);
+		JMenuBar bar = Utils.createSaveFileMenu(new String[] { "Цепочка",
+				"Выражение" }, area, regExpArea);
+
 		frame.setJMenuBar(bar);
-		
+
 		pane.revalidate();
 		regExpPane.revalidate();
 
@@ -86,7 +91,7 @@ public class ChainCreator implements Creator<Set<String>>, ActionListener {
 		frame.getContentPane().add(main);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.pack();
-		
+
 		Utils.centreFrame(null, frame);
 		frame.setVisible(true);
 	}
@@ -186,7 +191,9 @@ public class ChainCreator implements Creator<Set<String>>, ActionListener {
 						gen.add(String.valueOf(node.charAt(i)));
 						for (int j = 1; j < len; ++j) { // TODO optimize
 							List<String> tmp = new ArrayList<String>();
-							for (int k = 0; k < node.length(); ++k) { // TODO check it
+							for (int k = 0; k < node.length(); ++k) { // TODO
+																		// check
+																		// it
 								for (String str : gen) {
 									StringBuilder builder = new StringBuilder(
 											str);

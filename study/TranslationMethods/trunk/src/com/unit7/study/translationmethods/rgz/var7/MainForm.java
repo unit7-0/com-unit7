@@ -9,10 +9,15 @@ package com.unit7.study.translationmethods.rgz.var7;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -86,12 +91,46 @@ public class MainForm extends JFrame {
         main.add(lens);
         main.add(controls);
         
+        JMenu menu = new JMenu("About");
+		JMenuItem item = new JMenuItem("Help");
+
+		JMenuBar bar = new JMenuBar();
+		
+		menu.add(item);
+		bar.add(menu);
+		
+		this.setJMenuBar(bar);
+        
         setTitle("RGZ7");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(main);
         pack();
         
         Utils.centreFrame(null, this);
+        item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame1 = new JFrame("Help");
+
+				JLabel lable = new JLabel();
+
+				lable.setText("<html><body><br>Заполните все поля.<br>В поле \"Алфавит\" вводите символы через пробел или сплошным текстом.<br>"
+						+ "В поле \"Начальная подцепочка\" должны быть введены символы из \"Алфавита\".<br>"
+						+ "В поле \"Символ\" введите 1 символ из \"Начальной подцепочки\".<br>"
+						+ "\"Кратность\" задается цифрой.<br>"
+						+ "В первое поле \"Диапазон длин\" введите минимальную длину желаемых цепочек<br>"
+						+ "(не меньше длbны начальной подцепочки), во втором поле введите<br>"
+						+ "максимальную длину.<br><br><br></body></html>");
+
+				frame1.getContentPane().add(lable);
+				frame1.pack();
+				Utils.centreFrame(MainForm.this, frame1);
+				frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				frame1.setTitle("Help");
+				frame1.setVisible(true);
+			}
+		});
+        
         return this;
     }
 }
