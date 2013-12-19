@@ -186,7 +186,7 @@ public class ChainCreator implements Creator<Set<String>>, ActionListener {
 						gen.add(String.valueOf(node.charAt(i)));
 						for (int j = 1; j < len; ++j) { // TODO optimize
 							List<String> tmp = new ArrayList<String>();
-							for (int k = 0; k < node.length(); ++k) {
+							for (int k = 0; k < node.length(); ++k) { // TODO check it
 								for (String str : gen) {
 									StringBuilder builder = new StringBuilder(
 											str);
