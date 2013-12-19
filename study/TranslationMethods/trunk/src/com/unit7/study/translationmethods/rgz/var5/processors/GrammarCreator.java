@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -29,6 +30,7 @@ import javax.swing.JTextField;
 
 import com.unit7.study.translationmethods.labs.lab1.GrammarRules;
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
+import com.unit7.study.translationmethods.labs.utils.Utils;
 import com.unit7.study.translationmethods.rgz.var5.Grammar;
 
 /**
@@ -219,6 +221,9 @@ public class GrammarCreator implements Creator<Grammar>, ActionListener {
             rulesArea.append("\r\n");
         }
         
+        JMenuBar bar = Utils.createSaveFileMenu(new String[] { "Грамматика" }, rulesArea);
+        frame.setJMenuBar(bar);
+        
         main.add(terminals);
         main.add(notTerminals);
         main.add(rules);
@@ -227,6 +232,8 @@ public class GrammarCreator implements Creator<Grammar>, ActionListener {
         frame.setContentPane(main);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
+        
+        Utils.centreFrame(null, frame);
         frame.setVisible(true);
     }
     

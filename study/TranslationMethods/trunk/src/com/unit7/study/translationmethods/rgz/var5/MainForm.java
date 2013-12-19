@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 
 import com.unit7.study.translationmethods.labs.lab1.ChainsShower;
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
+import com.unit7.study.translationmethods.labs.utils.Utils;
 import com.unit7.study.translationmethods.rgz.var5.processors.Creator;
 import com.unit7.study.translationmethods.rgz.var5.processors.GrammarCreator;
 
@@ -104,6 +105,8 @@ public class MainForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("RGZ unit7");
         pack();
+        
+        Utils.centreFrame(null, this);
 
         return this;
     }
