@@ -1,15 +1,12 @@
 package com.unit7.study.translationmethods.labs.lab3.interfaces.impl;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.unit7.study.translationmethods.labs.lab3.exceptions.InformationException;
 import com.unit7.study.translationmethods.labs.lab3.interfaces.AutomateApp;

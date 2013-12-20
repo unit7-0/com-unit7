@@ -124,7 +124,7 @@ public class BuildListener implements ActionListener {
                     return;
                 }
                 
-                new ChainsShower(expressions, target.getText().trim(), len).setVisible(true);
+                new ChainsShower(expressions, target.getText().trim(), len, 0).setVisible(true);
             }
         }).start();
     }

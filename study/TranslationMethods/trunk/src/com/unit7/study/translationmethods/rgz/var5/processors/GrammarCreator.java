@@ -94,10 +94,6 @@ public class GrammarCreator implements Creator<Grammar>, ActionListener {
         if (start > fin)
             throw new InformationException("Минимальная длина больше максимальной");
         
-        if (start < beg.length() + end.length()) {
-            throw new InformationException("Минимальная длина меньше чем сумма длин начальной и конечной подцепочек");
-        }
-        
         String[] alphArr = alph.split("");
         Set<String> terms = new HashSet<String>();
         for (String str : alphArr) {
@@ -153,6 +149,10 @@ public class GrammarCreator implements Creator<Grammar>, ActionListener {
         StringBuilder B = new StringBuilder();
         StringBuilder S = new StringBuilder();
         String shortest = beg.substring(0, first) + suf + end.substring(second);
+
+        if (start < shortest.length()) {
+            throw new InformationException("Минимальная длина меньше чем длина минимально возможной цепочки: " + shortest);
+        }
         
         if (shortest.length() > start) {
             throw new InformationException(MIN_LEN_GREATER_SHORTEST_CHAIN);
