@@ -86,7 +86,7 @@ public class MainForm extends JFrame {
                     JOptionPane.showMessageDialog(MainForm.this, e1.getLocalizedMessage());
                 }
 
-                ChainsShower shower = new ChainsShower(grammar.getRules(), grammar.getTarget(), grammar.getMaxLen());
+                ChainsShower shower = new ChainsShower(grammar.getRules(), grammar.getTarget(), grammar.getMaxLen(), grammar.getMinLen());
                 shower.setVisible(true);
             }
         });

@@ -32,9 +32,12 @@ import com.unit7.study.translationmethods.labs.lab2.TreeFrame;
 import com.unit7.study.translationmethods.labs.utils.Utils;
 
 public class ChainsShower extends JFrame {
+	private int min;
+	
 	public ChainsShower(final Map<String, String> exprs, final String target,
-			int lens) {
+			int lens, int min) {
 		super("Цепочки");
+		this.min = min;
 		this.expressions = new ConcurrentHashMap<String, String>() {
 			{
 				for (Map.Entry<String, String> entry : exprs.entrySet()) {
@@ -67,7 +70,7 @@ public class ChainsShower extends JFrame {
 				.size() / 15.0), 15, 10, 10));
 		JScrollPane pane = new JScrollPane(panel);
 		for (String res : finalAnswer) {
-			if (!res.isEmpty()) {
+			if (!res.isEmpty() && res.length() >= min) {
 				area.append(res);
 				area.append("\r\n");
 				final JLabel label = new JLabel(res);
