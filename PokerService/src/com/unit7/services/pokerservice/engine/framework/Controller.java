@@ -14,6 +14,7 @@ import com.unit7.services.pokerservice.client.commands.containers.CardContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
 import com.unit7.services.pokerservice.client.commands.containers.EndRoundCommandContainer;
+import com.unit7.services.pokerservice.client.commands.containers.ErrorCommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.GamersInfoCommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBetContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBlindContainer;
@@ -30,6 +31,7 @@ import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;
 import com.unit7.services.pokerservice.engine.commands.CommandType;
 import com.unit7.services.pokerservice.engine.commands.EndRoundCommand;
+import com.unit7.services.pokerservice.engine.commands.ErrorCommand;
 import com.unit7.services.pokerservice.engine.commands.GamerCommand;
 import com.unit7.services.pokerservice.engine.commands.RequestNameCommand;
 import com.unit7.services.pokerservice.model.PokerGamer;
@@ -43,9 +45,9 @@ public class Controller {
                 log.debug("[ Executing: Request name command ]");
             }
 
-            new Thread(new Runnable() {
+            /*new Thread(new Runnable() {
                 @Override
-                public void run() {
+                public void run() {*/
                     Request request = new RequestImpl();
                     RequestNameContainer requestContainer = new RequestNameContainer();
                     GamerCommand gamerCommand = (RequestNameCommand) command;
@@ -75,8 +77,8 @@ public class Controller {
                     } catch (Exception e) {
                         // TODO handle exception
                     }
-                }
-            }).start();
+            /*    }
+            }).start();*/
 
             if (log.isDebugEnabled()) {
                 log.debug("[ Executing: Request name executing started ]");
@@ -95,6 +97,10 @@ public class Controller {
                 }
             }
 
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("[\tExecuting: Gamers info command: sleep block skiped\t]", null));
+            }
+            
             // get all gamers
             List<PokerGamer> gamers = model.getGamers();
             List<LightweightGamer> lightweightGamers = new ArrayList<LightweightGamer>();
@@ -108,17 +114,13 @@ public class Controller {
             GamersInfoCommandContainer container = new GamersInfoCommandContainer();
             container.setGamers(lightweightGamers);
 
-            Request request = new RequestImpl();
-            request.setData(container);
-
             // send to each gamer
             for (PokerGamer pokerGamer : gamers) {
-                request.setSocket(pokerGamer.getSocket());
                 int index = gamers.indexOf(pokerGamer);
                 LightweightGamer gamer = lightweightGamers.get(index);
                 try {
                     gamer.setCards(pokerGamer.getCards());
-                    Response response = requestListener.executeRequest(request);
+                    requestListener.sendMessage(pokerGamer.getSocket(), container);
 
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("[\tExecuting: received gamers info response from gamer: %s\t]",
@@ -273,6 +275,20 @@ public class Controller {
                 request.setSocket(winner.getSocket());
                 Response response = requestListener.executeRequest(request);
                 // TODO log response
+            }
+        } else if (CommandType.ERROR.equals(command.getCommandType())) {
+            if (log.isDebugEnabled()) {
+                log.debug("[\tExecuting error command\t]");
+            }
+            
+            ErrorCommand errorCommand = (ErrorCommand) command;
+            ErrorCommandContainer container = new ErrorCommandContainer();
+            container.setMessage(errorCommand.getMessage());
+            
+            requestListener.sendMessage(errorCommand.getSocket(), container);
+            
+            if (log.isDebugEnabled()) {
+                log.debug("[\tError command executed\t]");
             }
         }
     }
