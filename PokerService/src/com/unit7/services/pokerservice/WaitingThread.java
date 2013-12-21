@@ -11,7 +11,9 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
 
+import com.unit7.services.pokerservice.engine.commands.ErrorCommand;
 import com.unit7.services.pokerservice.engine.framework.Controller;
+import com.unit7.services.pokerservice.res.Resources;
 
 /**
  * Поток ожидает новых подключений для создания игры, если вышел таймаут
@@ -74,7 +76,10 @@ public class WaitingThread implements Runnable {
                         log.debug("[\tListening: timeout. connected clients < 2\t]");
                     }
                     
-                    // TODO послать сообщение
+                    ErrorCommand command = new ErrorCommand();
+                    command.setSocket(clients.get(0));
+                    command.setMessage(Resources.NOT_ENOUGH_FOR_GAME);
+                    command.execute(Controller.getInstance());
                 } else {
                     if (log.isDebugEnabled()) {
                         log.debug("[\tListening: new game started, clients.size=" + clients.size() + "\t]");
@@ -109,7 +114,7 @@ public class WaitingThread implements Runnable {
         this.connectionTimeOut = connectionTimeOut;
     }
 
-    private int connectionTimeOut = 20000;
+    private int connectionTimeOut = 15000;
     private ServerSocket socket;
     private Semaphore semaphore;
     private List<Socket> clients = new ArrayList<Socket>();

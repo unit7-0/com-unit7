@@ -15,15 +15,16 @@ public enum CommandType {
     FLOP("FLOP"), 
     SHOWDOWN("SHOWDOWN"), 
     END_ROUND("END_ROUND"),
-    GAMERS_INFO("GAMERS_INFO");
+    GAMERS_INFO("GAMERS_INFO"), 
+    ERROR("ERROR");
     
     private CommandType(String value) {
         this.value = value;
     }
-    
+
     public String getValue() {
         return value;
     }
-    
+
     private String value;
 }
