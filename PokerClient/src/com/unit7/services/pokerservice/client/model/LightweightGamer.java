@@ -48,6 +48,11 @@ public class LightweightGamer implements Serializable {
     public void setBet(double bet) {
         this.bet = bet;
     }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
 
     private int id;
     private String name;
