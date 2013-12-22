@@ -7,14 +7,14 @@ import java.util.Map;
 import com.unit7.services.pokerservice.engine.commands.GamerCommand;
 import com.unit7.services.pokerservice.model.PokerGamer;
 
-public class GamerCommandListener implements EventListener {
+/**
+ * TODO refactor this
+ * @author unit7
+ *
+ */
+public class GamerCommandListener implements EventListener<Map<PokerGamer, GamerCommand>> {
     @Override
-    public void update(Object data) {
-        // TODO full check
-        if (!(data instanceof Map<?, ?>)) {
-            return;
-        }
-        
+    public void update(Map<PokerGamer, GamerCommand> data) {        
         for (Subject subj : subjects) {
             subj.update(data);
         }

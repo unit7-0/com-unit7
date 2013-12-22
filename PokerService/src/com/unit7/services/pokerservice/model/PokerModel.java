@@ -22,6 +22,7 @@ public class PokerModel {
 			// FIX replace with factory
 			PokerGamer gamer = new PokerGamer();
 			gamer.setSocket(clients.get(i));
+			gamer.setId(i);
 			gamers.add(gamer);
 		}
 		

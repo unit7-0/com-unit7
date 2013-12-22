@@ -81,18 +81,18 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     public void game() {
         // step one - request usernames
         requestNames();
-        
+
         Controller.getInstance().setStage(Stage.SEND_GAMERS_INFO);
         if (log.isDebugEnabled()) {
             log.debug(String.format("[\tExecuting: stage gamers info setted\t]", null));
         }
-        
+
         sendGamersInfo();
-        
+
         if (log.isDebugEnabled()) {
             log.debug(String.format("[\tExecuting: stage request blind setted\t]", null));
         }
-        
+
         Controller.getInstance().setStage(Stage.REQUEST_BLIND);
 
         // step two - select button
@@ -153,11 +153,20 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         double maxBet = gamers.get((lastButton + 2) % gamers.size()).getBet();
         boolean wasChanged = true;
 
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("[\tgamerIndex: %d, smallBlind: %d, maxBet: %.2f\t]", gamerIndex,
+                    smallBlindIndex_1, maxBet));
+        }
+
         BetCommand command = new BetCommand();
         while (wasChanged) {
             wasChanged = false;
             while (gamerIndex != smallBlindIndex_1) {
-                PokerGamer gamer = gamers.get(gamerIndex++);
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("[\tCurrent gamerIndex: %d\t]", gamerIndex));
+                }
+                
+                PokerGamer gamer = gamers.get((gamerIndex = (gamerIndex + 1) % gamers.size()));
                 command.setGamer(gamer);
                 // комманда выполняется не в отдельном потоке, значит результат
                 // у нас уже будет
@@ -210,21 +219,17 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         gamerChoice.putAll(data);
     }
 
-    @Override
-    public void update(Object gamers) {
-        if (gamers == null)
-            throw new IllegalArgumentException("method=PokerGameInterfaceImpl.update: gamers == null");
-
-        if (!(gamers instanceof List))
-            throw new IllegalArgumentException("method=PokerGameInterfaceImpl.update: gamers != List");
-
-        this.gamers.clear();
-        List<PokerGamer> g = (List<PokerGamer>) gamers;
-        for (PokerGamer gamer : g) {
-            this.gamers.add(gamer);
-        }
-    }
-
+    /*
+     * @Override public void update(Object gamers) { if (gamers == null) throw
+     * new IllegalArgumentException(
+     * "method=PokerGameInterfaceImpl.update: gamers == null");
+     * 
+     * if (!(gamers instanceof List)) throw new IllegalArgumentException(
+     * "method=PokerGameInterfaceImpl.update: gamers != List");
+     * 
+     * this.gamers.clear(); List<PokerGamer> g = (List<PokerGamer>) gamers; for
+     * (PokerGamer gamer : g) { this.gamers.add(gamer); } }
+     */
     @Override
     public void determineWinner() {
         PokerGamer one = null;
@@ -256,7 +261,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
                     CombinationType type = null;
                     command.setCombinationType(type);
                     executor.execute(new Command[] { command });
-                    
+
                     List<PokerGamer> wins;
                     if (winners.containsKey(type)) {
                         wins = winners.get(type);
@@ -275,9 +280,13 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         command.setGamers(realWinners);
         command.execute(Controller.getInstance());
     }
-    
-    /* (non-Javadoc)
-     * @see com.unit7.services.pokerservice.engine.PokerGameInterface#sendGamersInfo()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.unit7.services.pokerservice.engine.PokerGameInterface#sendGamersInfo
+     * ()
      */
     @Override
     public void sendGamersInfo() {
@@ -291,6 +300,6 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     private int lastButton = -1;
 
     private Map<PokerGamer, GamerCommand> gamerChoice = new HashMap<PokerGamer, GamerCommand>();
-    
+
     private static final Logger log = Logger.getLogger(PokerGameInterfaceImpl.class);
 }

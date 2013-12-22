@@ -7,7 +7,7 @@ import com.unit7.services.pokerservice.engine.commands.GamerCommand;
 import com.unit7.services.pokerservice.engine.framework.Subject;
 import com.unit7.services.pokerservice.model.PokerGamer;
 
-public interface PokerGameInterface extends Subject {
+public interface PokerGameInterface extends Subject<Map<PokerGamer, GamerCommand>> {
     PokerGamer selectButton();
 
     void distributeCards();

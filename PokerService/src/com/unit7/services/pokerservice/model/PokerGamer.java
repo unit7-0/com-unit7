@@ -62,6 +62,52 @@ public class PokerGamer extends User implements Net {
         this.id = id;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(bet);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((cards == null) ? 0 : cards.hashCode());
+        result = prime * result + id;
+        result = prime * result + (inGame ? 1231 : 1237);
+        temp = Double.doubleToLongBits(money);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + ((socket == null) ? 0 : socket.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PokerGamer other = (PokerGamer) obj;
+        if (Double.doubleToLongBits(bet) != Double.doubleToLongBits(other.bet))
+            return false;
+        if (cards == null) {
+            if (other.cards != null)
+                return false;
+        } else if (!cards.equals(other.cards))
+            return false;
+        if (id != other.id)
+            return false;
+        if (inGame != other.inGame)
+            return false;
+        if (Double.doubleToLongBits(money) != Double.doubleToLongBits(other.money))
+            return false;
+        if (socket == null) {
+            if (other.socket != null)
+                return false;
+        } else if (!socket.equals(other.socket))
+            return false;
+        return true;
+    }
+
     private Socket socket;
     private double bet;
     private double money;
