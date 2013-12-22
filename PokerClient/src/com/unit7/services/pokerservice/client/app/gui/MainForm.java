@@ -32,6 +32,7 @@ import com.unit7.services.pokerservice.client.commands.CommandType;
 import com.unit7.services.pokerservice.client.commands.SimpleCommand;
 import com.unit7.services.pokerservice.client.engine.Controller;
 import com.unit7.services.pokerservice.client.engine.RequestNameProxy;
+import com.unit7.services.pokerservice.client.resources.Resources;
 import com.unit7.services.pokerservice.client.tools.Utils;
 
 /**
@@ -58,6 +59,9 @@ public class MainForm extends AbstractForm {
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
+        final JPanel main = new JPanel();
+        add(main);
+        
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -132,6 +136,11 @@ public class MainForm extends AbstractForm {
                     command.setType(CommandType.INIT_GAME);
                     command.execute(Controller.getInstance());
                     
+                    desktop = new DesktopPanel(Controller.getInstance().getGamers());
+                    main.add(desktop);
+                    main.revalidate();
+                    main.repaint();
+                    
                     if (log.isDebugEnabled()) {
                         log.debug("game inited");
                     }
@@ -168,6 +177,36 @@ public class MainForm extends AbstractForm {
         frame.setEnabled(true);
     }
     
+    public double getBet(String message) {
+        double val = 0;
+        
+        String input = null;
+        Pattern pattern = Pattern.compile(Resources.REGEX_DOUBLE);
+        Matcher matcher = null;
+        do {
+            input = JOptionPane.showInputDialog(message);
+            matcher = pattern.matcher(input);
+        } while(!matcher.matches());
+        
+        val = Double.parseDouble(input);
+        
+        return val;
+    }
+    
+    public void refresh() {
+        desktop.setPrikup(Controller.getInstance().getPrikup());
+        revalidate();
+        repaint();
+    }
+    
+    public void roundInfo(String info) {
+        JOptionPane.showMessageDialog(this, info);
+    }
+    
+    public void endGame() {
+        
+    }
+    
     public String getUserName() {
         this.setEnabled(false);
         String name = null;
@@ -178,6 +217,8 @@ public class MainForm extends AbstractForm {
         this.setEnabled(true);
         return name;
     }
+    
+    private DesktopPanel desktop;
     
     private static final Logger log = Logger.getLogger(Logger.class);
 }

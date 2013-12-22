@@ -1,12 +1,25 @@
-package com.unit7.services.pokerservice.client.commands.containers;
+/**
+ * Date:	22 дек. 2013 г.
+ * File:	GamerCardCommand.java
+ *
+ * Author:	Zajcev V.
+ */
+
+package com.unit7.services.pokerservice.client.commands;
 
 import java.util.List;
 
 import com.unit7.services.pokerservice.client.model.Card;
 
-public class CardContainer extends AbstractCommandContainer {
-    private static final long serialVersionUID = 3851122433840756170L;
-
+/**
+ * @author unit7
+ *
+ */
+public class GamerCardCommand extends SimpleCommand {
+    public GamerCardCommand() {
+        setType(CommandType.GAMER_CARD);
+    }
+    
     public List<Card> getCards() {
         return cards;
     }
@@ -23,6 +36,6 @@ public class CardContainer extends AbstractCommandContainer {
         this.gamerId = gamerId;
     }
 
-    List<Card> cards;
+    private List<Card> cards;
     private int gamerId;
 }

@@ -49,6 +49,14 @@ public class LightweightGamer implements Serializable {
         this.bet = bet;
     }
     
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
+
     @Override
     public String toString() {
         return name;
@@ -58,4 +66,5 @@ public class LightweightGamer implements Serializable {
     private String name;
     private List<Card> cards;
     private double bet;
+    private double money;
 }
