@@ -24,6 +24,10 @@ import com.unit7.services.pokerservice.client.model.LightweightGamer;
 public class DesktopPanel extends JPanel {
     public DesktopPanel(List<LightweightGamer> gamers) {        
         GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridwidth = 1;
+        c.gridheight = 1;
         setLayout(new GridBagLayout());
         
         Iterator<LightweightGamer> it = gamers.iterator();
@@ -37,6 +41,11 @@ public class DesktopPanel extends JPanel {
         addHorizontal(this, c, it);
         c.gridx = 0;
         c.gridy = 1;
+        addVertical(this, c, it);
+        
+        c.gridx = 2;
+        c.gridy = 2;
+        add(prikupPanel);
     }
     
     private void addHorizontal(JPanel root, GridBagConstraints c, Iterator<LightweightGamer> it) {
@@ -62,10 +71,6 @@ public class DesktopPanel extends JPanel {
         panel = new GamerPanel(gamer);
         c.gridx += 1;
         root.add(panel, c);
-        
-        c.gridx = 2;
-        c.gridy = 2;
-        add(prikupPanel);
     }
     
     private void addVertical(JPanel root, GridBagConstraints c, Iterator<LightweightGamer> it) {

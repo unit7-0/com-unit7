@@ -55,9 +55,27 @@ public class Model {
         this.gamers = gamers;
     }
 
+    public LightweightGamer getGamer() {
+        return gamer;
+    }
+
+    public void setGamer(LightweightGamer gamer) {
+        this.gamer = gamer;
+    }
+
+    public List<Card> getPrikup() {
+        return prikup;
+    }
+
+    public void setPrikup(List<Card> prikup) {
+        this.prikup = prikup;
+    }
+
     private Socket serverSocket;
     private String name;
     private double bet;
     private double money;
     private List<LightweightGamer> gamers;
+    private List<Card> prikup;
+    private LightweightGamer gamer;
 }
