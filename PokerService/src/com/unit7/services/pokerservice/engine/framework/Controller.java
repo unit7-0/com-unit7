@@ -38,6 +38,14 @@ import com.unit7.services.pokerservice.model.PokerGamer;
 import com.unit7.services.pokerservice.model.PokerModel;
 import com.unit7.services.pokerservice.model.Stage;
 
+/**
+ * пока большая часть запросов отправляется без подтверждения о получении.
+ * Преполагается сделать специальный контейнер, который будет свидетельствовать
+ * либо об успешной передаче, либо об ошибке.
+ * 
+ * @author unit7
+ * 
+ */
 public class Controller {
     public void execute(final Command command) {
         if (command.getCommandType().equals(CommandType.REQUEST_NAME)) {
@@ -45,40 +53,43 @@ public class Controller {
                 log.debug("[ Executing: Request name command ]");
             }
 
-            /*new Thread(new Runnable() {
-                @Override
-                public void run() {*/
-                    Request request = new RequestImpl();
-                    RequestNameContainer requestContainer = new RequestNameContainer();
-                    GamerCommand gamerCommand = (RequestNameCommand) command;
-                    request.setData(requestContainer);
-                    request.setSocket(gamerCommand.getGamer().getSocket());
+            /*
+             * new Thread(new Runnable() {
+             * 
+             * @Override public void run() {
+             */
+            Request request = new RequestImpl();
+            RequestNameContainer requestContainer = new RequestNameContainer();
+            GamerCommand gamerCommand = (RequestNameCommand) command;
+            request.setData(requestContainer);
+            request.setSocket(gamerCommand.getGamer().getSocket());
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("[ Executing: before execute request ]");
-                    }
+            if (log.isDebugEnabled()) {
+                log.debug("[ Executing: before execute request ]");
+            }
 
-                    Response response = requestListener.executeRequest(request);
-                    Object data = response.getData();
+            Response response = requestListener.executeRequest(request);
+            Object data = response.getData();
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("[ Executing: after execute request ]");
-                    }
+            if (log.isDebugEnabled()) {
+                log.debug("[ Executing: after execute request ]");
+            }
 
-                    try {
-                        requestContainer = (RequestNameContainer) data;
-                        String name = requestContainer.getName();
+            try {
+                requestContainer = (RequestNameContainer) data;
+                String name = requestContainer.getName();
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("[ Executing: received name: " + name + " ]");
-                        }
+                if (log.isDebugEnabled()) {
+                    log.debug("[ Executing: received name: " + name + " ]");
+                }
 
-                        gamerCommand.getGamer().setName(name);
-                    } catch (Exception e) {
-                        // TODO handle exception
-                    }
-            /*    }
-            }).start();*/
+                gamerCommand.getGamer().setName(name);
+            } catch (Exception e) {
+                // TODO handle exception
+            }
+            /*
+             * } }).start();
+             */
 
             if (log.isDebugEnabled()) {
                 log.debug("[ Executing: Request name executing started ]");
@@ -87,7 +98,7 @@ public class Controller {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("[\tExecuting: Gamers info command started\t]", null));
             }
-            
+
             while (!Stage.SEND_GAMERS_INFO.equals(model.getStage())) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(300);
@@ -100,7 +111,7 @@ public class Controller {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("[\tExecuting: Gamers info command: sleep block skiped\t]", null));
             }
-            
+
             // get all gamers
             List<PokerGamer> gamers = model.getGamers();
             List<LightweightGamer> lightweightGamers = new ArrayList<LightweightGamer>();
@@ -164,17 +175,15 @@ public class Controller {
                 // TODO handle exception
             }
         } else if (CommandType.GET_CARD.equals(command.getCommandType())) {
-            Request request = new RequestImpl();
             CardContainer container = generateCardContainer(2);
             GamerCommand gamerCommand = (GamerCommand) command;
+            PokerGamer gamer = gamerCommand.getGamer();
             container.setType(CommandContainerType.GET_CARD);
 
-            request.setData(container);
-            request.setSocket(gamerCommand.getGamer().getSocket());
 
-            requestListener.executeRequest(request);
+            container.setGamerId(gamer.getId());
+            requestListener.sendMessage(gamer.getSocket(), container);
 
-            PokerGamer gamer = gamerCommand.getGamer();
             Iterator<Card> it = container.getCards().iterator();
             while (it.hasNext()) {
                 gamer.addCard(it.next());
@@ -220,6 +229,7 @@ public class Controller {
             GamerCommand gamerCommand = (GamerCommand) command;
             Request request = new RequestImpl();
             RequestBetContainer container = new RequestBetContainer();
+            container.setType(CommandContainerType.REQUEST_BET);
 
             request.setData(container);
             request.setSocket(gamerCommand.getGamer().getSocket());
@@ -280,13 +290,13 @@ public class Controller {
             if (log.isDebugEnabled()) {
                 log.debug("[\tExecuting error command\t]");
             }
-            
+
             ErrorCommand errorCommand = (ErrorCommand) command;
             ErrorCommandContainer container = new ErrorCommandContainer();
             container.setMessage(errorCommand.getMessage());
-            
+
             requestListener.sendMessage(errorCommand.getSocket(), container);
-            
+
             if (log.isDebugEnabled()) {
                 log.debug("[\tError command executed\t]");
             }
@@ -330,11 +340,11 @@ public class Controller {
     }
 
     public List<PokerGamer> initGame(List<Socket> clients) {
-    	model = new PokerModel(clients);
+        model = new PokerModel(clients);
         model.setStage(Stage.REQUEST_NAME);
         return model.getGamers();
     }
-    
+
     public static Controller getInstance() {
         Controller controller = instance.get();
         if (controller == null) {

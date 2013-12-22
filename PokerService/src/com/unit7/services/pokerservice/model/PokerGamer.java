@@ -15,8 +15,6 @@ public class PokerGamer extends User implements Net {
     public List<Card> getCards() {
         return cards;
     }
-    
-    private List<Card> cards = new ArrayList<Card>();
 
     @Override
     public void setSocket(Socket socket) {
@@ -56,8 +54,18 @@ public class PokerGamer extends User implements Net {
         this.money += money;
     }
     
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private Socket socket;
     private double bet;
     private double money;
+    private int id;
     private boolean inGame = true;
+    private List<Card> cards = new ArrayList<Card>();
 }
