@@ -43,19 +43,21 @@ public class Resources {
     public static final String SPADES_FILE = "cards_spades.png";
     public static final String HEARTS_FILE = "cards_hearts.png";
     
+    public static final String DECK_PATH = "/imgs";
+    
     private static final Map<String, Image> deckCache = new HashMap<String, Image>();
     
     static {
-        Image[] images = getCardsFromFile(DIAMONDS_FILE);
+        Image[] images = getCardsFromFile(DECK_PATH + DIAMONDS_FILE);
         putToDeckCache(Suit.DIAMONDS.getName(), images);
         
-        images = getCardsFromFile(CLUBS_FILE);
+        images = getCardsFromFile(DECK_PATH + CLUBS_FILE);
         putToDeckCache(Suit.CLUBS.getName(), images);
         
-        images = getCardsFromFile(HEARTS_FILE);
+        images = getCardsFromFile(DECK_PATH + HEARTS_FILE);
         putToDeckCache(Suit.HEARTS.getName(), images);
         
-        images = getCardsFromFile(SPADES_FILE);
+        images = getCardsFromFile(DECK_PATH + SPADES_FILE);
         putToDeckCache(Suit.SPADES.getName(), images);
     }
     
