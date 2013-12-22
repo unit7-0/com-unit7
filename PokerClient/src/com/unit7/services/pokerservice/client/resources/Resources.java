@@ -18,6 +18,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import com.unit7.services.pokerservice.client.exceptions.ResourceNotFoundException;
 import com.unit7.services.pokerservice.client.model.CardType;
 import com.unit7.services.pokerservice.client.model.Suit;
@@ -43,21 +45,21 @@ public class Resources {
     public static final String SPADES_FILE = "cards_spades.png";
     public static final String HEARTS_FILE = "cards_hearts.png";
     
-    public static final String DECK_PATH = "/imgs";
+    public static final String DECK_PATH = "/imgs/";
     
     private static final Map<String, Image> deckCache = new HashMap<String, Image>();
     
     static {
-        Image[] images = getCardsFromFile(DECK_PATH + DIAMONDS_FILE);
+        Image[] images = getCardsFromFile(/*DECK_PATH + */DIAMONDS_FILE);
         putToDeckCache(Suit.DIAMONDS.getName(), images);
         
-        images = getCardsFromFile(DECK_PATH + CLUBS_FILE);
+        images = getCardsFromFile(/*DECK_PATH + */CLUBS_FILE);
         putToDeckCache(Suit.CLUBS.getName(), images);
         
-        images = getCardsFromFile(DECK_PATH + HEARTS_FILE);
+        images = getCardsFromFile(/*DECK_PATH + */HEARTS_FILE);
         putToDeckCache(Suit.HEARTS.getName(), images);
         
-        images = getCardsFromFile(DECK_PATH + SPADES_FILE);
+        images = getCardsFromFile(/*DECK_PATH + */SPADES_FILE);
         putToDeckCache(Suit.SPADES.getName(), images);
     }
     
@@ -86,10 +88,8 @@ public class Resources {
         int cols = images.length;
         
         URL url = Resources.class.getResource(name);
-        String path = url.getFile();
-        File file = new File(path);
         try {
-            BufferedImage image = ImageIO.read(file);
+            BufferedImage image = ImageIO.read(url);
             int width = image.getWidth() / cols;
             int height = image.getHeight() / rows;
             for (int i = 0; i < images.length; ++i) {
@@ -105,4 +105,6 @@ public class Resources {
         
         return images;
     }
+    
+//    private Logger log = Logger.getLogger(Resources.class);
 }
