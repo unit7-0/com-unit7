@@ -8,6 +8,7 @@
 package com.unit7.services.pokerservice.client.app.gui;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -15,6 +16,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -83,8 +85,32 @@ public class GamerPanel extends JPanel {
         }
 
         try {
-            firstCard.setImage(Resources.getImageByName(name1));
-            secondCard.setImage(Resources.getImageByName(name2));
+            Image image = Resources.getImageByName(name1);
+            firstCard.setImage(image);
+            if (image != null) {
+                firstCard.setSize(image.getWidth(null), image.getHeight(null));
+                Container parent = firstCard.getParent();
+                while (parent.getParent() != null) {
+                    parent = parent.getParent();
+                }
+                
+                parent.revalidate();
+            }
+            
+            image = Resources.getImageByName(name2);
+            secondCard.setImage(image);
+            if (image != null) {
+                secondCard.setSize(image.getWidth(null), image.getHeight(null));
+                Container parent = firstCard.getParent();
+                while (parent.getParent() != null) {
+                    parent = parent.getParent();
+                }
+                
+                if (parent instanceof JFrame) 
+                    ((JFrame) parent).pack();
+                        
+                parent.revalidate();
+            }
         } catch (ResourceNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

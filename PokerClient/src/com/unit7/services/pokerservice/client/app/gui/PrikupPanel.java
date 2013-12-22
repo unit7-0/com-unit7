@@ -35,7 +35,7 @@ public class PrikupPanel extends JPanel {
             for (int i = 0; i < names.length; ++i)
                 names[i] = CardType.UNKNOWN.getName();
         } else {
-            for (int i = 0; i < names.length; ++i) {
+            for (int i = 0; i < prikup.size(); ++i) {
                 names[i] = prikup.get(i).getType().getName();
             }
         }

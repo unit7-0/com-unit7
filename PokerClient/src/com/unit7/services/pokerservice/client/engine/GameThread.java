@@ -66,8 +66,9 @@ public class GameThread implements Runnable {
 
             } else if (CommandContainerType.REQUEST_BET.equals(type)) {
                 double val = betProxy.request(Resources.REQUEST_BET_TITLE);
-                RequestBlindContainer cont = (RequestBlindContainer) container;
-                cont.setValue(val);
+                RequestBetContainer cont = (RequestBetContainer) container;
+                // stub, just for now TODO make it
+                cont.setType(CommandContainerType.CALL);
                 Controller.getInstance().sendMessage(cont);
             } else if (CommandContainerType.SHOWDOWN.equals(type)) {
 
