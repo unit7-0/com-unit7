@@ -249,11 +249,14 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
             // open cards...
             for (PokerGamer gamer : gamers) {
                 if (gamer.isInGame()) {
-                    GamerCommand command = new ShowdownCommand();
+                    ShowdownCommand command = new ShowdownCommand();
                     command.setGamer(gamer);
 
                     // TODO определить комбинацию
                     CombinationType type = null;
+                    command.setCombinationType(type);
+                    executor.execute(new Command[] { command });
+                    
                     List<PokerGamer> wins;
                     if (winners.containsKey(type)) {
                         wins = winners.get(type);
