@@ -129,6 +129,10 @@ public class Controller {
         return requestListener.waitMessage(model.getServerSocket());
     }
 
+    public void sendMessage(Object mess) {
+        requestListener.sendMessage(model.getServerSocket(), mess);
+    }
+    
     public List<Card> getPrikup() {
         return model.getPrikup();
     }

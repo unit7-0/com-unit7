@@ -1,12 +1,15 @@
 package com.unit7.services.pokerservice.client.model;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Set;
 
 import com.unit7.services.pokerservice.client.tools.Utils;
 
-public class Card {
-	public Card(CardType type) {
+public class Card implements Serializable {
+	private static final long serialVersionUID = -501915713023218575L;
+
+    public Card(CardType type) {
 		this.type = type;
 	}
 	
