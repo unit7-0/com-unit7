@@ -22,7 +22,7 @@ public class Card implements Serializable {
 	    int len = suits.length;
 	    
 	    if (cards == null) {
-	        return new Card(CardType.valueOf(suits[Utils.getRandInt(len)].name()));
+	        return new Card(CardType.createCardType(suits[Utils.getRandInt(len)]));
 	    } else {
 	        Card card = null;
 	        do {

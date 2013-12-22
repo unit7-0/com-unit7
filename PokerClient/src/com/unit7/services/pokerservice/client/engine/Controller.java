@@ -91,12 +91,18 @@ public class Controller {
                 }
             });
             
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("[\tFinded gamer index: %d, gamerId: %d\t]", index, gamerId));
+            }
+            
             gamer = model.getGamers().get(index);
             model.setGamer(gamer);
             gamer.setCards(cards);
         } else if (CommandType.PRIKUP_CARDS.equals(type)) {
             PrikupCardCommand prikupCommand = (PrikupCardCommand) command;
             List<Card> cards = prikupCommand.getCards();
+            if (model.getPrikup() != null)
+                cards.addAll(model.getPrikup());
             model.setPrikup(cards);
         }
     }
