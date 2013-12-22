@@ -2,8 +2,10 @@ package com.unit7.services.pokerservice.engine.framework;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -27,7 +29,6 @@ import com.unit7.services.pokerservice.client.engine.transfer.RequestListener;
 import com.unit7.services.pokerservice.client.engine.transfer.Response;
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.client.model.LightweightGamer;
-import com.unit7.services.pokerservice.engine.commands.BetCommand;
 import com.unit7.services.pokerservice.engine.commands.Command;
 import com.unit7.services.pokerservice.engine.commands.CommandType;
 import com.unit7.services.pokerservice.engine.commands.EndRoundCommand;
@@ -118,7 +119,7 @@ public class Controller {
             for (PokerGamer pokerGamer : gamers) {
                 LightweightGamer gamer = new LightweightGamer();
                 gamer.setName(pokerGamer.getName());
-                gamer.setId(1);
+                gamer.setId(pokerGamer.getId());
                 lightweightGamers.add(gamer);
             }
 
@@ -180,7 +181,6 @@ public class Controller {
             PokerGamer gamer = gamerCommand.getGamer();
             container.setType(CommandContainerType.GET_CARD);
 
-
             container.setGamerId(gamer.getId());
             requestListener.sendMessage(gamer.getSocket(), container);
 
@@ -191,38 +191,35 @@ public class Controller {
 
             // nothing todo
         } else if (CommandType.FLOP.equals(command.getCommandType())) {
-            Request request = new RequestImpl();
             CardContainer container = generateCardContainer(3);
             container.setType(CommandContainerType.FLOP);
 
-            request.setData(container);
-            request.setSocket(((GamerCommand) command).getGamer().getSocket());
-
-            Response response = requestListener.executeRequest(request);
-
+            List<PokerGamer> gamers = model.getGamers();
+            for (int i = 0; i < gamers.size(); ++i) {
+                PokerGamer gamer = gamers.get(i);
+                requestListener.sendMessage(gamer.getSocket(), container);
+            }
             // nothing todo
         } else if (CommandType.TURN.equals(command.getCommandType())) {
-            Request request = new RequestImpl();
             CardContainer container = generateCardContainer(1);
             container.setType(CommandContainerType.TURN);
 
-            request.setData(container);
-            request.setSocket(((GamerCommand) command).getGamer().getSocket());
-
-            Response response = requestListener.executeRequest(request);
-            Object data = response.getData();
+            List<PokerGamer> gamers = model.getGamers();
+            for (int i = 0; i < gamers.size(); ++i) {
+                PokerGamer gamer = gamers.get(i);
+                requestListener.sendMessage(gamer.getSocket(), container);
+            }
 
             // nothing todo
         } else if (CommandType.RIVER.equals(command.getCommandType())) {
-            Request request = new RequestImpl();
             CardContainer container = generateCardContainer(1);
             container.setType(CommandContainerType.RIVER);
 
-            request.setData(container);
-            request.setSocket(((GamerCommand) command).getGamer().getSocket());
-
-            Response response = requestListener.executeRequest(request);
-            Object data = response.getData();
+            List<PokerGamer> gamers = model.getGamers();
+            for (int i = 0; i < gamers.size(); ++i) {
+                PokerGamer gamer = gamers.get(i);
+                requestListener.sendMessage(gamer.getSocket(), container);
+            }
 
             // nothing todo
         } else if (CommandType.BET.equals(command.getCommandType())) {
@@ -245,15 +242,26 @@ public class Controller {
                     double bet = model.getBetValue();
                     gamer.setBet(gamer.getBet() + bet);
                     model.addToBank(bet);
+                    gamerCommand.setCommandType(CommandType.CALL);
                 } else if (CommandContainerType.RAISE.equals(type)) {
                     double bet = model.getBetValue();
                     bet *= 2;
                     model.setBetValue(bet);
                     gamer.setBet(gamer.getBet() + bet);
+                    gamerCommand.setCommandType(CommandType.RAISE);
                 } else if (CommandContainerType.FOLD.equals(type)) {
                     gamer.setInGame(false);
+                    gamerCommand.setCommandType(CommandType.FOLD);
                 } else if (CommandContainerType.CHECK.equals(type)) {
                     // TODO
+                }
+
+                Map<PokerGamer, GamerCommand> comm = new HashMap<PokerGamer, GamerCommand>();
+                comm.put(gamer, gamerCommand);
+
+                for (int i = 0; i < listeners.size(); ++i) {
+                    EventListener listener = listeners.get(i);
+                    listener.update(comm);
                 }
             } catch (Exception e) {
                 // TODO handle exception
