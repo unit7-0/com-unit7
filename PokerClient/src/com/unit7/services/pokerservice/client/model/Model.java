@@ -12,26 +12,26 @@ import java.util.List;
 
 /**
  * @author unit7
- *
+ * 
  */
-public class Model {    
-    public Socket getServerSocket() {
-        return serverSocket;
-    }
+public class Model {
+	public Socket getServerSocket() {
+		return serverSocket;
+	}
 
-    public void setServerSocket(Socket serverSocket) {
-        this.serverSocket = serverSocket;
-    }
+	public void setServerSocket(Socket serverSocket) {
+		this.serverSocket = serverSocket;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public double getInitialMoney() {
+	public double getInitialMoney() {
 		return initialMoney;
 	}
 
@@ -40,30 +40,30 @@ public class Model {
 	}
 
 	public List<LightweightGamer> getGamers() {
-        return gamers;
-    }
+		return gamers;
+	}
 
-    public void setGamers(List<LightweightGamer> gamers) {
-        this.gamers = gamers;
-    }
+	public void setGamers(List<LightweightGamer> gamers) {
+		this.gamers = gamers;
+	}
 
-    public LightweightGamer getGamer() {
-        return gamer;
-    }
+	public LightweightGamer getGamer() {
+		return gamer;
+	}
 
-    public void setGamer(LightweightGamer gamer) {
-        this.gamer = gamer;
-    }
+	public void setGamer(LightweightGamer gamer) {
+		this.gamer = gamer;
+	}
 
-    public List<Card> getPrikup() {
-        return prikup;
-    }
+	public List<Card> getPrikup() {
+		return prikup;
+	}
 
-    public void setPrikup(List<Card> prikup) {
-        this.prikup = prikup;
-    }
+	public void setPrikup(List<Card> prikup) {
+		this.prikup = prikup;
+	}
 
-    public double getBigBlind() {
+	public double getBigBlind() {
 		return bigBlind;
 	}
 
@@ -71,11 +71,23 @@ public class Model {
 		this.bigBlind = bigBlind;
 	}
 
+	public double getMaxBet() {
+		return maxBet;
+	}
+
+	public void setMaxBet(double maxBet) {
+		this.maxBet = maxBet;
+	}
+
 	private Socket serverSocket;
-    private String name;
-    private double initialMoney;
-    private double bigBlind;
-    private List<LightweightGamer> gamers;
-    private List<Card> prikup;
-    private LightweightGamer gamer = new LightweightGamer();
+	private String name;
+
+	private double initialMoney;
+	private double bigBlind;
+	private double maxBet;
+
+	private List<Card> prikup;
+
+	private List<LightweightGamer> gamers;
+	private LightweightGamer gamer = new LightweightGamer();
 }

@@ -16,55 +16,64 @@ import java.util.List;
  */
 public class LightweightGamer implements Serializable {
 	private static final long serialVersionUID = 186996730345622387L;
-	
+
 	public int getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public List<Card> getCards() {
-        return cards;
-    }
+	public List<Card> getCards() {
+		return cards;
+	}
 
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
-    }
+	public void setCards(List<Card> cards) {
+		this.cards = cards;
+	}
 
-    public double getBet() {
-        return bet;
-    }
+	public double getBet() {
+		return bet;
+	}
 
-    public void setBet(double bet) {
-        this.bet = bet;
-    }
-    
-    public double getMoney() {
-        return money;
-    }
+	public void setBet(double bet) {
+		this.bet = bet;
+	}
 
-    public void setMoney(double money) {
-        this.money = money;
-    }
+	public double getMoney() {
+		return money;
+	}
 
-    @Override
-    public String toString() {
-        return name;
-    }
+	public boolean isInGame() {
+		return inGame;
+	}
 
-    private int id;
-    private String name;
-    private List<Card> cards;
-    private double bet;
-    private double money;
+	public void setInGame(boolean inGame) {
+		this.inGame = inGame;
+	}
+
+	public void setMoney(double money) {
+		this.money = money;
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	private int id;
+	private String name;
+	private List<Card> cards;
+	private double bet;
+	private double money;
+	private boolean inGame;
 }

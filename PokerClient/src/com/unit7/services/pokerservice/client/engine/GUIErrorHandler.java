@@ -40,6 +40,7 @@ public class GUIErrorHandler implements ErrorHandler {
             log.error(container.getMessage());
             throw new RuntimeException(container.getMessage());
         }
+        throw new RuntimeException(e.toString());
     }
 
     private Logger log = Logger.getLogger(GUIErrorHandler.class);

@@ -9,13 +9,13 @@ package com.unit7.services.pokerservice.client.commands.containers;
 public class RequestBetContainer extends AbstractCommandContainer {
 	private static final long serialVersionUID = -2138226723548420022L;
 
-	public double getMaxBet() {
-		return maxBet;
+	public double getBet() {
+		return bet;
 	}
 
-	public void setMaxBet(double maxBet) {
-		this.maxBet = maxBet;
+	public void setBet(double bet) {
+		this.bet = bet;
 	}
 
-	private double maxBet;
+	private double bet;
 }

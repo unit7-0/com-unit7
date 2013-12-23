@@ -36,6 +36,7 @@ import com.unit7.services.pokerservice.client.engine.EndGameProxy;
 import com.unit7.services.pokerservice.client.engine.GameThread;
 import com.unit7.services.pokerservice.client.engine.RefreshDataProxy;
 import com.unit7.services.pokerservice.client.engine.RequestBetProxy;
+import com.unit7.services.pokerservice.client.engine.RequestBlindProxy;
 import com.unit7.services.pokerservice.client.engine.RequestNameProxy;
 import com.unit7.services.pokerservice.client.engine.RoundInfoProxy;
 import com.unit7.services.pokerservice.client.resources.Resources;
@@ -167,7 +168,7 @@ public class MainForm extends AbstractForm {
 							.setDataProxy(new RefreshDataProxy(MainForm.this))
 							.setEndGameProxy(new EndGameProxy(MainForm.this))
 							.setRoundInfoProxy(
-									new RoundInfoProxy(MainForm.this)).build())
+									new RoundInfoProxy(MainForm.this)).setRequestBlindProxy(new RequestBlindProxy(MainForm.this)).build())
 							.start();
 
 					if (log.isDebugEnabled()) {
