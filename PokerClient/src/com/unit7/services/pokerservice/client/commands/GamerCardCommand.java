@@ -28,14 +28,5 @@ public class GamerCardCommand extends SimpleCommand {
         this.cards = cards;
     }
 
-    public int getGamerId() {
-        return gamerId;
-    }
-
-    public void setGamerId(int gamerId) {
-        this.gamerId = gamerId;
-    }
-
     private List<Card> cards;
-    private int gamerId;
 }

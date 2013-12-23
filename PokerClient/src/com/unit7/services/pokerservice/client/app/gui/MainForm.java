@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import com.unit7.services.pokerservice.client.commands.Command;
 import com.unit7.services.pokerservice.client.commands.CommandType;
 import com.unit7.services.pokerservice.client.commands.SimpleCommand;
+import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
 import com.unit7.services.pokerservice.client.engine.Controller;
 import com.unit7.services.pokerservice.client.engine.EndGameProxy;
 import com.unit7.services.pokerservice.client.engine.GameThread;
@@ -46,190 +47,217 @@ import com.unit7.services.pokerservice.client.tools.Utils;
  */
 public class MainForm extends AbstractForm {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.unit7.services.pokerservice.client.app.gui.AbstractForm#createGUI()
-     */
-    @Override
-    public JFrame createGUI() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Файл");
-        JMenuItem connect = new JMenuItem("Подключиться");
-        JMenuItem exit = new JMenuItem("Выход");
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.unit7.services.pokerservice.client.app.gui.AbstractForm#createGUI()
+	 */
+	@Override
+	public JFrame createGUI() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Файл");
+		JMenuItem connect = new JMenuItem("Подключиться");
+		JMenuItem exit = new JMenuItem("Выход");
 
-        menu.add(connect);
-        menu.add(exit);
-        menuBar.add(menu);
-        setJMenuBar(menuBar);
+		menu.add(connect);
+		menu.add(exit);
+		menuBar.add(menu);
+		setJMenuBar(menuBar);
 
-        final JPanel main = new JPanel();
-        add(main);
+		final JPanel main = new JPanel();
+		add(main);
 
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 
-        connect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String address = "127.0.0.1:7777";/*JOptionPane.showInputDialog(MainForm.this,
-                        "Введите адрес сервера[xxx.xxx.xxx.xxx:port]");*/
-                Pattern pattern = Pattern.compile("((\\d+\\.){3}\\d+):(\\d+)");
-                Matcher matcher = pattern.matcher(address);
+		connect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String address = "127.0.0.1:7777";/*
+												 * JOptionPane.showInputDialog(
+												 * MainForm.this,
+												 * "Введите адрес сервера[xxx.xxx.xxx.xxx:port]"
+												 * );
+												 */
+				Pattern pattern = Pattern.compile("((\\d+\\.){3}\\d+):(\\d+)");
+				Matcher matcher = pattern.matcher(address);
 
-                // получаем адрес
-                int port = 0;
-                if (matcher.matches()) {
-                    address = matcher.group();
-                    int del = address.indexOf(':');
-                    String part = address.substring(0, del);
-                    String portStr = address.substring(del + 1, address.length());
-                    port = Integer.parseInt(portStr);
-                    address = part;
-                } else {
-                    JOptionPane.showMessageDialog(MainForm.this, "Адрес введен неверно!");
-                    return;
-                }
+				// получаем адрес
+				int port = 0;
+				if (matcher.matches()) {
+					address = matcher.group();
+					int del = address.indexOf(':');
+					String part = address.substring(0, del);
+					String portStr = address.substring(del + 1,
+							address.length());
+					port = Integer.parseInt(portStr);
+					address = part;
+				} else {
+					JOptionPane.showMessageDialog(MainForm.this,
+							"Адрес введен неверно!");
+					return;
+				}
 
-                JFrame frame = new JFrame();
-                JDialog dialog = null;
-                try {
-                    // блокируем родительское окно
-                    dialog = lockAndShow(MainForm.this, "Пожалуйста подождите...");
+				JFrame frame = new JFrame();
+				JDialog dialog = null;
+				try {
+					// блокируем родительское окно
+					dialog = lockAndShow(MainForm.this,
+							"Пожалуйста подождите...");
 
-                    // пытаемся коннектиться
-                    Socket sock = null;
-                    try {
-                        sock = SocketFactory.getDefault().createSocket(address, port);
-                        Controller.getInstance().setServerSocket(sock);
-                        if (log.isDebugEnabled()) {
-                            log.debug("connected to: " + sock.getInetAddress().getHostAddress() + " : "
-                                    + sock.getPort());
-                        }
-                    } catch (UnknownHostException e1) {
-                        JOptionPane.showMessageDialog(MainForm.this, e1.getLocalizedMessage());
-                        return;
-                    } catch (IOException e1) {
-                        JOptionPane.showMessageDialog(MainForm.this, e1.getLocalizedMessage());
-                        return;
-                    }
+					// пытаемся коннектиться
+					Socket sock = null;
+					try {
+						sock = SocketFactory.getDefault().createSocket(address,
+								port);
+						Controller.getInstance().setServerSocket(sock);
+						if (log.isDebugEnabled()) {
+							log.debug("connected to: "
+									+ sock.getInetAddress().getHostAddress()
+									+ " : " + sock.getPort());
+						}
+					} catch (UnknownHostException e1) {
+						JOptionPane.showMessageDialog(MainForm.this,
+								e1.getLocalizedMessage());
+						return;
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(MainForm.this,
+								e1.getLocalizedMessage());
+						return;
+					}
 
-                    // все ок
-                    JOptionPane.showMessageDialog(MainForm.this, "Соединение установлено.");
-                    Command command = new SimpleCommand();
+					// все ок
+					JOptionPane.showMessageDialog(MainForm.this,
+							"Соединение установлено.");
+					Command command = new SimpleCommand();
 
-                    Controller.getInstance().setRequestNameProxy(new RequestNameProxy(MainForm.this));
+					Controller.getInstance().setRequestNameProxy(
+							new RequestNameProxy(MainForm.this));
 
-                    command.setType(CommandType.REQUEST_NAME);
-                    command.execute(Controller.getInstance());
+					command.setType(CommandType.REQUEST_NAME);
+					command.execute(Controller.getInstance());
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("name setted");
-                    }
+					if (log.isDebugEnabled()) {
+						log.debug("name setted");
+					}
 
-                    command.setType(CommandType.GAMERS_INFO);
-                    command.execute(Controller.getInstance());
+					command.setType(CommandType.GAMERS_INFO);
+					command.execute(Controller.getInstance());
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("gamers received");
-                    }
+					if (log.isDebugEnabled()) {
+						log.debug("gamers received");
+					}
 
-                    command.setType(CommandType.INIT_GAME);
-                    command.execute(Controller.getInstance());
+					command.setType(CommandType.INIT_GAME);
+					command.execute(Controller.getInstance());
 
-                    desktop = new DesktopPanel(Controller.getInstance().getGamers());
-                    main.add(desktop);
-                    main.revalidate();
-                    main.repaint();
+					desktop = new DesktopPanel(Controller.getInstance()
+							.getGamers());
+					main.add(desktop);
+					main.revalidate();
+					main.repaint();
 
-                    new Thread(new GameThread.Builder().setBetProxy(new RequestBetProxy(MainForm.this))
-                            .setDataProxy(new RefreshDataProxy(MainForm.this))
-                            .setEndGameProxy(new EndGameProxy(MainForm.this))
-                            .setRoundInfoProxy(new RoundInfoProxy(MainForm.this)).build()).start();
+					new Thread(new GameThread.Builder()
+							.setBetProxy(new RequestBetProxy(MainForm.this))
+							.setDataProxy(new RefreshDataProxy(MainForm.this))
+							.setEndGameProxy(new EndGameProxy(MainForm.this))
+							.setRoundInfoProxy(
+									new RoundInfoProxy(MainForm.this)).build())
+							.start();
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("game inited");
-                    }
-                } finally {
-                    unlock(MainForm.this, dialog);
-                }
-            }
-        });
+					if (log.isDebugEnabled()) {
+						log.debug("game inited");
+					}
+				} finally {
+					unlock(MainForm.this, dialog);
+				}
+			}
+		});
 
-        setSize(400, 300);
-        Utils.centreFrame(null, this);
-        setTitle("Texas Holdem");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        return this;
-    }
+		setSize(400, 300);
+		Utils.centreFrame(null, this);
+		setTitle("Texas Holdem");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		return this;
+	}
 
-    public JDialog lockAndShow(JFrame frame, String message) {
-        frame.setEnabled(false);
-        JDialog dialog = new JDialog(frame);
-        dialog.setUndecorated(true);
-        JLabel label = new JLabel("Пожалуйста, подождите...");
-        JPanel panel = new JPanel();
-        panel.add(label);
-        dialog.getContentPane().add(panel);
-        dialog.pack();
-        Utils.centreFrame(frame, dialog);
-        dialog.setVisible(true);
+	public JDialog lockAndShow(JFrame frame, String message) {
+		frame.setEnabled(false);
+		JDialog dialog = new JDialog(frame);
+		dialog.setUndecorated(true);
+		JLabel label = new JLabel("Пожалуйста, подождите...");
+		JPanel panel = new JPanel();
+		panel.add(label);
+		dialog.getContentPane().add(panel);
+		dialog.pack();
+		Utils.centreFrame(frame, dialog);
+		dialog.setVisible(true);
 
-        return dialog;
-    }
+		return dialog;
+	}
 
-    public void unlock(JFrame frame, JDialog dialog) {
-        dialog.dispose();
-        frame.setEnabled(true);
-    }
+	public void unlock(JFrame frame, JDialog dialog) {
+		dialog.dispose();
+		frame.setEnabled(true);
+	}
 
-    public double getBet(String message) {
-        double val = 0;
+	public CommandContainerType getBet() {
+		String input = null;
 
-        String input = null;
-        Pattern pattern = Pattern.compile(Resources.REGEX_DOUBLE);
-        Matcher matcher = null;
-        do {
-            input = JOptionPane.showInputDialog(message);
-            matcher = pattern.matcher(input);
-        } while (!matcher.matches());
+		Object[] bets = new Object[] { CommandContainerType.CALL.name(),
+				CommandContainerType.RAISE.name(),
+				CommandContainerType.CHECK.name(),
+				CommandContainerType.FOLD.name() };
 
-        val = Double.parseDouble(input);
+		do {
+			input = (String) JOptionPane.showInputDialog(this, "",
+					Resources.REQUEST_BET_TITLE, JOptionPane.PLAIN_MESSAGE,
+					null, bets, bets[0]);
+		} while (input == null);
 
-        return val;
-    }
+		return CommandContainerType.valueOf(input);
+	}
 
-    public void refresh() {
-        desktop.setPrikup(Controller.getInstance().getPrikup());
-        revalidate();
-        repaint();
-    }
+	/**
+	 * TODO
+	 */
+	public void getBlind(String message) {
+		
+	}
 
-    public void roundInfo(String info) {
-        JOptionPane.showMessageDialog(this, info);
-    }
+	public void refresh() {
+		desktop.setPrikup(Controller.getInstance().getPrikup());
+		revalidate();
+		repaint();
+	}
 
-    public void endGame() {
+	public void roundInfo(String info) {
+		JOptionPane.showMessageDialog(this, info);
+	}
 
-    }
+	public void endGame() {
 
-    public String getUserName() {
-        this.setEnabled(false);
-        String name = null;
-        do {
-            name = JOptionPane.showInputDialog(this, "Введите имя пользователя[3-15 знаков]:");
-        } while (!(name != null && (name = name.trim()).length() <= 15 && name.length() >= 3));
+	}
 
-        this.setEnabled(true);
-        return name;
-    }
+	public String getUserName() {
+		this.setEnabled(false);
+		String name = null;
+		do {
+			name = JOptionPane.showInputDialog(this,
+					"Введите имя пользователя[3-15 знаков]:");
+		} while (!(name != null && (name = name.trim()).length() <= 15 && name
+				.length() >= 3));
 
-    private DesktopPanel desktop;
+		this.setEnabled(true);
+		return name;
+	}
 
-    private static final Logger log = Logger.getLogger(Logger.class);
+	private DesktopPanel desktop;
+
+	private static final Logger log = Logger.getLogger(Logger.class);
 }
