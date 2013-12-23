@@ -12,5 +12,5 @@ package com.unit7.services.pokerservice.client.commands;
  *
  */
 public enum CommandType {
-    REQUEST_NAME, GAMERS_INFO, INIT_GAME, PRIKUP_CARDS, GAMER_CARD
+    REQUEST_NAME, GAMERS_INFO, INIT_GAME, PRIKUP_CARDS, GAMER_CARD, BET
 }

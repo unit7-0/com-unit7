@@ -77,8 +77,8 @@ public class MainForm extends AbstractForm {
         connect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String address = JOptionPane.showInputDialog(MainForm.this,
-                        "Введите адрес сервера[xxx.xxx.xxx.xxx:port]");
+                String address = "127.0.0.1:7777";/*JOptionPane.showInputDialog(MainForm.this,
+                        "Введите адрес сервера[xxx.xxx.xxx.xxx:port]");*/
                 Pattern pattern = Pattern.compile("((\\d+\\.){3}\\d+):(\\d+)");
                 Matcher matcher = pattern.matcher(address);
 

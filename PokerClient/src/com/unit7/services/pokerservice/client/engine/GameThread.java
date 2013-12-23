@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.unit7.services.pokerservice.client.commands.BetCommand;
 import com.unit7.services.pokerservice.client.commands.GamerCardCommand;
 import com.unit7.services.pokerservice.client.commands.PrikupCardCommand;
 import com.unit7.services.pokerservice.client.commands.containers.CardContainer;
@@ -56,11 +57,21 @@ public class GameThread implements Runnable {
                 double val = betProxy.request(Resources.REQUEST_SMALL_BLIND_TITLE);
                 RequestBlindContainer cont = (RequestBlindContainer) container;
                 cont.setValue(val);
+                
+                BetCommand command = new BetCommand();
+                command.setBet(val);
+                command.execute(Controller.getInstance());
+                
                 Controller.getInstance().sendMessage(cont);
             } else if (CommandContainerType.BIG_BLIND.equals(type)) {
                 double val = betProxy.request(Resources.REQUEST_BIG_BLIND_TITLE);
                 RequestBlindContainer cont = (RequestBlindContainer) container;
                 cont.setValue(val);
+                
+                BetCommand command = new BetCommand();
+                command.setBet(val);
+                command.execute(Controller.getInstance());
+                
                 Controller.getInstance().sendMessage(cont);
             } else if (CommandContainerType.END_ROUND.equals(type)) {
 
@@ -69,6 +80,11 @@ public class GameThread implements Runnable {
                 RequestBetContainer cont = (RequestBetContainer) container;
                 // stub, just for now TODO make it
                 cont.setType(CommandContainerType.CALL);
+                
+                BetCommand command = new BetCommand();
+                command.setBet(val);
+                command.execute(Controller.getInstance());
+                
                 Controller.getInstance().sendMessage(cont);
             } else if (CommandContainerType.SHOWDOWN.equals(type)) {
 

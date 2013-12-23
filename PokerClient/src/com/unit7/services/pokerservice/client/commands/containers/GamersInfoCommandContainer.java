@@ -27,5 +27,23 @@ public class GamersInfoCommandContainer extends AbstractCommandContainer {
         this.gamers = gamers;
     }
 
-    private List<LightweightGamer> gamers;
+    public double getInitialMoney() {
+		return initialMoney;
+	}
+
+	public void setInitialMoney(double initialMoney) {
+		this.initialMoney = initialMoney;
+	}
+
+	public double getBigBlind() {
+		return bigBlind;
+	}
+
+	public void setBigBlind(double bigBlind) {
+		this.bigBlind = bigBlind;
+	}
+
+	private List<LightweightGamer> gamers;
+    private double initialMoney;
+    private double bigBlind;
 }
