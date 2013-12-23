@@ -243,14 +243,14 @@ public class Controller {
 				container = (RequestBetContainer) data;
 				CommandContainerType type = container.getType();
 				if (CommandContainerType.CALL.equals(type)) {
-					double bet = model.getBetValue();
-					gamer.setBet(gamer.getBet() + bet);
-					model.addToBank(bet);
+					double val = container.getBet();
+					gamer.setBet(gamer.getBet() + val);
+					model.addToBank(val);
 					gamerCommand.setCommandType(CommandType.CALL);
 				} else if (CommandContainerType.RAISE.equals(type)) {
-					double bet = model.getBetValue();
-					bet *= 2;
-					model.setBetValue(bet);
+					double bet = container.getBet();
+//					model.setBetValue(bet);
+					model.addToBank(bet);
 					gamer.setBet(gamer.getBet() + bet);
 					gamerCommand.setCommandType(CommandType.RAISE);
 				} else if (CommandContainerType.FOLD.equals(type)) {
