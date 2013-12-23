@@ -8,12 +8,13 @@
 package com.unit7.services.pokerservice.client.engine;
 
 import com.unit7.services.pokerservice.client.app.gui.MainForm;
+import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
 
 /**
  * @author unit7
  *
  */
-public class RequestBetProxy implements Proxy<String, Double> {
+public class RequestBetProxy implements Proxy<Object, CommandContainerType> {
     public RequestBetProxy(MainForm form) {
         this.form = form;
     }
@@ -22,8 +23,8 @@ public class RequestBetProxy implements Proxy<String, Double> {
      * @see com.unit7.services.pokerservice.client.engine.Proxy#request(java.lang.Object)
      */
     @Override
-    public Double request(String data) {
-        return form.getBet(data);
+    public CommandContainerType request(Object obj) {
+        return form.getBet();
     }
 
     private MainForm form;

@@ -61,6 +61,7 @@ public class Controller {
 				errorHandler.handleError(message);
 			}
 		} else if (CommandType.GAMERS_INFO.equals(type)) {
+			// выполняется при старте программы, инциирует модель
 			Object message = requestListener.waitMessage(model
 					.getServerSocket());
 			if (message instanceof GamersInfoCommandContainer) {
@@ -73,6 +74,7 @@ public class Controller {
 				for (LightweightGamer gamer : gamers) {
 					if (gamer.getCards() != null) {
 						model.setGamer(gamer);
+						gamer.setMoney(model.getInitialMoney());
 						break;
 					}
 				}
@@ -89,11 +91,10 @@ public class Controller {
 			// now nothing to do
 		} else if (CommandType.GAMER_CARD.equals(type)) {
 			List<Card> cards = ((GamerCardCommand) command).getCards();
-			int gamerId = ((GamerCardCommand) command).getGamerId();
-			LightweightGamer gamer = new LightweightGamer();
-//			gamer.setId(gamerId);
 			
-//			gamer.setCards(cards);
+			LightweightGamer gamer = model.getGamer();
+			gamer.setCards(cards);
+			gamer.setBet(0);
 			// если игрок проиграется до последней копейки - для него игра
 			// окончена, но будет предложено получить начальную сумму заново,
 			// таким образом в этой части кода money никогда != 0, если игрок в

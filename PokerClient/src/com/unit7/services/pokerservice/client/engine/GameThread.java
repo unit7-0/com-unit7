@@ -54,7 +54,7 @@ public class GameThread implements Runnable {
             }
 
             if (CommandContainerType.SMALL_BLIND.equals(type)) {
-                double val = betProxy.request(Resources.REQUEST_SMALL_BLIND_TITLE);
+                double val = 0;//betProxy.request(Resources.REQUEST_SMALL_BLIND_TITLE);
                 RequestBlindContainer cont = (RequestBlindContainer) container;
                 cont.setValue(val);
                 
@@ -64,7 +64,7 @@ public class GameThread implements Runnable {
                 
                 Controller.getInstance().sendMessage(cont);
             } else if (CommandContainerType.BIG_BLIND.equals(type)) {
-                double val = betProxy.request(Resources.REQUEST_BIG_BLIND_TITLE);
+                double val = 0;//betProxy.request(Resources.REQUEST_BIG_BLIND_TITLE);
                 RequestBlindContainer cont = (RequestBlindContainer) container;
                 cont.setValue(val);
                 
@@ -76,13 +76,13 @@ public class GameThread implements Runnable {
             } else if (CommandContainerType.END_ROUND.equals(type)) {
 
             } else if (CommandContainerType.REQUEST_BET.equals(type)) {
-                double val = betProxy.request(Resources.REQUEST_BET_TITLE);
+                CommandContainerType betType = betProxy.request(null);
                 RequestBetContainer cont = (RequestBetContainer) container;
-                // stub, just for now TODO make it
-                cont.setType(CommandContainerType.CALL);
+                cont.setType(betType);
                 
                 BetCommand command = new BetCommand();
-                command.setBet(val);
+                // TODO
+                command.setBet(0);
                 command.execute(Controller.getInstance());
                 
                 Controller.getInstance().sendMessage(cont);
@@ -101,7 +101,6 @@ public class GameThread implements Runnable {
                 List<Card> cards = cardContainer.getCards();
                 GamerCardCommand command = new GamerCardCommand();
                 command.setCards(cards);
-                command.setGamerId(cardContainer.getGamerId());
                 command.execute(Controller.getInstance());
                 dataProxy.request(null);
             } else if (CommandContainerType.ERROR.equals(type)) {

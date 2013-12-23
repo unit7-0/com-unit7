@@ -95,10 +95,13 @@ public class GamerPanel extends JPanel {
              	int width = image.getWidth(null);
             	int height = image.getHeight(null);
                 firstCard.setPreferredSize(new Dimension(width, height));
-                Container parent = firstCard.getParent();
+        /*        Container parent = firstCard.getParent();
                 while (parent.getParent() != null) {
                     parent = parent.getParent();
                 }
+                
+                if (parent instanceof JFrame) 
+                    ((JFrame) parent).pack();*/
                 
 //                parent.revalidate();
             }
@@ -109,12 +112,12 @@ public class GamerPanel extends JPanel {
 //                secondCard.setSize(image.getWidth(null), image.getHeight(null));
             	int width = image.getWidth(null);
             	int height = image.getHeight(null);
-                firstCard.setPreferredSize(new Dimension(width, height));
-                Container parent = firstCard.getParent();
+                secondCard.setPreferredSize(new Dimension(width, height));
+     /*           Container parent = secondCard.getParent();
                 while (parent.getParent() != null) {
                     parent = parent.getParent();
                 }
-                /*
+                
                 if (parent instanceof JFrame) 
                     ((JFrame) parent).pack();*/
                         
