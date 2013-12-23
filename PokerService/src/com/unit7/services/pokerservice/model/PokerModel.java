@@ -30,55 +30,49 @@ public class PokerModel {
 				gamer.addCard(card);
 			}
 		}
-		
-		/* for crypting, now not needed, because we not realize mental poker. Just poker with ciphering
-		for (int i = 0; i < CARDS_COUNT; ++i) {
-			// TODO may be replace with factory
-			cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new Card(CardType.createCardType(Suit.rand())));
-		}*/
-	}  
-	
+
+		/*
+		 * for crypting, now not needed, because we not realize mental poker.
+		 * Just poker with ciphering for (int i = 0; i < CARDS_COUNT; ++i) { //
+		 * TODO may be replace with factory
+		 * cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new
+		 * Card(CardType.createCardType(Suit.rand()))); }
+		 */
+	}
+
 	public double getBetValue() {
-        return betValue;
-    }
+		return betValue;
+	}
 
-    public void setBetValue(double betValue) {
-        this.betValue = betValue;
-    }
+	public void setBetValue(double betValue) {
+		this.betValue = betValue;
+	}
 
-    public Set<Card> getDeck() {
-        return deck;
-    }
-    
-    public void addCard(Card card) {
-        deck.add(card);
-    }
+	public Set<Card> getDeck() {
+		return deck;
+	}
 
-    public void addToBank(double value) {
-        bank += value;
-    }
-    
-    public void resetBank() {
-        bank = 0;
-    }
-    
-    public double getBank() {
-        return bank;
-    }
-    
-    public List<PokerGamer> getGamers() {
-        return gamers;
-    }
-    
-    public Stage getStage() {
-        return stage;
-    }
+	public void addCard(Card card) {
+		deck.add(card);
+	}
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+	public void addToBank(double value) {
+		bank += value;
+	}
 
-    public double getInitialMoney() {
+	public void resetBank() {
+		bank = 0;
+	}
+
+	public double getBank() {
+		return bank;
+	}
+
+	public List<PokerGamer> getGamers() {
+		return gamers;
+	}
+
+	public double getInitialMoney() {
 		return initialMoney;
 	}
 
@@ -86,24 +80,26 @@ public class PokerModel {
 		this.initialMoney = initialMoney;
 	}
 
-//	private Map<Integer, Card> cards = new HashMap<Integer, Card>();
+	public Card[] getPrikup() {
+		return tableCards;
+	}
+
+	// private Map<Integer, Card> cards = new HashMap<Integer, Card>();
 	private List<PokerGamer> gamers = new ArrayList<PokerGamer>();
 	private Card[] tableCards = new Card[CARDS_PRIKUP];
-	
+
 	private double bank;
-	
+
 	public static final int CARDS_COUNT = 52;
 	public static final int CARDS_PRIKUP = 5;
-	
-	private double betValue = 2; 
-    private double initialMoney = 100;
-	
+
+	private double betValue = 2;
+	private double initialMoney = 100;
+
 	/**
 	 * Уже отданные карты
 	 */
 	private Set<Card> deck = new HashSet<Card>();
-	
-	private Stage stage;
-	
+
 	private static final Logger log = Logger.getLogger(PokerModel.class);
 }
