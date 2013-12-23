@@ -107,7 +107,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         requestBigBlind(gamer);
 
         // step fife - distribute cards
-        distributeCards();
+//        distributeCards();
 
         // step six - get bets
         betRound();
