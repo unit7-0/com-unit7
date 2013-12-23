@@ -92,7 +92,7 @@ public class GamerPanel extends JPanel {
             Image image = Resources.getImageByName(name1);
             firstCard.setImage(image);
             if (image != null) {
-            	int width = image.getWidth(null);
+             	int width = image.getWidth(null);
             	int height = image.getHeight(null);
                 firstCard.setPreferredSize(new Dimension(width, height));
                 Container parent = firstCard.getParent();

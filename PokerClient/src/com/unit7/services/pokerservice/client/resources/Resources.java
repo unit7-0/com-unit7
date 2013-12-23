@@ -44,6 +44,7 @@ public class Resources {
     public static final String CLUBS_FILE = "cards_clubs.png";
     public static final String SPADES_FILE = "cards_spades.png";
     public static final String HEARTS_FILE = "cards_hearts.png";
+    public static final String UNKNOWN_FILE = "unknown.png";
     
     public static final String DECK_PATH = "/imgs/";
     
@@ -61,6 +62,14 @@ public class Resources {
         
         images = getCardsFromFile(/*DECK_PATH + */SPADES_FILE);
         putToDeckCache(Suit.SPADES.getName(), images);
+        
+        try {
+			Image unk = ImageIO.read(Resources.class.getResource(UNKNOWN_FILE));
+			deckCache.put(CardType.UNKNOWN.getName(), unk);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     /**
