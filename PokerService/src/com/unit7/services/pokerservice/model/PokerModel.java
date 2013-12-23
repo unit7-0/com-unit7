@@ -24,12 +24,18 @@ public class PokerModel {
 			gamer.setSocket(clients.get(i));
 			gamer.setId(i);
 			gamers.add(gamer);
+			for (int j = 0; j < 2; ++j) {
+				Card card = Card.getRandCard(deck);
+				deck.add(card);
+				gamer.addCard(card);
+			}
 		}
 		
+		/* for crypting, now not needed, because we not realize mental poker. Just poker with ciphering
 		for (int i = 0; i < CARDS_COUNT; ++i) {
 			// TODO may be replace with factory
 			cards.put(random.nextInt(Integer.MAX_VALUE - 1) + 1, new Card(CardType.createCardType(Suit.rand())));
-		}
+		}*/
 	}  
 	
 	public double getBetValue() {
@@ -72,7 +78,15 @@ public class PokerModel {
         this.stage = stage;
     }
 
-    private Map<Integer, Card> cards = new HashMap<Integer, Card>();
+    public double getInitialMoney() {
+		return initialMoney;
+	}
+
+	public void setInitialMoney(double initialMoney) {
+		this.initialMoney = initialMoney;
+	}
+
+//	private Map<Integer, Card> cards = new HashMap<Integer, Card>();
 	private List<PokerGamer> gamers = new ArrayList<PokerGamer>();
 	private Card[] tableCards = new Card[CARDS_PRIKUP];
 	
@@ -81,7 +95,8 @@ public class PokerModel {
 	public static final int CARDS_COUNT = 52;
 	public static final int CARDS_PRIKUP = 5;
 	
-	private double betValue = 1; 
+	private double betValue = 2; 
+    private double initialMoney = 100;
 	
 	/**
 	 * Уже отданные карты

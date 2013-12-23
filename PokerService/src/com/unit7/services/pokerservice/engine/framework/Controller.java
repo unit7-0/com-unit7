@@ -125,7 +125,11 @@ public class Controller {
 
             GamersInfoCommandContainer container = new GamersInfoCommandContainer();
             container.setGamers(lightweightGamers);
-
+            
+            // start params
+            container.setBigBlind(model.getBetValue());
+            container.setInitialMoney(model.getInitialMoney());
+            
             // send to each gamer
             for (PokerGamer pokerGamer : gamers) {
                 int index = gamers.indexOf(pokerGamer);
@@ -176,7 +180,7 @@ public class Controller {
                 // TODO handle exception
             }
         } else if (CommandType.GET_CARD.equals(command.getCommandType())) {
-            CardContainer container = generateCardContainer(2);
+/*            CardContainer container = generateCardContainer(2);
             GamerCommand gamerCommand = (GamerCommand) command;
             PokerGamer gamer = gamerCommand.getGamer();
             container.setType(CommandContainerType.GET_CARD);
@@ -187,7 +191,7 @@ public class Controller {
             Iterator<Card> it = container.getCards().iterator();
             while (it.hasNext()) {
                 gamer.addCard(it.next());
-            }
+            }*/
 
             // nothing todo
         } else if (CommandType.FLOP.equals(command.getCommandType())) {
