@@ -27,164 +27,182 @@ import com.unit7.services.pokerservice.client.resources.Resources;
  * 
  */
 public class GameThread implements Runnable {
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
-     */
-    @Override
-    public void run() {
-        while (true) {
-            Object message = Controller.getInstance().waitCommand();
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("[\tReceive message from server: %s\t]", message));
-            }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		while (true) {
+			Object message = Controller.getInstance().waitCommand();
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
+						"[\tReceive message from server: %s\t]", message));
+			}
 
-            if (!(message instanceof CommandContainer)) {
-                log.error(String.format("[\tReceive not a command container from server\r\n message: [ %s ]\t]",
-                        message));
-                continue;
-            }
+			if (!(message instanceof CommandContainer)) {
+				log.error(String
+						.format("[\tReceive not a command container from server\r\n message: [ %s ]\t]",
+								message));
+				continue;
+			}
 
-            CommandContainer container = (CommandContainer) message;
-            CommandContainerType type = container.getType();
+			CommandContainer container = (CommandContainer) message;
+			CommandContainerType type = container.getType();
 
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("[\tContainer type: %s\t]", type.name()));
-            }
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("[\tContainer type: %s\t]", type.name()));
+			}
 
-            if (CommandContainerType.SMALL_BLIND.equals(type)) {
-                double val = 0;//betProxy.request(Resources.REQUEST_SMALL_BLIND_TITLE);
-                RequestBlindContainer cont = (RequestBlindContainer) container;
-                cont.setValue(val);
-                
-                BetCommand command = new BetCommand();
-                command.setBet(val);
-                command.execute(Controller.getInstance());
-                
-                Controller.getInstance().sendMessage(cont);
-            } else if (CommandContainerType.BIG_BLIND.equals(type)) {
-                double val = 0;//betProxy.request(Resources.REQUEST_BIG_BLIND_TITLE);
-                RequestBlindContainer cont = (RequestBlindContainer) container;
-                cont.setValue(val);
-                
-                BetCommand command = new BetCommand();
-                command.setBet(val);
-                command.execute(Controller.getInstance());
-                
-                Controller.getInstance().sendMessage(cont);
-            } else if (CommandContainerType.END_ROUND.equals(type)) {
+			if (CommandContainerType.SMALL_BLIND.equals(type)) {
+				requestBlindProxy.request(Resources.REQUEST_SMALL_BLIND_TITLE);
+				double val = 0;
+				RequestBlindContainer cont = (RequestBlindContainer) container;
+				cont.setValue(val);
 
-            } else if (CommandContainerType.REQUEST_BET.equals(type)) {
-                CommandContainerType betType = betProxy.request(null);
-                RequestBetContainer cont = (RequestBetContainer) container;
-                cont.setType(betType);
-                
-                BetCommand command = new BetCommand();
-                // TODO
-                command.setBet(0);
-                command.execute(Controller.getInstance());
-                
-                Controller.getInstance().sendMessage(cont);
-            } else if (CommandContainerType.SHOWDOWN.equals(type)) {
+				BetCommand command = new BetCommand();
+				// command.setBet(val);
+				command.execute(Controller.getInstance());
 
-            } else if (CommandContainerType.FLOP.equals(type) || CommandContainerType.TURN.equals(type)
-                    || CommandContainerType.RIVER.equals(type)) {
-                PrikupCardCommand command = new PrikupCardCommand();
-                List<Card> cards = ((CardContainer) container).getCards();
-                command.setCards(cards);
-                command.execute(Controller.getInstance());
-                // обновим данные
-                dataProxy.request(null);
-            } else if (CommandContainerType.GET_CARD.equals(type)) {
-                CardContainer cardContainer = (CardContainer) container;
-                List<Card> cards = cardContainer.getCards();
-                GamerCardCommand command = new GamerCardCommand();
-                command.setCards(cards);
-                command.execute(Controller.getInstance());
-                dataProxy.request(null);
-            } else if (CommandContainerType.ERROR.equals(type)) {
-                break;
-            }
-        }
-    }
+				Controller.getInstance().sendMessage(cont);
+			} else if (CommandContainerType.BIG_BLIND.equals(type)) {
+				requestBlindProxy.request(Resources.REQUEST_BIG_BLIND_TITLE);
+				double val = 0;
+				RequestBlindContainer cont = (RequestBlindContainer) container;
+				cont.setValue(val);
 
-    public RequestBetProxy getBetProxy() {
-        return betProxy;
-    }
+				BetCommand command = new BetCommand();
+				// command.setBet(val);
+				command.execute(Controller.getInstance());
 
-    public void setBetProxy(RequestBetProxy betProxy) {
-        this.betProxy = betProxy;
-    }
+				Controller.getInstance().sendMessage(cont);
+			} else if (CommandContainerType.END_ROUND.equals(type)) {
 
-    public RefreshDataProxy getDataProxy() {
-        return dataProxy;
-    }
+			} else if (CommandContainerType.REQUEST_BET.equals(type)) {
+				while (true) {
+					CommandContainerType betType = betProxy.request(null);
+					BetCommand command = new BetCommand();
+					command.setBetType(betType);
+					try {
+						command.execute(Controller.getInstance());
+					} catch (Exception e) {
+						continue;
+					}
+					break;
+				}
+			} else if (CommandContainerType.SHOWDOWN.equals(type)) {
 
-    public void setDataProxy(RefreshDataProxy dataProxy) {
-        this.dataProxy = dataProxy;
-    }
+			} else if (CommandContainerType.FLOP.equals(type)
+					|| CommandContainerType.TURN.equals(type)
+					|| CommandContainerType.RIVER.equals(type)) {
+				PrikupCardCommand command = new PrikupCardCommand();
+				List<Card> cards = ((CardContainer) container).getCards();
+				command.setCards(cards);
+				command.execute(Controller.getInstance());
+				// обновим данные
+				dataProxy.request(null);
+			} else if (CommandContainerType.GET_CARD.equals(type)) {
+				CardContainer cardContainer = (CardContainer) container;
+				List<Card> cards = cardContainer.getCards();
+				GamerCardCommand command = new GamerCardCommand();
+				command.setCards(cards);
+				command.execute(Controller.getInstance());
+				dataProxy.request(null);
+			} else if (CommandContainerType.ERROR.equals(type)) {
+				break;
+			}
+		}
+	}
 
-    public RoundInfoProxy getRoundInfoProxy() {
-        return roundInfoProxy;
-    }
+	public RequestBetProxy getBetProxy() {
+		return betProxy;
+	}
 
-    public void setRoundInfoProxy(RoundInfoProxy roundInfoProxy) {
-        this.roundInfoProxy = roundInfoProxy;
-    }
+	public void setBetProxy(RequestBetProxy betProxy) {
+		this.betProxy = betProxy;
+	}
 
-    public EndGameProxy getEndGameProxy() {
-        return endGameProxy;
-    }
+	public RefreshDataProxy getDataProxy() {
+		return dataProxy;
+	}
 
-    public void setEndGameProxy(EndGameProxy endGameProxy) {
-        this.endGameProxy = endGameProxy;
-    }
+	public void setDataProxy(RefreshDataProxy dataProxy) {
+		this.dataProxy = dataProxy;
+	}
 
-    public static class Builder {
-        public GameThread build() {
-            GameThread thread = new GameThread();
-            thread.setBetProxy(betProxy);
-            thread.setDataProxy(dataProxy);
-            thread.setEndGameProxy(endGameProxy);
-            thread.setRoundInfoProxy(roundInfoProxy);
-            return thread;
-        }
+	public RoundInfoProxy getRoundInfoProxy() {
+		return roundInfoProxy;
+	}
 
-        public RequestBetProxy getBetProxy() {
-            return betProxy;
-        }
+	public void setRoundInfoProxy(RoundInfoProxy roundInfoProxy) {
+		this.roundInfoProxy = roundInfoProxy;
+	}
 
-        public Builder setBetProxy(RequestBetProxy betProxy) {
-            this.betProxy = betProxy;
-            return this;
-        }
+	public EndGameProxy getEndGameProxy() {
+		return endGameProxy;
+	}
 
-        public Builder setDataProxy(RefreshDataProxy dataProxy) {
-            this.dataProxy = dataProxy;
-            return this;
-        }
+	public void setEndGameProxy(EndGameProxy endGameProxy) {
+		this.endGameProxy = endGameProxy;
+	}
 
-        public Builder setRoundInfoProxy(RoundInfoProxy roundInfoProxy) {
-            this.roundInfoProxy = roundInfoProxy;
-            return this;
-        }
+	public void setRequestBlindProxy(RequestBlindProxy proxy) {
+		this.requestBlindProxy = proxy;
+	}
 
-        public Builder setEndGameProxy(EndGameProxy endGameProxy) {
-            this.endGameProxy = endGameProxy;
-            return this;
-        }
+	public static class Builder {
+		public GameThread build() {
+			GameThread thread = new GameThread();
+			thread.setBetProxy(betProxy);
+			thread.setDataProxy(dataProxy);
+			thread.setEndGameProxy(endGameProxy);
+			thread.setRoundInfoProxy(roundInfoProxy);
+			thread.setRequestBlindProxy(requestBlindProxy);
+			return thread;
+		}
 
-        private RequestBetProxy betProxy;
-        private RefreshDataProxy dataProxy;
-        private RoundInfoProxy roundInfoProxy;
-        private EndGameProxy endGameProxy;
-    }
+		public RequestBetProxy getBetProxy() {
+			return betProxy;
+		}
 
-    private RequestBetProxy betProxy;
-    private RefreshDataProxy dataProxy;
-    private RoundInfoProxy roundInfoProxy;
-    private EndGameProxy endGameProxy;
+		public Builder setBetProxy(RequestBetProxy betProxy) {
+			this.betProxy = betProxy;
+			return this;
+		}
 
-    private Logger log = Logger.getLogger(GameThread.class);
+		public Builder setDataProxy(RefreshDataProxy dataProxy) {
+			this.dataProxy = dataProxy;
+			return this;
+		}
+
+		public Builder setRoundInfoProxy(RoundInfoProxy roundInfoProxy) {
+			this.roundInfoProxy = roundInfoProxy;
+			return this;
+		}
+
+		public Builder setEndGameProxy(EndGameProxy endGameProxy) {
+			this.endGameProxy = endGameProxy;
+			return this;
+		}
+
+		public Builder setRequestBlindProxy(RequestBlindProxy requestBlindProxy) {
+			this.requestBlindProxy = requestBlindProxy;
+			return this;
+		}
+
+		private RequestBetProxy betProxy;
+		private RefreshDataProxy dataProxy;
+		private RoundInfoProxy roundInfoProxy;
+		private EndGameProxy endGameProxy;
+		private RequestBlindProxy requestBlindProxy;
+	}
+
+	private RequestBetProxy betProxy;
+	private RefreshDataProxy dataProxy;
+	private RoundInfoProxy roundInfoProxy;
+	private EndGameProxy endGameProxy;
+	private RequestBlindProxy requestBlindProxy;
+
+	private Logger log = Logger.getLogger(GameThread.class);
 }

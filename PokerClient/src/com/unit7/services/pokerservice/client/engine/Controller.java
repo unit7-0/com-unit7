@@ -22,8 +22,10 @@ import com.unit7.services.pokerservice.client.commands.Command;
 import com.unit7.services.pokerservice.client.commands.CommandType;
 import com.unit7.services.pokerservice.client.commands.GamerCardCommand;
 import com.unit7.services.pokerservice.client.commands.PrikupCardCommand;
+import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
 import com.unit7.services.pokerservice.client.commands.containers.ErrorCommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.GamersInfoCommandContainer;
+import com.unit7.services.pokerservice.client.commands.containers.RequestBetContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestNameContainer;
 import com.unit7.services.pokerservice.client.engine.transfer.PokerRequestListener;
 import com.unit7.services.pokerservice.client.engine.transfer.RequestListener;
@@ -31,6 +33,7 @@ import com.unit7.services.pokerservice.client.exceptions.ErrorException;
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.client.model.LightweightGamer;
 import com.unit7.services.pokerservice.client.model.Model;
+import com.unit7.services.pokerservice.client.resources.Resources;
 
 /**
  * @author unit7
@@ -70,6 +73,7 @@ public class Controller {
 				model.setGamers(gamers);
 				model.setInitialMoney(container.getInitialMoney());
 				model.setBigBlind(container.getBigBlind());
+				model.setMaxBet(model.getBigBlind());
 
 				for (LightweightGamer gamer : gamers) {
 					if (gamer.getCards() != null) {
@@ -91,7 +95,7 @@ public class Controller {
 			// now nothing to do
 		} else if (CommandType.GAMER_CARD.equals(type)) {
 			List<Card> cards = ((GamerCardCommand) command).getCards();
-			
+
 			LightweightGamer gamer = model.getGamer();
 			gamer.setCards(cards);
 			gamer.setBet(0);
@@ -109,8 +113,62 @@ public class Controller {
 			model.setPrikup(cards);
 		} else if (CommandType.BET.equals(type)) {
 			BetCommand betCommand = (BetCommand) command;
-			model.getGamer().setBet(
-					model.getGamer().getBet() + betCommand.getBet());
+			CommandContainerType containerType = betCommand.getBetType();
+			RequestBetContainer container = new RequestBetContainer();
+			container.setType(containerType);
+
+			LightweightGamer gamer = model.getGamer();
+			double bet = gamer.getBet();
+			double money = gamer.getMoney();
+			double maxBet = model.getMaxBet();
+
+			switch (containerType) {
+			case CALL:
+				double to = maxBet - bet;
+				if (to > money) {
+					// TODO refactor
+					errorHandler.handleException(new RuntimeException(Resources.MONEY_NOT_ENOUGH));
+				} else if (to != 0) {
+					gamer.setBet(maxBet);
+					gamer.setMoney(money - to);
+					container.setBet(to);
+				} else {
+					errorHandler.handleException(new RuntimeException(Resources.WRONG_COMMAND));
+				}
+				break;
+			case RAISE:
+				to = maxBet * 2 - bet;
+				if (to > money) {
+					// TODO refactor
+					errorHandler.handleException(new RuntimeException(Resources.MONEY_NOT_ENOUGH));
+				} else if (to != 0) {
+					gamer.setBet(maxBet);
+					gamer.setMoney(money - to);
+					container.setBet(to);
+				} else {
+					errorHandler.handleException(new RuntimeException(Resources.WRONG_COMMAND));
+				}
+				break;
+
+			case FOLD:
+				gamer.setInGame(false);
+				break;
+			case CHECK:
+				break;
+			default:
+				throw new RuntimeException();
+			}
+
+			sendMessage(container);
+		} else if (CommandType.END_ROUND.equals(type)) {
+			model.setMaxBet(model.getBigBlind());
+			// возвращаем в игру fold'ов
+			for (LightweightGamer gamer : model.getGamers()) {
+				if (gamer.getMoney() > 0) { 
+					gamer.setInGame(true);
+					gamer.setBet(0);
+				}
+			}
 		}
 	}
 
@@ -153,7 +211,7 @@ public class Controller {
 	private Model model = new Model();
 	private RequestNameProxy requestNameProxy;
 	private RequestListener requestListener = new PokerRequestListener();
-	private ErrorHandler errorHandler = new ErrorHandlerStub();
+	private ErrorHandler errorHandler = new GUIErrorHandler();
 
 	private static final Controller instance = new Controller();
 

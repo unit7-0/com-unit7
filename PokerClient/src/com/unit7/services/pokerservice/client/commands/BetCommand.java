@@ -7,18 +7,21 @@
 
 package com.unit7.services.pokerservice.client.commands;
 
+import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
+
 public class BetCommand extends SimpleCommand {
 	public BetCommand() {
 		setType(CommandType.BET);
 	}
-	
-	public double getBet() {
-		return bet;
+
+	public CommandContainerType getBetType() {
+		return betType;
 	}
 
-	public void setBet(double bet) {
-		this.bet = bet;
+	public void setBetType(CommandContainerType betType) {
+		this.betType = betType;
 	}
 
-	private double bet;
+	// оставим это рефакторингу, пока пофиг
+	private CommandContainerType betType;
 }
