@@ -3,7 +3,6 @@ package com.unit7.services.pokerservice.engine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +34,6 @@ import com.unit7.services.pokerservice.engine.framework.Executor;
 import com.unit7.services.pokerservice.engine.framework.GamerCommandListener;
 import com.unit7.services.pokerservice.engine.framework.GamersChangeListener;
 import com.unit7.services.pokerservice.model.PokerGamer;
-import com.unit7.services.pokerservice.model.Stage;
 
 public class PokerGameInterfaceImpl implements PokerGameInterface {
     public PokerGameInterfaceImpl(List<PokerGamer> gamers) {
@@ -82,18 +80,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         // step one - request usernames
         requestNames();
 
-        Controller.getInstance().setStage(Stage.SEND_GAMERS_INFO);
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("[\tExecuting: stage gamers info setted\t]", null));
-        }
-
         sendGamersInfo();
-
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("[\tExecuting: stage request blind setted\t]", null));
-        }
-
-        Controller.getInstance().setStage(Stage.REQUEST_BLIND);
 
         // step two - select button
         PokerGamer button = selectButton();
