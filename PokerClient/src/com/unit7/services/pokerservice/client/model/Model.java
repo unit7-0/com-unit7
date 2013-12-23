@@ -31,23 +31,15 @@ public class Model {
         this.name = name;
     }
 
-    public double getBet() {
-        return bet;
-    }
+    public double getInitialMoney() {
+		return initialMoney;
+	}
 
-    public void setBet(double bet) {
-        this.bet = bet;
-    }
+	public void setInitialMoney(double initialMoney) {
+		this.initialMoney = initialMoney;
+	}
 
-    public double getMoney() {
-        return money;
-    }
-
-    public void setMoney(double money) {
-        this.money = money;
-    }
-
-    public List<LightweightGamer> getGamers() {
+	public List<LightweightGamer> getGamers() {
         return gamers;
     }
 
@@ -71,11 +63,19 @@ public class Model {
         this.prikup = prikup;
     }
 
-    private Socket serverSocket;
+    public double getBigBlind() {
+		return bigBlind;
+	}
+
+	public void setBigBlind(double bigBlind) {
+		this.bigBlind = bigBlind;
+	}
+
+	private Socket serverSocket;
     private String name;
-    private double bet;
-    private double money;
+    private double initialMoney;
+    private double bigBlind;
     private List<LightweightGamer> gamers;
     private List<Card> prikup;
-    private LightweightGamer gamer;
+    private LightweightGamer gamer = new LightweightGamer();
 }

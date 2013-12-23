@@ -9,6 +9,7 @@ package com.unit7.services.pokerservice.client.app.gui;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -60,6 +61,9 @@ public class GamerPanel extends JPanel {
 
         cardsPanel.add(firstCard);
         cardsPanel.add(secondCard);
+        
+        cardsPanel.setBackground(Color.CYAN);
+        cards.setBackground(Color.ORANGE);
         info.add(infoPanel);
         cards.add(cardsPanel);
 
@@ -88,28 +92,33 @@ public class GamerPanel extends JPanel {
             Image image = Resources.getImageByName(name1);
             firstCard.setImage(image);
             if (image != null) {
-                firstCard.setSize(image.getWidth(null), image.getHeight(null));
+            	int width = image.getWidth(null);
+            	int height = image.getHeight(null);
+                firstCard.setPreferredSize(new Dimension(width, height));
                 Container parent = firstCard.getParent();
                 while (parent.getParent() != null) {
                     parent = parent.getParent();
                 }
                 
-                parent.revalidate();
+//                parent.revalidate();
             }
             
             image = Resources.getImageByName(name2);
             secondCard.setImage(image);
             if (image != null) {
-                secondCard.setSize(image.getWidth(null), image.getHeight(null));
+//                secondCard.setSize(image.getWidth(null), image.getHeight(null));
+            	int width = image.getWidth(null);
+            	int height = image.getHeight(null);
+                firstCard.setPreferredSize(new Dimension(width, height));
                 Container parent = firstCard.getParent();
                 while (parent.getParent() != null) {
                     parent = parent.getParent();
                 }
-                
+                /*
                 if (parent instanceof JFrame) 
-                    ((JFrame) parent).pack();
+                    ((JFrame) parent).pack();*/
                         
-                parent.revalidate();
+//                parent.revalidate();
             }
         } catch (ResourceNotFoundException e) {
             // TODO Auto-generated catch block
