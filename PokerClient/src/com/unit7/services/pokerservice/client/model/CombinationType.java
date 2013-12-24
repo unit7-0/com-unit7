@@ -1,5 +1,6 @@
 package com.unit7.services.pokerservice.client.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,8 +19,10 @@ import java.util.Set;
  * @author unit7
  * 
  */
-public class CombinationType implements Comparable<CombinationType> {
-	public static final CombinationType STRAIGHT_FLASH = new CombinationType(0,
+public class CombinationType implements Comparable<CombinationType>, Serializable {
+	private static final long serialVersionUID = -7655610030011769769L;
+	
+    public static final CombinationType STRAIGHT_FLASH = new CombinationType(0,
 			"Straight flash");
 	public static final CombinationType FOUR_OF_A_KIND = new CombinationType(9,
 			"Four of a kind");

@@ -45,7 +45,7 @@ public class DesktopPanel extends JPanel {
         
         c.gridx = 2;
         c.gridy = 2;
-        add(prikupPanel);
+        add(prikupPanel, c);
     }
     
     private void addHorizontal(JPanel root, GridBagConstraints c, Iterator<LightweightGamer> it) {

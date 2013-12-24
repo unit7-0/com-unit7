@@ -79,7 +79,6 @@ public class Controller {
 					gamer.setMoney(model.getInitialMoney());
 					if (gamer.getCards() != null) {
 						model.setGamer(gamer);
-						break;
 					}
 				}
 
