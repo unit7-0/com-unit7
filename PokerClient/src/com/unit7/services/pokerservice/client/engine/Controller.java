@@ -51,7 +51,7 @@ public class Controller {
 					.getServerSocket());
 			if (message instanceof RequestNameContainer) {
 				RequestNameContainer container = (RequestNameContainer) message;
-				String name = requestNameProxy.request(null);
+				String name = "asd";//requestNameProxy.request(null);
 				container.setName(name);
 				model.setName(name);
 				requestListener.sendMessage(model.getServerSocket(), container);
