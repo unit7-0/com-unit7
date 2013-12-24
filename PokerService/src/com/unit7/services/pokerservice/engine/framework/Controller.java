@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import com.unit7.services.pokerservice.GameThread;
 import com.unit7.services.pokerservice.ServerThread;
 import com.unit7.services.pokerservice.client.commands.containers.CardContainer;
-import com.unit7.services.pokerservice.client.commands.containers.CommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
 import com.unit7.services.pokerservice.client.commands.containers.EndRoundCommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.ErrorCommandContainer;
@@ -20,13 +19,13 @@ import com.unit7.services.pokerservice.client.commands.containers.GamersInfoComm
 import com.unit7.services.pokerservice.client.commands.containers.RequestBetContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBlindContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestNameContainer;
-import com.unit7.services.pokerservice.client.commands.containers.ShowdownCommandContainer;
 import com.unit7.services.pokerservice.client.engine.transfer.PokerRequestListener;
 import com.unit7.services.pokerservice.client.engine.transfer.Request;
 import com.unit7.services.pokerservice.client.engine.transfer.RequestImpl;
 import com.unit7.services.pokerservice.client.engine.transfer.RequestListener;
 import com.unit7.services.pokerservice.client.engine.transfer.Response;
 import com.unit7.services.pokerservice.client.model.Card;
+import com.unit7.services.pokerservice.client.model.CombinationType;
 import com.unit7.services.pokerservice.client.model.LightweightGamer;
 import com.unit7.services.pokerservice.engine.commands.Command;
 import com.unit7.services.pokerservice.engine.commands.CommandType;
@@ -117,9 +116,9 @@ public class Controller {
 			container.setInitialMoney(model.getInitialMoney());
 
 			// send to each gamer
-			for (PokerGamer pokerGamer : gamers) {
-				int index = gamers.indexOf(pokerGamer);
-				LightweightGamer gamer = lightweightGamers.get(index);
+			for (int i = 0; i < gamers.size(); ++i) {
+				PokerGamer pokerGamer = gamers.get(i);
+				LightweightGamer gamer = lightweightGamers.get(i);
 				try {
 					gamer.setCards(pokerGamer.getCards());
 					requestListener.sendMessage(pokerGamer.getSocket(),
@@ -148,6 +147,15 @@ public class Controller {
 
 			Response response = requestListener.executeRequest(request);
 			Object data = response.getData();
+
+			if (log.isDebugEnabled()) {
+				boolean isBlind = data instanceof RequestBetContainer;
+				log.debug(String
+						.format("[\tReceived container object: %s, is RequestBetContainer: %s, type: %s\t]",
+								data, isBlind,
+								isBlind ? ((RequestBetContainer) data)
+										.getType().name() : "none"));
+			}
 
 			try {
 				RequestBetContainer betCont = (RequestBetContainer) data;
@@ -249,7 +257,7 @@ public class Controller {
 					gamerCommand.setCommandType(CommandType.CALL);
 				} else if (CommandContainerType.RAISE.equals(type)) {
 					double bet = container.getBet();
-//					model.setBetValue(bet);
+					// model.setBetValue(bet);
 					model.addToBank(bet);
 					gamer.setBet(gamer.getBet() + bet);
 					gamerCommand.setCommandType(CommandType.RAISE);
@@ -270,37 +278,39 @@ public class Controller {
 			} catch (Exception e) {
 				// TODO handle exception
 			}
-		} else if (CommandType.SHOWDOWN.equals(command.getCommandType())) {
-			CommandContainer container = new ShowdownCommandContainer();
-			container.setType(CommandContainerType.SHOWDOWN);
-
-			Request request = new RequestImpl();
-			request.setData(container);
-
-			for (PokerGamer gamer : model.getGamers()) {
-				request.setSocket(gamer.getSocket());
-				Response response = requestListener.executeRequest(request);
-				// TODO log response
-			}
-
 		} else if (CommandType.END_ROUND.equals(command.getCommandType())) {
+			// TODO refactor command
+			
 			EndRoundCommandContainer container = new EndRoundCommandContainer();
 			container.setType(CommandContainerType.END_ROUND);
-
-			List<PokerGamer> winners = ((EndRoundCommand) command).getGamers();
+			EndRoundCommand endRound = (EndRoundCommand) command;
+			
+			// сформировать контейнер
+			Map<Integer, CombinationType> types = endRound.getCombinations();
+			container.setCombinations(types);
+			
+			// послать комбинации и выигрыш всем игрокам
+			
+			List<PokerGamer> winners = endRound.getWinners();
 			double win = model.getBank() / winners.size();
-//			model.resetBank();
-			// отдать выигрышь
-			for (PokerGamer winner : winners) {
-				winner.addMoney(win);
-				winner.setBet(0);
-				container.setMoney(winner.getMoney());
-				requestListener.sendMessage(winner.getSocket(), container);
+			for (PokerGamer gamer : model.getGamers()) {
+				if (winners.contains(gamer)) {
+					gamer.addMoney(win);
+					container.setMoney(gamer.getMoney());
+					gamer.setBet(0);
+				} else {
+					container.setMoney(0);
+				}
+				
+				requestListener.sendMessage(gamer.getSocket(), container);
 			}
 			
+			model.resetBank();
+
 			// снять деньги - ставку
 			for (PokerGamer gamer : model.getGamers()) {
 				gamer.setMoney(gamer.getMoney() - gamer.getBet());
+				gamer.setBet(0);
 			}
 		} else if (CommandType.ERROR.equals(command.getCommandType())) {
 			if (log.isDebugEnabled()) {

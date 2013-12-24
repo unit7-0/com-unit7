@@ -1,7 +1,9 @@
 package com.unit7.services.pokerservice.engine.commands;
 
 import java.util.List;
+import java.util.Map;
 
+import com.unit7.services.pokerservice.client.model.CombinationType;
 import com.unit7.services.pokerservice.engine.framework.Controller;
 import com.unit7.services.pokerservice.model.PokerGamer;
 
@@ -21,13 +23,22 @@ public class EndRoundCommand extends AbstractCommand {
         controller.execute(this);
     }
 
-    public List<PokerGamer> getGamers() {
-        return gamers;
-    }
+	public Map<Integer, CombinationType> getCombinations() {
+		return combinations;
+	}
 
-    public void setGamers(List<PokerGamer> gamers) {
-        this.gamers = gamers;
-    }
+	public void setCombinations(Map<Integer, CombinationType> combinations) {
+		this.combinations = combinations;
+	}
 
-    private List<PokerGamer> gamers;
+	public List<PokerGamer> getWinners() {
+		return winners;
+	}
+
+	public void setWinners(List<PokerGamer> winners) {
+		this.winners = winners;
+	}
+
+	private Map<Integer, CombinationType> combinations;
+	private List<PokerGamer> winners;
 }
