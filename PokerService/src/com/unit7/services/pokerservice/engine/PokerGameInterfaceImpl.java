@@ -25,7 +25,6 @@ import com.unit7.services.pokerservice.engine.commands.GetCardCommand;
 import com.unit7.services.pokerservice.engine.commands.PreflopCommand;
 import com.unit7.services.pokerservice.engine.commands.RequestNameCommand;
 import com.unit7.services.pokerservice.engine.commands.RiverCommand;
-import com.unit7.services.pokerservice.engine.commands.ShowdownCommand;
 import com.unit7.services.pokerservice.engine.commands.SmallBlindCommand;
 import com.unit7.services.pokerservice.engine.commands.TurnCommand;
 import com.unit7.services.pokerservice.engine.framework.CommandExecutor;
@@ -93,32 +92,19 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         gamer = gamers.get((lastButton + 2) % gamers.size());
         requestBigBlind(gamer);
 
-        // step fife - distribute cards
-//        distributeCards();
-
-        // step six - get bets
         betRound();
 
-        // step seven - pre-flop
-        // preFlop();
-
-        // step eight - get bets
-        // betRound();
-
-        // step nine - flop
         flop();
 
-        // step ten - get bets
         betRound();
 
-        // step eleven - turn
         turn();
 
-        // step twelve - get bets
         betRound();
 
-        // step thirteen - river
         river();
+        
+        determineWinner();
     }
 
     @Override
@@ -136,19 +122,19 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
     public void betRound() {
         // next to big blind
         int gamerIndex = (lastButton + 3) % gamers.size();
-        int smallBlindIndex_1 = (lastButton + 2) % gamers.size();
-        double maxBet = gamers.get((lastButton + 2) % gamers.size()).getBet();
+        int bigBlindIndex_1 = (lastButton + 2) % gamers.size();
+        double maxBet = gamers.get(bigBlindIndex_1).getBet();
         boolean wasChanged = true;
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("[\tgamerIndex: %d, smallBlind: %d, maxBet: %.2f\t]", gamerIndex,
-                    smallBlindIndex_1, maxBet));
+            log.debug(String.format("[\tgamerIndex: %d, bigBlind: %d, maxBet: %.2f\t]", gamerIndex,
+                    bigBlindIndex_1, maxBet));
         }
 
         BetCommand command = new BetCommand();
         while (wasChanged) {
             wasChanged = false;
-            while (gamerIndex != smallBlindIndex_1) {
+            while (gamerIndex != bigBlindIndex_1) {
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("[\tCurrent gamerIndex: %d\t]", gamerIndex));
                 }
@@ -230,6 +216,8 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
             }
         }
 
+        // combinations
+        Map<Integer, CombinationType> result = new HashMap<Integer, CombinationType>();
         // one gamer in game - winner
         Map<CombinationType, List<PokerGamer>> winners = new TreeMap<CombinationType, List<PokerGamer>>();
         if (one != null) {
@@ -241,15 +229,10 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
             // open cards...
             for (PokerGamer gamer : gamers) {
                 if (gamer.isInGame()) {
-                    ShowdownCommand command = new ShowdownCommand();
-                    command.setGamer(gamer);
-
                     // TODO определить комбинацию
                     CombinationType type = null;
-                    command.setCombinationType(type);
-                    executor.execute(new Command[] { command });
-
                     List<PokerGamer> wins;
+                    result.put(gamer.getId(), type);
                     if (winners.containsKey(type)) {
                         wins = winners.get(type);
                     } else {
@@ -264,7 +247,8 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
 
         List<PokerGamer> realWinners = winners.get(winners.keySet().iterator().next());
         EndRoundCommand command = new EndRoundCommand();
-        command.setGamers(realWinners);
+        command.setWinners(realWinners);
+        command.setCombinations(result);
         command.execute(Controller.getInstance());
     }
 
