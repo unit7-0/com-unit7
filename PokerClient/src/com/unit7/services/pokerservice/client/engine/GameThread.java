@@ -8,6 +8,7 @@
 package com.unit7.services.pokerservice.client.engine;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -17,9 +18,11 @@ import com.unit7.services.pokerservice.client.commands.PrikupCardCommand;
 import com.unit7.services.pokerservice.client.commands.containers.CardContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.CommandContainerType;
+import com.unit7.services.pokerservice.client.commands.containers.EndRoundCommandContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBetContainer;
 import com.unit7.services.pokerservice.client.commands.containers.RequestBlindContainer;
 import com.unit7.services.pokerservice.client.model.Card;
+import com.unit7.services.pokerservice.client.model.CombinationType;
 import com.unit7.services.pokerservice.client.resources.Resources;
 
 /**
@@ -66,7 +69,11 @@ public class GameThread implements Runnable {
 				command.setBetType(CommandContainerType.BIG_BLIND);
 				command.execute(Controller.getInstance());
 			} else if (CommandContainerType.END_ROUND.equals(type)) {
-
+				EndRoundCommandContainer cont = (EndRoundCommandContainer) container;
+				Map<Integer, CombinationType> combinations = cont.getCombinations();
+				double money = cont.getMoney();
+				// TODO
+				
 			} else if (CommandContainerType.REQUEST_BET.equals(type)) {
 				while (true) {
 					CommandContainerType betType = betProxy.request(null);
@@ -79,8 +86,6 @@ public class GameThread implements Runnable {
 					}
 					break;
 				}
-			} else if (CommandContainerType.SHOWDOWN.equals(type)) {
-
 			} else if (CommandContainerType.FLOP.equals(type)
 					|| CommandContainerType.TURN.equals(type)
 					|| CommandContainerType.RIVER.equals(type)) {
