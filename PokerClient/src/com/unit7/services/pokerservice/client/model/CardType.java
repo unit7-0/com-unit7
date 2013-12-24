@@ -32,7 +32,7 @@ public class CardType implements Serializable {
 	}
 	
 	public static CardType createCardType(Suit suit) {
-	    CardType type = values()[Utils.getRandInt(values().length)];
+	    CardType type = values()[Utils.getRandInt(values().length - 1)];
 	    type = new CardType(type.getName());
 	    type.suit = suit;
 	    return type;
