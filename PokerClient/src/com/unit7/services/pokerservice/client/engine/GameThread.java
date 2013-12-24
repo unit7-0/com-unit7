@@ -23,6 +23,7 @@ import com.unit7.services.pokerservice.client.commands.containers.RequestBetCont
 import com.unit7.services.pokerservice.client.commands.containers.RequestBlindContainer;
 import com.unit7.services.pokerservice.client.model.Card;
 import com.unit7.services.pokerservice.client.model.CombinationType;
+import com.unit7.services.pokerservice.client.model.LightweightGamer;
 import com.unit7.services.pokerservice.client.resources.Resources;
 
 /**
@@ -70,9 +71,8 @@ public class GameThread implements Runnable {
 				command.execute(Controller.getInstance());
 			} else if (CommandContainerType.END_ROUND.equals(type)) {
 				EndRoundCommandContainer cont = (EndRoundCommandContainer) container;
-				Map<Integer, CombinationType> combinations = cont.getCombinations();
+				Map<LightweightGamer, CombinationType> combinations = cont.getCombinations();
 				double money = cont.getMoney();
-				// TODO
 				
 			} else if (CommandContainerType.REQUEST_BET.equals(type)) {
 				while (true) {

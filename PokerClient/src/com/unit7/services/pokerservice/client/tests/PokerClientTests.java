@@ -22,7 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
-import org.junit.Test;
+//import org.junit.Test;
 
 import com.sun.corba.se.impl.orbutil.threadpool.ThreadPoolImpl;
 import com.sun.corba.se.impl.orbutil.threadpool.ThreadPoolManagerImpl;
@@ -94,7 +94,7 @@ public class PokerClientTests {
 		fr.setVisible(true);
 	}
 
-	@Test
+//	@Test
 	public void testMaxGamers() {
 		for (int i = 0; i < 10; ++i) {
 			upClient();
