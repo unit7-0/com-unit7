@@ -24,17 +24,45 @@ public class PokerModel {
 			gamer.setSocket(clients.get(i));
 			gamer.setId(i);
 			gamers.add(gamer);
+			
+			if (log.isDebugEnabled()) {
+				log.debug("[\tgamers cards: ");
+			}
+			
 			for (int j = 0; j < 2; ++j) {
 				Card card = Card.getRandCard(deck);
+				if (log.isDebugEnabled()) {
+					StringBuilder res = new StringBuilder();
+					for (Card c : deck)
+						res.append(c.getType().getName()).append(",");
+					
+					log.debug(String.format("%s, set before add: %s", card.getType().getName(), res.toString()));
+				}
+				
 				deck.add(card);
 				gamer.addCard(card);
 			}
+			
+			if (log.isDebugEnabled()) {
+				log.debug("\t]");
+			}
 		}
 
+		if (log.isDebugEnabled()) {
+			log.debug("[\tprikup: \t");
+		}
+		
 		for (int i = 0; i < CARDS_PRIKUP; ++i) {
 			tableCards[i] = Card.getRandCard(deck);
 			deck.add(tableCards[i]);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("%s, ", tableCards[i].getType().getName()));
+			}
 		} 
+		
+		if (log.isDebugEnabled()) {
+			log.debug("\t]");
+		}
 		
 		/*
 		 * for crypting, now not needed, because we not realize mental poker.
