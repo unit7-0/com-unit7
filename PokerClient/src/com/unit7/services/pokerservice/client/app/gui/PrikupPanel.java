@@ -7,7 +7,9 @@
 
 package com.unit7.services.pokerservice.client.app.gui;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -23,8 +25,10 @@ import com.unit7.services.pokerservice.client.resources.Resources;
  */
 public class PrikupPanel extends JPanel {
     public PrikupPanel() {
-        for (int i = 0; i < panels.length; ++i)
+        for (int i = 0; i < panels.length; ++i) {
             panels[i] = new ImagePanel(null);
+            add(panels[i]);
+        }
     }
 
     @Override
@@ -41,13 +45,20 @@ public class PrikupPanel extends JPanel {
         }
         
         for (int i = 0; i < names.length; ++i) {
+        	Image image = null;
             try {
-                panels[i].setImage(Resources.getImageByName(names[i]));
+            	image = Resources.getImageByName(names[i]);
+                panels[i].setImage(image);
             } catch (ResourceNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             
+            if (image != null) {
+            	int width = image.getWidth(null);
+            	int height = image.getHeight(null);
+            	panels[i].setPreferredSize(new Dimension(width, height));
+            }
             panels[i].repaint();
         }
     }

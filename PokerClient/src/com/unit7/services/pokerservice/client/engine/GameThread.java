@@ -57,26 +57,14 @@ public class GameThread implements Runnable {
 
 			if (CommandContainerType.SMALL_BLIND.equals(type)) {
 				requestBlindProxy.request(Resources.REQUEST_SMALL_BLIND_TITLE);
-				double val = 0;
-				RequestBlindContainer cont = (RequestBlindContainer) container;
-				cont.setValue(val);
-
 				BetCommand command = new BetCommand();
-				// command.setBet(val);
+				command.setBetType(CommandContainerType.SMALL_BLIND);
 				command.execute(Controller.getInstance());
-
-				Controller.getInstance().sendMessage(cont);
 			} else if (CommandContainerType.BIG_BLIND.equals(type)) {
 				requestBlindProxy.request(Resources.REQUEST_BIG_BLIND_TITLE);
-				double val = 0;
-				RequestBlindContainer cont = (RequestBlindContainer) container;
-				cont.setValue(val);
-
 				BetCommand command = new BetCommand();
-				// command.setBet(val);
+				command.setBetType(CommandContainerType.BIG_BLIND);
 				command.execute(Controller.getInstance());
-
-				Controller.getInstance().sendMessage(cont);
 			} else if (CommandContainerType.END_ROUND.equals(type)) {
 
 			} else if (CommandContainerType.REQUEST_BET.equals(type)) {
@@ -98,6 +86,11 @@ public class GameThread implements Runnable {
 					|| CommandContainerType.RIVER.equals(type)) {
 				PrikupCardCommand command = new PrikupCardCommand();
 				List<Card> cards = ((CardContainer) container).getCards();
+				
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("[\tReceived cards size: %d\t]", cards.size()));
+				}
+				
 				command.setCards(cards);
 				command.execute(Controller.getInstance());
 				// обновим данные
@@ -105,6 +98,11 @@ public class GameThread implements Runnable {
 			} else if (CommandContainerType.GET_CARD.equals(type)) {
 				CardContainer cardContainer = (CardContainer) container;
 				List<Card> cards = cardContainer.getCards();
+				
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("[\tReceived cards size: %d\t]", cards.size()));
+				}
+				
 				GamerCardCommand command = new GamerCardCommand();
 				command.setCards(cards);
 				command.execute(Controller.getInstance());
