@@ -150,8 +150,9 @@ public class Controller {
 			Object data = response.getData();
 
 			try {
-				container = (RequestBlindContainer) data;
-				double blind = container.getValue();
+				RequestBetContainer betCont = (RequestBetContainer) data;
+				// check container is blind
+				double blind = betCont.getBet();
 				PokerGamer gamer = gamerCommand.getGamer();
 				gamer.setBet(blind);
 				model.addToBank(blind);
@@ -159,7 +160,6 @@ public class Controller {
 				// TODO handle exception
 			}
 		} else if (CommandType.GET_CARD.equals(command.getCommandType())) {
-
 			CardContainer container = generateCardContainer(2);
 			GamerCommand gamerCommand = (GamerCommand) command;
 			PokerGamer gamer = gamerCommand.getGamer();
