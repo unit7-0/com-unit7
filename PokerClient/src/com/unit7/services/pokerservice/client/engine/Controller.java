@@ -76,9 +76,9 @@ public class Controller {
 				model.setMaxBet(model.getBigBlind());
 
 				for (LightweightGamer gamer : gamers) {
+					gamer.setMoney(model.getInitialMoney());
 					if (gamer.getCards() != null) {
 						model.setGamer(gamer);
-						gamer.setMoney(model.getInitialMoney());
 						break;
 					}
 				}
@@ -149,7 +149,16 @@ public class Controller {
 					errorHandler.handleException(new RuntimeException(Resources.WRONG_COMMAND));
 				}
 				break;
-
+			case SMALL_BLIND:
+				gamer.setBet(model.getBigBlind() / 2);
+				gamer.setMoney(gamer.getMoney() - gamer.getBet());
+				container.setBet(gamer.getBet());
+				break;
+			case BIG_BLIND:
+				gamer.setBet(model.getBigBlind());
+				gamer.setMoney(gamer.getMoney() - gamer.getBet());
+				container.setBet(gamer.getBet());
+				break;
 			case FOLD:
 				gamer.setInGame(false);
 				break;
