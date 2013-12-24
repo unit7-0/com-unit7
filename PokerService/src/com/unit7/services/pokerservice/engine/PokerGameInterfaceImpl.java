@@ -103,7 +103,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         betRound();
 
         river();
-        
+
         determineWinner();
     }
 
@@ -127,8 +127,8 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         boolean wasChanged = true;
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("[\tgamerIndex: %d, bigBlind: %d, maxBet: %.2f\t]", gamerIndex,
-                    bigBlindIndex_1, maxBet));
+            log.debug(String.format("[\tgamerIndex: %d, bigBlind: %d, maxBet: %.2f\t]", gamerIndex, bigBlindIndex_1,
+                    maxBet));
         }
 
         BetCommand command = new BetCommand();
@@ -138,8 +138,12 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("[\tCurrent gamerIndex: %d\t]", gamerIndex));
                 }
-                
+
                 PokerGamer gamer = gamers.get((gamerIndex = (gamerIndex + 1) % gamers.size()));
+                if (!gamer.isInGame())
+                    continue;
+                
+                command.setCommandType(CommandType.BET);
                 command.setGamer(gamer);
                 // комманда выполняется не в отдельном потоке, значит результат
                 // у нас уже будет
@@ -154,6 +158,7 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
                     wasChanged = true;
                 }
             }
+            gamerIndex += 1;
         }
     }
 
@@ -223,14 +228,16 @@ public class PokerGameInterfaceImpl implements PokerGameInterface {
         if (one != null) {
             List<PokerGamer> wins = new ArrayList<PokerGamer>();
             wins.add(one);
-
-            // TODO winners.put(key, wins);
+            // TODO
+            CombinationType type = CombinationType.STRAIGHT_FLASH;
+            result.put(one.getId(), type);
+            winners.put(type, wins);
         } else {
             // open cards...
             for (PokerGamer gamer : gamers) {
                 if (gamer.isInGame()) {
-                    // TODO определить комбинацию
-                    CombinationType type = null;
+                    // TODO
+                    CombinationType type = CombinationType.STRAIGHT_FLASH;
                     List<PokerGamer> wins;
                     result.put(gamer.getId(), type);
                     if (winners.containsKey(type)) {

@@ -287,7 +287,27 @@ public class Controller {
 			
 			// сформировать контейнер
 			Map<Integer, CombinationType> types = endRound.getCombinations();
-			container.setCombinations(types);
+			Map<LightweightGamer, CombinationType> combinations = new HashMap<LightweightGamer, CombinationType>();
+			for (Iterator<Integer> it = types.keySet().iterator(); it.hasNext(); ) {
+			    int id = it.next();
+			    CombinationType type = types.get(id);
+			    PokerGamer selected = null;
+			    for (PokerGamer gamer : model.getGamers()) {
+			        if (gamer.getId() == id) {
+			            selected = gamer;
+			            break;
+			        }
+			    }
+			    
+			    LightweightGamer res = new LightweightGamer();
+			    
+			    res.setId(id);
+			    // положить карты, теперь их увидят все
+			    res.setCards(selected.getCards());
+			    combinations.put(res, type);
+			}
+			
+			container.setCombinations(combinations);
 			
 			// послать комбинации и выигрыш всем игрокам
 			
