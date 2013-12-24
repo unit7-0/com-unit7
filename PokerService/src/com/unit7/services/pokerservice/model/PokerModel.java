@@ -31,6 +31,11 @@ public class PokerModel {
 			}
 		}
 
+		for (int i = 0; i < CARDS_PRIKUP; ++i) {
+			tableCards[i] = Card.getRandCard(deck);
+			deck.add(tableCards[i]);
+		} 
+		
 		/*
 		 * for crypting, now not needed, because we not realize mental poker.
 		 * Just poker with ciphering for (int i = 0; i < CARDS_COUNT; ++i) { //
