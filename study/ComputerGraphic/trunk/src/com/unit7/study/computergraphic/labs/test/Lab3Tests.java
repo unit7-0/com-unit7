@@ -64,7 +64,7 @@ public class Lab3Tests {
 	private DrawerStrategy initStrategy() {
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("C:/temp/texture"));
+			image = ImageIO.read(new File("texture"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
