@@ -42,6 +42,41 @@ public class App {
                 .setWeight(BigInteger.valueOf(333022).multiply(BigInteger.TEN.pow(18))).build();
         mercury.setX(sun.getX() - mercury.getDrawnRadius());
 
+        // venus
+        DrawnSphere venus = (DrawnSphere) builder.setDrawnRadius(108000).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(224.7)).setName("Venus").setRadius(6051.8).build();
+        venus.setX(sun.getX() - venus.getDrawnRadius());
+
+        // earth
+        DrawnSphere earth = (DrawnSphere) builder.setDrawnRadius(149098.29).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(365.26)).setName("Earth").setRadius(6378.1).build();
+        earth.setX(sun.getX() - earth.getDrawnRadius());
+
+        // mars
+        DrawnSphere mars = (DrawnSphere) builder.setDrawnRadius(229232).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(687)).setName("Mars").setRadius(3396.9).build();
+        mars.setX(sun.getX() - mars.getDrawnRadius());
+
+        // Jupiter
+        DrawnSphere jupiter = (DrawnSphere) builder.setDrawnRadius(770573.6).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(4332.6)).setName("Jupiter").setRadius(71492).build();
+        jupiter.setX(sun.getX() - jupiter.getDrawnRadius());
+
+        // saturn
+        DrawnSphere saturn = (DrawnSphere) builder.setDrawnRadius(1613325.783).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(10759.2)).setName("Saturn").setRadius(60268).build();
+        saturn.setX(sun.getX() - saturn.getDrawnRadius());
+
+        // uran
+        DrawnSphere uran = (DrawnSphere) builder.setDrawnRadius(2848938.461).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(30685.4)).setName("Uran").setRadius(25559).build();
+        uran.setX(sun.getX() - uran.getDrawnRadius());
+
+        // neptun
+        DrawnSphere neptun = (DrawnSphere) builder.setDrawnRadius(4503946.49).setTarget(sun)
+                .setTimeAround(Utils.daysToMilliseconds(60189)).setName("Neptun").setRadius(24764).build();
+        neptun.setX(sun.getX() - neptun.getDrawnRadius());
+
         // pluto
         DrawnSphere pluto = (DrawnSphere) builder.setDrawnRadius(5900000).setTarget(sun)
                 .setTimeAround(Utils.daysToMilliseconds(365 * 248)).setName("Pluto").setRadius(1153).build();
@@ -49,18 +84,35 @@ public class App {
 
         DrawableSphere sunDraw = new DrawableSphere(sun);
         DrawableSphere mercuryDraw = new DrawableSphere(mercury);
+        DrawableSphere venusDraw = new DrawableSphere(venus);
+        DrawableSphere earthDraw = new DrawableSphere(earth);
+        DrawableSphere marsDraw = new DrawableSphere(mars);
+        DrawableSphere jupiterDraw = new DrawableSphere(jupiter);
+        DrawableSphere saturnDraw = new DrawableSphere(saturn);
+        DrawableSphere uranDraw = new DrawableSphere(uran);
+        DrawableSphere neptunDraw = new DrawableSphere(neptun);
         DrawableSphere plutoDraw = new DrawableSphere(pluto);
 
         double ratio = 0.004;
         sunDraw.setRatio(ratio);
         mercuryDraw.setRatio(ratio);
+        venusDraw.setRatio(ratio);
+        earthDraw.setRatio(ratio);
+        marsDraw.setRatio(ratio);
+        jupiterDraw.setRatio(ratio);
+        saturnDraw.setRatio(ratio);
+        uranDraw.setRatio(ratio);
+        neptunDraw.setRatio(ratio);
         plutoDraw.setRatio(ratio);
 
         // add to drawing
-        renderer.addObject(sunDraw).addObject(mercuryDraw).addObject(plutoDraw);
+        renderer.addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw)
+                .addObject(marsDraw).addObject(jupiterDraw).addObject(saturnDraw).addObject(uranDraw)
+                .addObject(neptunDraw).addObject(plutoDraw);
 
         // add to scene
-        scene.addObject(sun).addObject(mercury).addObject(pluto);
+        scene.addObject(sun).addObject(mercury).addObject(venus).addObject(earth).addObject(mars).addObject(jupiter)
+                .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);
 
         GLFrame frame = new GLFrame(renderer);
         frame.setVisible(true);
