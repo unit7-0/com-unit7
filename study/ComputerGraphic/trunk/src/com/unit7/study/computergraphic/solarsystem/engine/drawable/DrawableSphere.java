@@ -41,7 +41,7 @@ public class DrawableSphere extends DrawableSpaceObject {
     public void draw(GL2 gl) {
         GLU glu = GLU.createGLU();
         GLUquadric quadric = glu.gluNewQuadric();
-        double addRatio = 0.1;
+        double addRatio = 20000;
         double x = getObject().getX() * getRatio() * addRatio;
         double y = getObject().getY() * getRatio() * addRatio;
         double z = getObject().getZ() * getRatio() * addRatio;
@@ -51,7 +51,7 @@ public class DrawableSphere extends DrawableSpaceObject {
 
         gl.glTranslated(x, y, z);
         // gl.glRotated(20, 1, 0, 0);
-        glu.gluLookAt(0, 0, 50000000, 0, 0, 0, 0, 1, 0);
+        glu.gluLookAt(0, 0, 500000000, 0, 0, 0, 0, 1, 0);
         gl.glColor3f(1.0f, 0.0f, 0f);
         // TODO
         double radius = ((Sphere) getObject()).getRadius() * getRatio();
@@ -59,8 +59,13 @@ public class DrawableSphere extends DrawableSpaceObject {
             log.debug(String.format("radius: %.2f", radius));
         }
 
-        glu.gluSphere(quadric, radius, 100, 100);
+        glu.gluSphere(quadric, 2782040, 100, 100);
         glu.gluDeleteQuadric(quadric);
+        /*
+        gl.glTranslated(0, 2782040, 0);
+        quadric = glu.gluNewQuadric();
+        glu.gluSphere(quadric, 978204, 100, 100);
+        glu.gluDeleteQuadric(quadric);*/
     }
 
     @Override
