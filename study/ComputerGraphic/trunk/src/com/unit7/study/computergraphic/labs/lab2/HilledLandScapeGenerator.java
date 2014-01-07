@@ -1,9 +1,21 @@
 package com.unit7.study.computergraphic.labs.lab2;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Random;
 
 public class HilledLandScapeGenerator implements MapGenerator, Normalizer {
+    public HilledLandScapeGenerator() {
+        try {
+            log = new PrintWriter(new FileWriter("/home/unit7/log.txt"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
     @Override
     public float[][] generateMap(int n) {
         float[][] map = new float[n][n];
@@ -22,9 +34,12 @@ public class HilledLandScapeGenerator implements MapGenerator, Normalizer {
             Arrays.fill(map[i], 0f);
         }
         
+        
         for (int i = 0; i < stepCount; ++i) {
             int radius = rand.nextInt(maxRadius);
-            int x1 = rand.nextInt(n + radius);
+            /*int radius = maxRadius;
+            int x1 = map.length / 2; int y1 = map.length / 2;
+            */int x1 = rand.nextInt(n + radius);
             int y1 = rand.nextInt(n + radius);
             int quadR = sqr(radius);
             for (int x = x1 - radius; x < x1 + radius; ++x) {
@@ -32,13 +47,15 @@ public class HilledLandScapeGenerator implements MapGenerator, Normalizer {
                     if (x >= 0 && x < n && y >= 0 && y < n) {
                         float h = quadR - (sqr(x - x1) + sqr(y - y1));
                         if (h > 0)
-                            map[x][y] += h; 
+                            map[x][y] += h;Math.sqrt(h);
+                        log.print(map[x][y] + "\t");
                     }
                 }
+                log.println();
             }
         }
         
-        normalize(map);
+//        normalize(map);
         valliyng(map);
     }
     
@@ -85,7 +102,8 @@ public class HilledLandScapeGenerator implements MapGenerator, Normalizer {
         this.maxRadius = maxRadius;
     }
 
-    private int stepCount = 500;
-    private int maxRadius = 55;
+    private int stepCount = 100;
+    private int maxRadius = 128;
     private Random rand = new Random(System.currentTimeMillis());
+    PrintWriter log = null;
 }

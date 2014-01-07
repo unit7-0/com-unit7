@@ -38,7 +38,7 @@ public class LandScapeDrawer implements DrawerStrategy {
         
         gl.glPushMatrix();
                
-        gl.glTranslatef(-1.1f, -0.f, -3.5f);
+        gl.glTranslatef(-300.1f, -0.f, -1100.5f);
         gl.glRotatef(angle, xAxis, yAxis, zAxis);  
         gl.glRotatef(-50, 1, 0, 0);
         gl.glRotatef(-50, 0, 0, 1);
@@ -51,13 +51,14 @@ public class LandScapeDrawer implements DrawerStrategy {
                 float h = hMatrix[i][j] * ZOOM;
                 float x = i * ZOOM_XY;
                 float y = j * ZOOM_XY;
+                float magic = 200;
                 
                 points[12 * (i * (hMatrix.length - 1) + j)] = x;
                 points[12 * (i * (hMatrix.length - 1) + j) + 1] = y;
                 points[12 * (i * (hMatrix.length - 1) + j) + 2] = h;
                 
                 colors[12 * (i * (hMatrix.length - 1) + j)] = 0;
-                colors[12 * (i * (hMatrix.length - 1) + j) + 1] = h;
+                colors[12 * (i * (hMatrix.length - 1) + j) + 1] = (h - 0.000001f > 0 ? h / magic : 0.1f);
                 colors[12 * (i * (hMatrix.length - 1) + j) + 2] = 0;
                 
                 gl.glColor3f(colors[12 * (i * (hMatrix.length - 1) + j)], colors[12 * (i * (hMatrix.length - 1) + j) + 1], colors[12 * (i * (hMatrix.length - 1) + j) + 2]);
@@ -71,7 +72,7 @@ public class LandScapeDrawer implements DrawerStrategy {
                 points[12 * (i * (hMatrix.length - 1) + j) + 5] = h;
                 
                 colors[12 * (i * (hMatrix.length - 1) + j) + 3] = 0;
-                colors[12 * (i * (hMatrix.length - 1) + j) + 4] = h;
+                colors[12 * (i * (hMatrix.length - 1) + j) + 4] = (h - 0.000001f > 0 ? h / magic : 0.1f);
                 colors[12 * (i * (hMatrix.length - 1) + j) + 5] = 0;
                 
                 gl.glColor3f(colors[12 * (i * (hMatrix.length - 1) + j) + 3], colors[12 * (i * (hMatrix.length - 1) + j) + 4], colors[12 * (i * (hMatrix.length - 1) + j) + 5]);
@@ -85,7 +86,7 @@ public class LandScapeDrawer implements DrawerStrategy {
                 points[12 * (i * (hMatrix.length - 1) + j) + 8] = h;
                 
                 colors[12 * (i * (hMatrix.length - 1) + j) + 6] = 0;
-                colors[12 * (i * (hMatrix.length - 1) + j) + 7] = h;
+                colors[12 * (i * (hMatrix.length - 1) + j) + 7] = (h - 0.000001f > 0 ? h / magic : 0.1f);
                 colors[12 * (i * (hMatrix.length - 1) + j) + 8] = 0;
                 
                 gl.glColor3f(colors[12 * (i * (hMatrix.length - 1) + j) + 6], colors[12 * (i * (hMatrix.length - 1) + j) + 7], colors[12 * (i * (hMatrix.length - 1) + j) + 8]);
@@ -100,7 +101,7 @@ public class LandScapeDrawer implements DrawerStrategy {
                 points[12 * (i * (hMatrix.length - 1) + j) + 11] = h;
                 
                 colors[12 * (i * (hMatrix.length - 1) + j) + 9] = 0;
-                colors[12 * (i * (hMatrix.length - 1) + j) + 10] = h;
+                colors[12 * (i * (hMatrix.length - 1) + j) + 10] = (h - 0.000001f > 0 ? h / magic : 0.1f);
                 colors[12 * (i * (hMatrix.length - 1) + j) + 11] = 0;
                 
                 gl.glColor3f(colors[12 * (i * (hMatrix.length - 1) + j) + 9], colors[12 * (i * (hMatrix.length - 1) + j) + 10], colors[12 * (i * (hMatrix.length - 1) + j) + 11]);
@@ -136,6 +137,7 @@ public class LandScapeDrawer implements DrawerStrategy {
     }
 
     private void generateMap(int n) {
+//        hMatrix = new float[n][n];
         hMatrix = mapGenerator.generateMap(n);
     }
     
@@ -191,7 +193,7 @@ public class LandScapeDrawer implements DrawerStrategy {
 
     private float[][] hMatrix;
     private float ZOOM = 1;
-    private float ZOOM_XY = 0.0031f;
+    private float ZOOM_XY = 1; //0.0031f;
     private MapGenerator mapGenerator;
     
     private float angle = 0;
