@@ -13,6 +13,8 @@ import javax.media.opengl.glu.GLUquadric;
 
 import org.apache.log4j.Logger;
 
+import com.jogamp.opengl.util.gl2.GLUT;
+import com.unit7.study.computergraphic.solarsystem.engine.Camera;
 import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
 
@@ -41,7 +43,7 @@ public class DrawableSphere extends DrawableSpaceObject {
     public void draw(GL2 gl) {
         GLU glu = GLU.createGLU();
         GLUquadric quadric = glu.gluNewQuadric();
-        double addRatio = 20000;
+        double addRatio = 1.5;
         double x = getObject().getX() * getRatio() * addRatio;
         double y = getObject().getY() * getRatio() * addRatio;
         double z = getObject().getZ() * getRatio() * addRatio;
@@ -51,7 +53,7 @@ public class DrawableSphere extends DrawableSpaceObject {
 
         gl.glTranslated(x, y, z);
         // gl.glRotated(20, 1, 0, 0);
-        glu.gluLookAt(0, 0, 500000000, 0, 0, 0, 0, 1, 0);
+//        Camera.getInstance().setEyeZ(90000000);
         gl.glColor3f(1.0f, 0.0f, 0f);
         // TODO
         double radius = ((Sphere) getObject()).getRadius() * getRatio();
@@ -59,7 +61,10 @@ public class DrawableSphere extends DrawableSpaceObject {
             log.debug(String.format("radius: %.2f", radius));
         }
 
-        glu.gluSphere(quadric, 2782040, 100, 100);
+        glu.gluQuadricDrawStyle(quadric, GLU.GLU_FILL);
+        glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
+        glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
+        glu.gluSphere(quadric, radius, 100, 100);
         glu.gluDeleteQuadric(quadric);
         /*
         gl.glTranslated(0, 2782040, 0);

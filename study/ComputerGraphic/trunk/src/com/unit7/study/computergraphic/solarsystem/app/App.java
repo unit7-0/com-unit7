@@ -7,10 +7,17 @@
 
 package com.unit7.study.computergraphic.solarsystem.app;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.math.BigInteger;
+
+import org.apache.log4j.Logger;
 
 import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere;
 import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere.Builder;
+import com.unit7.study.computergraphic.solarsystem.engine.Camera;
+import com.unit7.study.computergraphic.solarsystem.engine.GLCanvasMouseListener;
 import com.unit7.study.computergraphic.solarsystem.engine.GLFrame;
 import com.unit7.study.computergraphic.solarsystem.engine.Renderer;
 import com.unit7.study.computergraphic.solarsystem.engine.Scene;
@@ -30,7 +37,8 @@ public class App {
         Time.getInstance().changeSpeed(1000000);
 
         // star, Sun
-        Sphere sun = new Sphere.Builder().setName("Sun").setAge(4.57).setRadius(695510000)
+        // уменьшим радиус
+        Sphere sun = new Sphere.Builder().setName("Sun").setAge(4.57).setRadius(69551)
                 .setWeight(BigInteger.valueOf(19891).multiply(BigInteger.TEN.pow(26))).build();
 
         // planets
@@ -93,7 +101,7 @@ public class App {
         DrawableSphere neptunDraw = new DrawableSphere(neptun);
         DrawableSphere plutoDraw = new DrawableSphere(pluto);
 
-        double ratio = 0.004;
+        double ratio = 100;
         sunDraw.setRatio(ratio);
         mercuryDraw.setRatio(ratio);
         venusDraw.setRatio(ratio);
@@ -115,8 +123,15 @@ public class App {
                 .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);
 
         GLFrame frame = new GLFrame(renderer);
+        MouseAdapter mouseAdapter = new GLCanvasMouseListener();
+        
+        frame.getCanvas().addMouseWheelListener(mouseAdapter);
+        frame.getCanvas().addMouseListener(mouseAdapter);
+        frame.getCanvas().addMouseMotionListener(mouseAdapter);
         frame.setVisible(true);
 
         scene.show();
     }
+    
+    private static final Logger log = Logger.getLogger(App.class);
 }
