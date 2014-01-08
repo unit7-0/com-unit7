@@ -21,30 +21,76 @@ import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
 
 /**
  * @author unit7
- *
+ * 
  */
 public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListener {
 
-    /* (non-Javadoc)
-     * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable
+     * )
      */
     @Override
     public void display(GLAutoDrawable arg0) {
         // TODO Auto-generated method stub
         GL2 gl = (GL2) arg0.getGL();
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-        
+
         Collection<Drawable> objs = getObjects();
         if (log.isDebugEnabled()) {
             log.debug(String.format("objects to draw: [ %d ]", objs.size()));
         }
+
+        float SHINE_ALL_DIRECTIONS = 1;
+        float[] lightPos = { 0, 0, 0, SHINE_ALL_DIRECTIONS };
+        float[] lightColorAmbient = { 0.8f, 0.5f, 0.2f, 1f };
+        float[] lightColorSpecular = { 0.8f, 0.8f, 0.8f, 1f };
+
+        // Set light parameters.
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPos, 0);
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightColorAmbient, 0);
+        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, lightColorSpecular, 0);
+
+        // Enable lighting in GL.
+        gl.glEnable(GL2.GL_LIGHT1);
+        gl.glEnable(GL2.GL_LIGHTING);
+
+        // Set material properties.
+        float[] rgba = { 1f, 1f, 1f };
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, rgba, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, rgba, 0);
+        gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.5f);
+
+        gl.glPushMatrix();
+        Camera camera = Camera.getInstance();
+        double angle = camera.getRotatingAngle();
+        if (angle > 0) {
+            double xRotate = camera.normalizeXRotating();
+            double yRotate = camera.normalizeYRotating();
+            double zRotate = camera.normalizeZRotating();
+
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("angle: %.2f, rotate [ %.3f, %.3f, %.3f ]", angle, xRotate, yRotate, zRotate));
+            }
+
+            gl.glRotated(angle, xRotate, yRotate, zRotate);
+//            camera.resetRotating();
+        }
         
+/*        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();*/
+
+        glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
+                camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ());
+
         for (Iterator<Drawable> it = objs.iterator(); it.hasNext();) {
             Drawable object = it.next();
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Object [ %s ] starting drawing", object));
             }
-            
+
             gl.glPushMatrix();
             object.draw(gl);
             gl.glPopMatrix();
@@ -52,10 +98,16 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
                 log.debug(String.format("Object [ %s ] finished drawing", object));
             }
         }
+        
+        gl.glPopMatrix();
     }
 
-    /* (non-Javadoc)
-     * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable
+     * )
      */
     @Override
     public void dispose(GLAutoDrawable arg0) {
@@ -63,47 +115,62 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
 
     }
 
-    /* (non-Javadoc)
-     * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
+     * )
      */
     @Override
     public void init(GLAutoDrawable arg0) {
         // TODO Auto-generated method stub
-        GL2 gl = arg0.getGL().getGL2();      // get the OpenGL graphics context
-        glu = new GLU();                         // get GL Utilities
+        GL2 gl = arg0.getGL().getGL2(); // get the OpenGL graphics context
+        glu = new GLU(); // get GL Utilities
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
-        gl.glClearDepth(1.0f);      // set clear depth value to farthest
+        gl.glClearDepth(1.0f); // set clear depth value to farthest
         gl.glEnable(GL2.GL_DEPTH_TEST); // enables depth testing
-        gl.glDepthFunc(GL2.GL_LEQUAL);  // the type of depth test to do
-        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); // best perspective correction
-        gl.glShadeModel(GL2.GL_SMOOTH); // blends colors nicely, and smoothes out lighting
-//        glu.gluLookAt(0, 0, 50, 0, 0, 0, 0, 1, 0);
+        gl.glDepthFunc(GL2.GL_LEQUAL); // the type of depth test to do
+        gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); // best
+                                                                      // perspective
+                                                                      // correction
+        gl.glShadeModel(GL2.GL_SMOOTH); // blends colors nicely, and smoothes
+                                        // out lighting
     }
 
-    /* (non-Javadoc)
-     * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable
+     * , int, int, int, int)
      */
     @Override
     public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int width, int height) {
-        GL2 gl = arg0.getGL().getGL2();  // get the OpenGL 2 graphics context
-        
-        if (height == 0) height = 1;   // prevent divide by zero
-        float aspect = (float)width / height;
-   
+        GL2 gl = arg0.getGL().getGL2(); // get the OpenGL 2 graphics context
+
+        if (height == 0)
+            height = 1; // prevent divide by zero
+        float aspect = (float) width / height;
+
         // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
-   
+
         // Setup perspective projection, with aspect ratio matches viewport
-        gl.glMatrixMode(GL2.GL_PROJECTION);  // choose projection matrix
-        gl.glLoadIdentity();             // reset projection matrix
+        gl.glMatrixMode(GL2.GL_PROJECTION); // choose projection matrix
+        gl.glLoadIdentity(); // reset projection matrix
         glu.gluPerspective(45.0, aspect, 0, 1); // fovy, aspect, zNear, zFar
-   
+
+        Camera camera = Camera.getInstance();
+        glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
+                camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ());
+
         // Enable the model-view transform
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
     }
-    
+
     private GLU glu;
-    
+
     private static final Logger log = Logger.getLogger(Renderer.class);
 }
