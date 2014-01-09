@@ -268,7 +268,7 @@ public class Camera {
         resetRotating();
     }
     
-    private double eyeX, eyeY, eyeZ = 900;
+    private double eyeX, eyeY, eyeZ = 90;
     private double centerX, centerY, centerZ;
     private double upX, upY = 1, upZ;
     private double rotateX, rotateY, rotateZ;
