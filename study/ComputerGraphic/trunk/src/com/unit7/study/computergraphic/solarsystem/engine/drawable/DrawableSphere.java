@@ -51,12 +51,12 @@ public class DrawableSphere extends DrawableSpaceObject {
             log.debug(String.format("x: %.2f, y: %.2f, z: %.2f", x, y, z));
         }
 
-        gl.glTranslated(x, y, z);
         // gl.glRotated(20, 1, 0, 0);
 //        Camera.getInstance().setEyeZ(90000000);
         gl.glColor3f(1.0f, 0.0f, 0f);
         // TODO
         double radius = ((Sphere) getObject()).getRadius() * getRatio();
+        gl.glTranslated(x + radius, y + radius, z + radius);
         if (log.isDebugEnabled()) {
             log.debug(String.format("radius: %.2f", radius));
         }

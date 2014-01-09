@@ -260,6 +260,14 @@ public class Camera {
         this.rotatingAngle = rotatingAngle;
     }
 
+    public void resetCamera() {
+        eyeX = eyeY = eyeZ = 0;
+        centerX = centerY = centerZ = 0;
+        upX = upZ = 0;
+        upY = 1;
+        resetRotating();
+    }
+    
     private double eyeX, eyeY, eyeZ = 90000000;
     private double centerX, centerY, centerZ;
     private double upX, upY = 1, upZ;

@@ -43,27 +43,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
             log.debug(String.format("objects to draw: [ %d ]", objs.size()));
         }
 
-        float SHINE_ALL_DIRECTIONS = 1;
-        float[] lightPos = { 0, 0, 0, SHINE_ALL_DIRECTIONS };
-        float[] lightColorAmbient = { 0.8f, 0.5f, 0.2f, 1f };
-        float[] lightColorSpecular = { 0.8f, 0.8f, 0.8f, 1f };
-
-        // Set light parameters.
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPos, 0);
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, lightColorAmbient, 0);
-        gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, lightColorSpecular, 0);
-
-        // Enable lighting in GL.
-        gl.glEnable(GL2.GL_LIGHT1);
-        gl.glEnable(GL2.GL_LIGHTING);
-
-        // Set material properties.
-        float[] rgba = { 1f, 1f, 1f };
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, rgba, 0);
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, rgba, 0);
-        gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.5f);
-
-        gl.glPushMatrix();
+        // gl.glPushMatrix();
         Camera camera = Camera.getInstance();
         double angle = camera.getRotatingAngle();
         if (angle > 0) {
@@ -75,16 +55,20 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
                 log.debug(String.format("angle: %.2f, rotate [ %.3f, %.3f, %.3f ]", angle, xRotate, yRotate, zRotate));
             }
 
-            gl.glRotated(angle, xRotate, yRotate, zRotate);
-//            camera.resetRotating();
+            // gl.glRotated(angle, xRotate, yRotate, zRotate);
+            // camera.resetRotating();
         }
-        
-/*        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();*/
 
+        /*
+         * gl.glMatrixMode(GL2.GL_MODELVIEW); gl.glLoadIdentity();
+         */
+
+        // gl.glPushMatrix();
         glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
                 camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ());
+        camera.resetCamera();
 
+        gl.glPushMatrix();
         for (Iterator<Drawable> it = objs.iterator(); it.hasNext();) {
             Drawable object = it.next();
             if (log.isDebugEnabled()) {
@@ -98,7 +82,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
                 log.debug(String.format("Object [ %s ] finished drawing", object));
             }
         }
-        
+
         gl.glPopMatrix();
     }
 
@@ -130,12 +114,34 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f); // set clear depth value to farthest
         gl.glEnable(GL2.GL_DEPTH_TEST); // enables depth testing
+        gl.glEnable(GL2.GL_COLOR_MATERIAL);
         gl.glDepthFunc(GL2.GL_LEQUAL); // the type of depth test to do
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); // best
                                                                       // perspective
                                                                       // correction
         gl.glShadeModel(GL2.GL_SMOOTH); // blends colors nicely, and smoothes
                                         // out lighting
+
+        float SHINE_ALL_DIRECTIONS = 1;
+        float[] lightPos = { 0, 0, 0, SHINE_ALL_DIRECTIONS };
+        float[] lightColorAmbient = { 0f, 0f, 0f, 1f };
+        float[] lightColorDiffuse = { 1f, 1f, 1f, 1f };
+
+        // Set light parameters.
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, lightColorAmbient, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, lightColorDiffuse, 0);
+
+        // Enable lighting in GL.
+        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_LIGHTING);
+
+        // Set material properties.
+        float[] rgba = { 1f, 1f, 1f, 1f };
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT_AND_DIFFUSE, rgba, 0);
+        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, rgba, 0);
+        gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.5f);
+
     }
 
     /*
