@@ -38,7 +38,15 @@ public class GLCanvasMouseListener extends MouseAdapter {
 
         Camera.getInstance().setRotateX(Math.abs(diffY));
         Camera.getInstance().setRotateY(Math.abs(diffX));
-        Camera.getInstance().setRotatingAngle(Math.abs(diffX) + Math.abs(diffY));
+        
+        double newAngle = diffX + diffY + Camera.getInstance().getRotatingAngle();
+        if (newAngle > 0)
+            newAngle %= 360;
+        else
+            newAngle %= -360;
+        
+        Camera.getInstance().setRotatingAngle(newAngle);
+        Camera.getInstance().setEyeY(diffY * 10000000);
 
         lastX = x;
         lastY = y;
