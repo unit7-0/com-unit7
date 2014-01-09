@@ -177,7 +177,7 @@ public class DrawnSphere extends Sphere implements DrawnObject {
 
     private SpaceObject target;
     private long timeAround; // время обращения вокруг объекта в мс
-    private double drawnRadius; // радиус обращения в км
+    private double drawnRadius; // радиус обращения / расстояние от солнца до плутона * 1000
     private double delta; // время обращения за 1 мс
     private long lastStep = Time.getInstance().getTime(); // время последнего
                                                           // шага

@@ -40,7 +40,7 @@ public class App {
          * сделаем все координаты в рамках 1000x1000
          */
         double coordMul = 1000;
-        double plutoDrawnRadius = 590000;
+        double plutoDrawnRadius = 5900000;
         double meruryDrawnRadius = 57910 / plutoDrawnRadius * 1000;
         double venusDrawRadius = 108000 / plutoDrawnRadius * 1000;
         double earthDrawnRadius = 149098.29 / plutoDrawnRadius * 1000;
@@ -117,7 +117,7 @@ public class App {
         DrawableSphere neptunDraw = new DrawableSphere(neptun);
         DrawableSphere plutoDraw = new DrawableSphere(pluto);
 
-        double ratio = 100;
+        double ratio = 0.0001;
         sunDraw.setRatio(ratio);
         mercuryDraw.setRatio(ratio);
         venusDraw.setRatio(ratio);
