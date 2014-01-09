@@ -21,7 +21,7 @@ public class GLCanvasMouseListener extends MouseAdapter {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         double v = e.getPreciseWheelRotation();
-        Camera.getInstance().addEyeZ(v * 10000000);
+        Camera.getInstance().addEyeZ(v);
 
         if (log.isDebugEnabled()) {
             log.debug("Mouse wheeled: " + v);
@@ -46,7 +46,7 @@ public class GLCanvasMouseListener extends MouseAdapter {
             newAngle %= -360;
         
         Camera.getInstance().setRotatingAngle(newAngle);
-        Camera.getInstance().setEyeY(diffY * 10000000);
+        Camera.getInstance().setEyeY(diffY);
 
         lastX = x;
         lastY = y;
