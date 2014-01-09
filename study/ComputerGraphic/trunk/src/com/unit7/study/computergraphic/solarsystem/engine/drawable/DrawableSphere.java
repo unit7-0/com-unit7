@@ -56,13 +56,13 @@ public class DrawableSphere extends DrawableSpaceObject {
         gl.glColor3f(1.0f, 0.0f, 0f);
         // TODO
         double radius = ((Sphere) getObject()).getRadius() * getRatio();
-        gl.glTranslated(x + radius, y + radius, z + radius);
+        gl.glTranslated(x, y, z);
         if (log.isDebugEnabled()) {
             log.debug(String.format("radius: %.2f", radius));
         }
 
         glu.gluQuadricDrawStyle(quadric, GLU.GLU_FILL);
-        glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
+        glu.gluQuadricNormals(quadric, GLU.GLU_SMOOTH);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
         glu.gluSphere(quadric, radius, 100, 100);
         glu.gluDeleteQuadric(quadric);

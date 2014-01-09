@@ -34,7 +34,7 @@ public class App {
     public static void main(String[] args) {
         Renderer renderer = new Renderer();
         Scene scene = new Scene();
-        Time.getInstance().changeSpeed(1000000);
+        Time.getInstance().changeSpeed(10000000);
 
         /**
          * сделаем все координаты в рамках 1000x1000

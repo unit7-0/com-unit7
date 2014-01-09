@@ -62,7 +62,43 @@ public abstract class SpaceObject implements ActionObject {
         this.z = z;
     }
 
-    @Override
+    public double getVx() {
+		return vx;
+	}
+
+	public void setVx(double vx) {
+		this.vx = vx;
+	}
+
+	public double getVy() {
+		return vy;
+	}
+
+	public void setVy(double vy) {
+		this.vy = vy;
+	}
+
+	public double getVz() {
+		return vz;
+	}
+
+	public void setVz(double vz) {
+		this.vz = vz;
+	}
+
+	public void addVx(double v) {
+		vx += v;
+	}
+	
+	public void addVy(double v) {
+		vy += v;
+	}
+	
+	public void addVz(double v) {
+		vz += v;
+	}
+	
+	@Override
     public String toString() {
         return String.format("SpaceObject [weight=%s, age=%s, name=%s]", weight, age, name);
     }
@@ -72,4 +108,5 @@ public abstract class SpaceObject implements ActionObject {
     private double age; // возраст в млрд лет
     private String name;
     private double x, y, z;
+    private double vx, vy, vz;
 }

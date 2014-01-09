@@ -63,12 +63,12 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
          * gl.glMatrixMode(GL2.GL_MODELVIEW); gl.glLoadIdentity();
          */
 
-        // gl.glPushMatrix();
+         gl.glPushMatrix();
         glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
                 camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ());
-        camera.resetCamera();
+//        camera.resetCamera();
 
-        gl.glPushMatrix();
+//        gl.glPushMatrix();
         for (Iterator<Drawable> it = objs.iterator(); it.hasNext();) {
             Drawable object = it.next();
             if (log.isDebugEnabled()) {
@@ -124,7 +124,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
 
         float SHINE_ALL_DIRECTIONS = 1;
         float[] lightPos = { 0, 0, 0, SHINE_ALL_DIRECTIONS };
-        float[] lightColorAmbient = { 0f, 0f, 0f, 1f };
+        float[] lightColorAmbient = { 0.4f, 0.4f, 0.4f, 1f };
         float[] lightColorDiffuse = { 1f, 1f, 1f, 1f };
 
         // Set light parameters.
