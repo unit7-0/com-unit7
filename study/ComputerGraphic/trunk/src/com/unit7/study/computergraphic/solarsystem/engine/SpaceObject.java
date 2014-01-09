@@ -14,11 +14,11 @@ import java.math.BigInteger;
  * 
  */
 public abstract class SpaceObject implements ActionObject {
-    public BigInteger getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(BigInteger weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
@@ -67,7 +67,8 @@ public abstract class SpaceObject implements ActionObject {
         return String.format("SpaceObject [weight=%s, age=%s, name=%s]", weight, age, name);
     }
 
-    private BigInteger weight;
+    private double weight; // масса * 10^23
+    private double weightDegree = 23;
     private double age; // возраст в млрд лет
     private String name;
     private double x, y, z;

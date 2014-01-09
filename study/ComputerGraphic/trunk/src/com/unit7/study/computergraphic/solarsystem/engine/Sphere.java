@@ -50,7 +50,7 @@ public class Sphere extends SpaceObject {
             return sphere;
         }
 
-        public BigInteger getWeight() {
+        public double getWeight() {
             return weight;
         }
 
@@ -78,7 +78,7 @@ public class Sphere extends SpaceObject {
             return radius;
         }
 
-        public Builder setWeight(BigInteger weight) {
+        public Builder setWeight(double weight) {
             this.weight = weight;
             return this;
         }
@@ -113,7 +113,7 @@ public class Sphere extends SpaceObject {
             return this;
         }
 
-        private BigInteger weight;
+        private double weight;
         private double age;
         private String name;
         private double x, y, z;

@@ -43,7 +43,7 @@ public class DrawableSphere extends DrawableSpaceObject {
     public void draw(GL2 gl) {
         GLU glu = GLU.createGLU();
         GLUquadric quadric = glu.gluNewQuadric();
-        double addRatio = 1.5;
+        double addRatio = 1 / getRatio();
         double x = getObject().getX() * getRatio() * addRatio;
         double y = getObject().getY() * getRatio() * addRatio;
         double z = getObject().getZ() * getRatio() * addRatio;
