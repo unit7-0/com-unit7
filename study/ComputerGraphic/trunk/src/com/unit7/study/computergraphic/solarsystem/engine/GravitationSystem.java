@@ -28,9 +28,10 @@ public class GravitationSystem extends ObjectHolderImpl<SpaceObject> implements
 							+ Utils.sqr(obj.getY() - obj0.getY())
 							+ Utils.sqr(obj.getZ() - obj0.getZ()));
 					if (d > 3) {
-						obj0.addVx(0.00007 * obj.getWeight() / d / d * (obj.getX() - obj0.getX() / d));
-						obj0.addVy(0.00007 * obj.getWeight() / d / d * (obj.getY() - obj0.getY() / d));
-						obj0.addVz(0.00007 * obj.getWeight() / d / d * (obj.getZ() - obj0.getZ() / d));
+					    double con = 0.000007;
+						obj0.addVx(con * obj.getWeight() / d / d * (obj.getX() - obj0.getX() / d));
+						obj0.addVy(con * obj.getWeight() / d / d * (obj.getY() - obj0.getY() / d));
+						obj0.addVz(con * obj.getWeight() / d / d * (obj.getZ() - obj0.getZ() / d));
 					}
 				}
 				
