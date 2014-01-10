@@ -146,9 +146,9 @@ public class App {
         scene.addObject(sun).addObject(mercury).addObject(venus).addObject(earth).addObject(mars).addObject(jupiter)
                 .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);
 
-        mercury.setVy(-3.);
-        venus.setVy(-3);
-        earth.setVy(-2.5);
+        mercury.setVy(-0.015);
+        venus.setVy(-.015);
+        earth.setVy(-.015);
         grSystem.addObject(sun).addObject(mercury).addObject(venus).addObject(earth);/*.addObject(mars).addObject(jupiter)
                 .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);*/
 

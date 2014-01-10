@@ -8,7 +8,6 @@
 package com.unit7.study.computergraphic.solarsystem.engine;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,8 +46,8 @@ public class ObjectHolderImpl<T> implements ObjectHolder<T> {
      * @see com.unit7.study.computergraphic.solarsystem.engine.ObjectHolder#getObjects()
      */
     @Override
-    public Collection<T> getObjects() {
-        return Collections.unmodifiableCollection(objects);
+    public List<T> getObjects() {
+        return Collections.unmodifiableList(objects);
     }
 
     private List<T> objects = new ArrayList<T>();
