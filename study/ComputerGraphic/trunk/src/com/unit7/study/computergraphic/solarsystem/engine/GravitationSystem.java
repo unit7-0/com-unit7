@@ -7,7 +7,7 @@
 
 package com.unit7.study.computergraphic.solarsystem.engine;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class GravitationSystem extends ObjectHolderImpl<SpaceObject> implements
@@ -15,15 +15,12 @@ public class GravitationSystem extends ObjectHolderImpl<SpaceObject> implements
 	@Override
 	public void run() {
 		while (true) {
-			Iterator<SpaceObject> it = getObjects().iterator();
-			while (it.hasNext()) {
-				SpaceObject obj0 = it.next();
-				Iterator<SpaceObject> it1 = getObjects().iterator();
-				while (it1.hasNext()) {
-					SpaceObject obj = it1.next();
-					if (obj0.equals(obj))
-						continue;
-
+			List<SpaceObject> objs = getObjects();
+			int size = objs.size();
+			for (int i = 0; i < size; ++i) {
+				SpaceObject obj0 = objs.get(i);
+				for (int j = i + 1; j < size; ++j) {
+					SpaceObject obj = objs.get(j);
 					double d = Math.sqrt(Utils.sqr(obj.getX() - obj0.getX())
 							+ Utils.sqr(obj.getY() - obj0.getY())
 							+ Utils.sqr(obj.getZ() - obj0.getZ()));
@@ -57,5 +54,5 @@ public class GravitationSystem extends ObjectHolderImpl<SpaceObject> implements
 		this.delay = delay;
 	}
 
-	private long delay = 200;
+	private long delay = 5;
 }

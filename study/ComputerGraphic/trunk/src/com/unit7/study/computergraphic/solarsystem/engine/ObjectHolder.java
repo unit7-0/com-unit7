@@ -7,7 +7,6 @@
 
 package com.unit7.study.computergraphic.solarsystem.engine;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,5 +20,5 @@ public interface ObjectHolder<T> {
 
     void setObjects(List<T> objects);
 
-    Collection<T> getObjects();
+    List<T> getObjects();
 }
