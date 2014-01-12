@@ -98,7 +98,15 @@ public abstract class SpaceObject implements ActionObject {
 		vz += v;
 	}
 	
-	@Override
+	public SpaceObjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SpaceObjectStatus status) {
+        this.status = status;
+    }
+
+    @Override
     public String toString() {
         return String.format("SpaceObject [weight=%s, age=%s, name=%s]", weight, age, name);
     }
@@ -109,4 +117,6 @@ public abstract class SpaceObject implements ActionObject {
     private String name;
     private double x, y, z;
     private double vx, vy, vz;
+    
+    private SpaceObjectStatus status;
 }

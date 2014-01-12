@@ -7,17 +7,28 @@
 
 package com.unit7.study.computergraphic.solarsystem.engine;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
 
 import org.apache.log4j.Logger;
 
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
+import com.unit7.study.computergraphic.solarsystem.app.App;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
+import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSpaceObject;
 
 /**
  * @author unit7
@@ -63,12 +74,18 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
          * gl.glMatrixMode(GL2.GL_MODELVIEW); gl.glLoadIdentity();
          */
 
-         gl.glPushMatrix();
+        gl.glPushMatrix();
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("eye [ %.2f, %.2f, %.2f ], center [ %.2f, %.2f, %.2f ], up [ %.2f, %.2f, %.2f ]",
+                    camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
+                    camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ()));
+        }
+        
         glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
                 camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ());
-//        camera.resetCamera();
+        // camera.resetCamera();
 
-//        gl.glPushMatrix();
+        // gl.glPushMatrix();
         for (Iterator<Drawable> it = objs.iterator(); it.hasNext();) {
             Drawable object = it.next();
             if (log.isDebugEnabled()) {
@@ -76,7 +93,15 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
             }
 
             gl.glPushMatrix();
+            if (object.isTextureEnabled()) {
+                Texture text = object.getTexture();
+                text.enable(gl);
+                text.bind(gl);
+            }
             object.draw(gl);
+            if (object.isTextureEnabled()) {
+                object.getTexture().disable(gl);
+            }
             gl.glPopMatrix();
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Object [ %s ] finished drawing", object));
@@ -142,6 +167,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
         gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, rgba, 0);
         gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 0.5f);
 
+        loadTextures(getObjects());
     }
 
     /*
@@ -174,6 +200,27 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
         // Enable the model-view transform
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
+    }
+
+    private void loadTextures(List<Drawable> objs) {
+        InputStream in = null;
+        for (int i = 0; i < objs.size(); ++i) {
+            DrawableSpaceObject obj = (DrawableSpaceObject) objs.get(i);
+            String name = obj.getObject().getName();
+            try {
+                in = new FileInputStream(App.CONF_PATH + App.TEXTURES_PATH + "/" + name.toLowerCase() + ".png");
+                TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), in, false, "png");
+                Texture text = TextureIO.newTexture(data);
+                obj.setTexture(text);
+                obj.setTextureEnabled(true);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     private GLU glu;

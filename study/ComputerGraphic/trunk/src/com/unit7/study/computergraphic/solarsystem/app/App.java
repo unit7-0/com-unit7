@@ -7,24 +7,48 @@
 
 package com.unit7.study.computergraphic.solarsystem.app;
 
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.media.opengl.GLProfile;
+import javax.swing.JPanel;
+
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import com.jogamp.newt.event.KeyAdapter;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
 import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere;
 import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere.Builder;
 import com.unit7.study.computergraphic.solarsystem.engine.Camera;
+import com.unit7.study.computergraphic.solarsystem.engine.GLCanvasKeyboardListener;
 import com.unit7.study.computergraphic.solarsystem.engine.GLCanvasMouseListener;
 import com.unit7.study.computergraphic.solarsystem.engine.GLFrame;
 import com.unit7.study.computergraphic.solarsystem.engine.GravitationSystem;
+import com.unit7.study.computergraphic.solarsystem.engine.MouseCoordGetter;
 import com.unit7.study.computergraphic.solarsystem.engine.Renderer;
 import com.unit7.study.computergraphic.solarsystem.engine.Scene;
 import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
 import com.unit7.study.computergraphic.solarsystem.engine.Time;
 import com.unit7.study.computergraphic.solarsystem.engine.Utils;
+import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
+import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSphere;
 
 /**
@@ -104,13 +128,13 @@ public class App {
 
         // uran
         DrawnSphere uran = (DrawnSphere) builder.setDrawnRadius(uranDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(30685.4)).setName("Uran").setRadius(25559).setWeight(868.1)
+                .setTimeAround(Utils.daysToMilliseconds(30685.4)).setName("Uranus").setRadius(25559).setWeight(868.1)
                 .build();
         uran.setX(sun.getX() - uran.getDrawnRadius());
 
         // neptun
         DrawnSphere neptun = (DrawnSphere) builder.setDrawnRadius(neptunDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(60189)).setName("Neptun").setRadius(24764).setWeight(1024)
+                .setTimeAround(Utils.daysToMilliseconds(60189)).setName("Neptune").setRadius(24764).setWeight(1024)
                 .build();
         neptun.setX(sun.getX() - neptun.getDrawnRadius());
 
@@ -126,6 +150,7 @@ public class App {
         DrawableSphere plutoDraw = new DrawableSphere(pluto);
 
         double ratio = 0.0001;
+        Camera.getInstance().setRatio(ratio);
         sunDraw.setRatio(ratio);
         mercuryDraw.setRatio(ratio);
         venusDraw.setRatio(ratio);
@@ -137,32 +162,89 @@ public class App {
         neptunDraw.setRatio(ratio);
         plutoDraw.setRatio(ratio);
 
+        App app = new App();
+        // loadTextures
+        List<DrawableSpaceObject> objs = new ArrayList<DrawableSpaceObject>();
+        objs.add(sunDraw);
+        objs.add(mercuryDraw);
+        objs.add(venusDraw);
+        objs.add(earthDraw);
+        objs.add(marsDraw);
+        objs.add(jupiterDraw);
+        objs.add(saturnDraw);
+        objs.add(uranDraw);
+        objs.add(neptunDraw);
+        objs.add(plutoDraw);
+
         // add to drawing
-        renderer.addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw);/*
+        renderer.addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw)
                 .addObject(marsDraw).addObject(jupiterDraw).addObject(saturnDraw).addObject(uranDraw)
-                .addObject(neptunDraw).addObject(plutoDraw);*/
+                .addObject(neptunDraw).addObject(plutoDraw);
 
         // add to scene
         scene.addObject(sun).addObject(mercury).addObject(venus).addObject(earth).addObject(mars).addObject(jupiter)
                 .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);
 
-        mercury.setVy(-0.015);
-        venus.setVy(-.015);
-        earth.setVy(-.015);
-        grSystem.addObject(sun).addObject(mercury).addObject(venus).addObject(earth);/*.addObject(mars).addObject(jupiter)
-                .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);*/
+        /*
+         * mercury.setVy(-0.000000711); venus.setVy(-0.000000600);
+         * earth.setVy(-0.000000500);
+         * grSystem.addObject(sun).addObject(mercury).
+         * addObject(venus).addObject(earth);.addObject(mars).addObject(jupiter)
+         * .
+         * addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);
+         */
 
         GLFrame frame = new GLFrame(renderer);
         MouseAdapter mouseAdapter = new GLCanvasMouseListener();
+        java.awt.event.KeyAdapter keyAdapter = new GLCanvasKeyboardListener();
+        MouseCoordGetter coordGetter = new MouseCoordGetter(frame.getCanvas());
 
+        class CoordPanel extends JPanel {
+            /**
+             * 
+             */
+            public CoordPanel(MouseCoordGetter getter) {
+                this.getter = getter;
+            }
+            
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                int x = getter.getX();
+                int y = getter.getY();
+                g.setColor(Color.BLACK);
+                g.drawString("x: " + x + " y: " + y, 50, 50);
+            }
+            
+            private MouseCoordGetter getter;
+        }
+        
         frame.getCanvas().addMouseWheelListener(mouseAdapter);
         frame.getCanvas().addMouseListener(mouseAdapter);
         frame.getCanvas().addMouseMotionListener(mouseAdapter);
+        frame.getCanvas().addKeyListener(keyAdapter);
+        frame.getCanvas().addMouseMotionListener(coordGetter);
+        frame.getContentPane().setLayout(new GridLayout(1, 2, 10, 10));
+        final CoordPanel coordPanel = new CoordPanel(coordGetter);
+//        frame.getContentPane().add(coordPanel);
         frame.setVisible(true);
-
-        new Thread(grSystem).start();
-        // scene.show();
+        
+        Timer timer = new Timer();
+  /*      timer.schedule(new TimerTask() {
+            
+            @Override
+            public void run() {
+                coordPanel.paintComponent(coordPanel.getGraphics());
+            }
+        }, 0, 100);
+  */      
+        
+        // new Thread(grSystem).start();
+        Logger.getRootLogger().setLevel(Level.ERROR);
+        scene.show();
     }
 
+    public static final String CONF_PATH = "/home/unit7";
+    public static final String TEXTURES_PATH = "/textures";
     private static final Logger log = Logger.getLogger(App.class);
 }

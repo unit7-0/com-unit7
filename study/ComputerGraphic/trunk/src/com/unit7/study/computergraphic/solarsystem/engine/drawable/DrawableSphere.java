@@ -43,19 +43,20 @@ public class DrawableSphere extends DrawableSpaceObject {
     public void draw(GL2 gl) {
         GLU glu = GLU.createGLU();
         GLUquadric quadric = glu.gluNewQuadric();
+        Camera camera = Camera.getInstance();
         double addRatio = 1 / getRatio();
-        double x = getObject().getX() * getRatio() * addRatio;
-        double y = getObject().getY() * getRatio() * addRatio;
-        double z = getObject().getZ() * getRatio() * addRatio;
+        double x = getObject().getX() * camera.getRatio() * addRatio;
+        double y = getObject().getY() * camera.getRatio() * addRatio;
+        double z = getObject().getZ() * camera.getRatio() * addRatio;
         if (log.isDebugEnabled()) {
             log.debug(String.format("x: %.2f, y: %.2f, z: %.2f", x, y, z));
         }
 
         // gl.glRotated(20, 1, 0, 0);
 //        Camera.getInstance().setEyeZ(90000000);
-        gl.glColor3f(1.0f, 0.0f, 0f);
+//        gl.glColor3f(1.0f, 0.0f, 0f);
         // TODO
-        double radius = ((Sphere) getObject()).getRadius() * getRatio();
+        double radius = ((Sphere) getObject()).getRadius() * camera.getRatio();
         gl.glTranslated(x, y, z);
         if (log.isDebugEnabled()) {
             log.debug(String.format("radius: %.2f", radius));
@@ -64,6 +65,7 @@ public class DrawableSphere extends DrawableSpaceObject {
         glu.gluQuadricDrawStyle(quadric, GLU.GLU_FILL);
         glu.gluQuadricNormals(quadric, GLU.GLU_SMOOTH);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
+        glu.gluQuadricTexture(quadric, true);
         glu.gluSphere(quadric, radius, 100, 100);
         glu.gluDeleteQuadric(quadric);
         /*
