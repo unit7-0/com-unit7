@@ -268,11 +268,20 @@ public class Camera {
         resetRotating();
     }
     
+    public double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(double ratio) {
+        this.ratio = ratio;
+    }
+
     private double eyeX, eyeY, eyeZ = 90;
     private double centerX, centerY, centerZ;
     private double upX, upY = 1, upZ;
     private double rotateX, rotateY, rotateZ;
-    private double rotatingAngle = 0;
+    private double rotatingAngle;
+    private double ratio; // коэффициент преобразования размера для объектов
 
     private static final Logger log = Logger.getLogger(Camera.class);
 

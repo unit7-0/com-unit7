@@ -7,6 +7,7 @@
 
 package com.unit7.study.computergraphic.solarsystem.engine.drawable;
 
+import com.jogamp.opengl.util.texture.Texture;
 import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
 
 
@@ -40,6 +41,28 @@ public abstract class DrawableSpaceObject implements Drawable {
         return String.format("DrawableSpaceObject [object=%s]", object);
     }
 
+    @Override
+    public Texture getTexture() {
+        return texture;
+    }
+
+    @Override
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
+    @Override
+    public boolean isTextureEnabled() {
+        return textureEnabled;
+    }
+
+    @Override
+    public void setTextureEnabled(boolean textureEnabled) {
+        this.textureEnabled = textureEnabled;
+    }
+
     private SpaceObject object;
+    private Texture texture;
+    private boolean textureEnabled;
     private double ratio;
 }

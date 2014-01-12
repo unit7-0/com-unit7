@@ -21,7 +21,16 @@ public class GLCanvasMouseListener extends MouseAdapter {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         double v = e.getPreciseWheelRotation();
-        Camera.getInstance().addEyeZ(v);
+        if (v > 0)
+            Camera.getInstance().setRatio(Camera.getInstance().getRatio() / 1.3);
+        else
+            Camera.getInstance().setRatio(Camera.getInstance().getRatio() * 1.3);
+        /*double eye = Camera.getInstance().getEyeZ();
+        if ((eye >= 0 && eye + v <= 0) || (eye <= 0 && eye + v >= 0)) {
+            Camera.getInstance().setRatio(Camera.getInstance().getRatio() * 1.3);
+        } else {
+            Camera.getInstance().addEyeZ(v);
+        }*/
 
         if (log.isDebugEnabled()) {
             log.debug("Mouse wheeled: " + v);
@@ -33,20 +42,24 @@ public class GLCanvasMouseListener extends MouseAdapter {
         int x = e.getX();
         int y = e.getY();
 
-        int diffX = lastX - x;
-        int diffY = lastY - y;
+        double del = 5;
+        double diffX = (lastX - x) / del;
+        double diffY = (lastY - y) / del;
 
-        Camera.getInstance().setRotateX(Math.abs(diffY));
-        Camera.getInstance().setRotateY(Math.abs(diffX));
-        
-        double newAngle = diffX + diffY + Camera.getInstance().getRotatingAngle();
+        Camera camera = Camera.getInstance();
+        camera.setRotateX(Math.abs(diffY));
+        camera.setRotateY(Math.abs(diffX));
+
+        double newAngle = diffX + diffY + camera.getRotatingAngle();
         if (newAngle > 0)
             newAngle %= 360;
         else
             newAngle %= -360;
-        
-        Camera.getInstance().setRotatingAngle(newAngle);
-        Camera.getInstance().setEyeY(diffY);
+
+        camera.setRotatingAngle(newAngle);
+        camera.setEyeY(camera.getEyeY() + diffY);
+        camera.setEyeX(camera.getEyeX() + diffX);
+        camera.setEyeZ(camera.getEyeZ() - (Math.abs(camera.getEyeX()) + Math.abs(camera.getEyeY())) / 2);
 
         lastX = x;
         lastY = y;

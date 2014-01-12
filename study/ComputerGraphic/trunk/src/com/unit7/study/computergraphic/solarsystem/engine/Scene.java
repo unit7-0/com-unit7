@@ -64,7 +64,7 @@ public class Scene extends ObjectHolderImpl<ActionObject> {
         this.quite = quite;
     }
 
-    private long delay = 200; // 200 milliseconds
+    private long delay = 1; // 200 milliseconds
     private boolean quite;
     
     private static final Logger log = Logger.getLogger(Scene.class);
