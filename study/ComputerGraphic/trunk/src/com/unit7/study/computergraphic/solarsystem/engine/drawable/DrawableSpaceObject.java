@@ -8,6 +8,7 @@
 package com.unit7.study.computergraphic.solarsystem.engine.drawable;
 
 import com.jogamp.opengl.util.texture.Texture;
+import com.unit7.study.computergraphic.solarsystem.engine.Nameable;
 import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
 
 
@@ -15,7 +16,7 @@ import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
  * @author unit7
  * 
  */
-public abstract class DrawableSpaceObject implements Drawable {
+public abstract class DrawableSpaceObject implements Drawable, Nameable {
     public DrawableSpaceObject(SpaceObject object) {
         this.object = object;
     }
@@ -59,6 +60,16 @@ public abstract class DrawableSpaceObject implements Drawable {
     @Override
     public void setTextureEnabled(boolean textureEnabled) {
         this.textureEnabled = textureEnabled;
+    }
+
+    @Override
+    public String getName() {
+        return object.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        object.setName(name);
     }
 
     private SpaceObject object;

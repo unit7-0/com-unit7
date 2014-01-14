@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
 
 import org.apache.log4j.Logger;
 
+import com.unit7.study.computergraphic.solarsystem.app.App;
+
 /**
  * @author unit7
  * 
@@ -46,6 +48,9 @@ public class GLCanvasKeyboardListener extends KeyAdapter {
             break;
         case KeyEvent.VK_MINUS:
             Camera.getInstance().addEyeZ(-d);
+            break;
+        case KeyEvent.VK_SPACE:
+            App.showOrbits(!App.showOrbits);
             break;
         }
     //    super.keyPressed(e);

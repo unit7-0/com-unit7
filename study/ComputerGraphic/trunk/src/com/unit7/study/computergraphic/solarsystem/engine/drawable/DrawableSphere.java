@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.unit7.study.computergraphic.solarsystem.engine.Camera;
+import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere;
 import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
 
@@ -51,10 +52,23 @@ public class DrawableSphere extends DrawableSpaceObject {
         if (log.isDebugEnabled()) {
             log.debug(String.format("x: %.2f, y: %.2f, z: %.2f", x, y, z));
         }
+        
+        if (showOrbit) {
+            SpaceObject obj = getObject();
+            if (obj instanceof DrawnSphere) {
+                DrawnSphere sphere = (DrawnSphere) obj;
+                if (log.isDebugEnabled()) {
+                    log.debug("drawnRadius: " + sphere.getDrawnRadius() + " ration: " + camera.getRatio());
+                }
+                
+                drawCircle(gl, sphere.getTarget().getX(),
+                        sphere.getTarget().getY(), sphere.getDrawnRadius() * camera.getRatio(), 100);
+            }
+        }
 
         // gl.glRotated(20, 1, 0, 0);
-//        Camera.getInstance().setEyeZ(90000000);
-//        gl.glColor3f(1.0f, 0.0f, 0f);
+        // Camera.getInstance().setEyeZ(90000000);
+        // gl.glColor3f(1.0f, 0.0f, 0f);
         // TODO
         double radius = ((Sphere) getObject()).getRadius() * camera.getRatio();
         gl.glTranslated(x, y, z);
@@ -68,11 +82,31 @@ public class DrawableSphere extends DrawableSpaceObject {
         glu.gluQuadricTexture(quadric, true);
         glu.gluSphere(quadric, radius, 100, 100);
         glu.gluDeleteQuadric(quadric);
-        /*
-        gl.glTranslated(0, 2782040, 0);
-        quadric = glu.gluNewQuadric();
-        glu.gluSphere(quadric, 978204, 100, 100);
-        glu.gluDeleteQuadric(quadric);*/
+    }
+
+    protected void drawCircle(GL2 gl, double cx, double cy, double r, int num_segments) {
+        gl.glBegin(GL2.GL_LINE_LOOP);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("cx: %.2f, cy: %.2f, r: %.2f", cx, cy, r));
+        }
+        
+        for (int ii = 0; ii < num_segments; ii++) {
+            double theta = 2.0 * Math.PI * (double) ii / (double) num_segments;// get
+                                                                               // the
+                                                                               // current
+                                                                               // angle
+
+            double x = r * Math.cos(theta);// calculate the x component
+            double y = r * Math.sin(theta);// calculate the y component
+
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("x: %.2f, y: %.2f", x, y));
+            }
+            
+            gl.glVertex3d(x + cx, y + cy, 0);// output vertex
+
+        }
+        gl.glEnd();
     }
 
     @Override
@@ -82,6 +116,16 @@ public class DrawableSphere extends DrawableSpaceObject {
 
         super.setObject(object);
     }
+
+    public boolean isShowOrbit() {
+        return showOrbit;
+    }
+
+    public void setShowOrbit(boolean showOrbit) {
+        this.showOrbit = showOrbit;
+    }
+
+    private boolean showOrbit;
 
     private static final Logger log = Logger.getLogger(DrawableSphere.class);
 }

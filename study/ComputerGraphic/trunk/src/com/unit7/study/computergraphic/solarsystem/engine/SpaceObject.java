@@ -13,7 +13,7 @@ import java.math.BigInteger;
  * @author unit7
  * 
  */
-public abstract class SpaceObject implements ActionObject {
+public abstract class SpaceObject implements ActionObject, Nameable {
     public double getWeight() {
         return weight;
     }

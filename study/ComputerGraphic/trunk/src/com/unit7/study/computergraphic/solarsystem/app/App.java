@@ -44,9 +44,11 @@ import com.unit7.study.computergraphic.solarsystem.engine.GravitationSystem;
 import com.unit7.study.computergraphic.solarsystem.engine.MouseCoordGetter;
 import com.unit7.study.computergraphic.solarsystem.engine.Renderer;
 import com.unit7.study.computergraphic.solarsystem.engine.Scene;
+import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
 import com.unit7.study.computergraphic.solarsystem.engine.Time;
 import com.unit7.study.computergraphic.solarsystem.engine.Utils;
+import com.unit7.study.computergraphic.solarsystem.engine.drawable.BackGround;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSphere;
@@ -78,63 +80,66 @@ public class App {
 
         plutoDrawnRadius = coordMul;
 
+        double radiusMul = 0.0001;
+        double sunRadius = 69551;
+        
         // star, Sun
         // уменьшим радиус
-        Sphere sun = new Sphere.Builder().setName("Sun").setAge(4.57).setRadius(69551).setWeight(19891000).build();
+        Sphere sun = new Sphere.Builder().setName("Sun").setAge(4.57).setRadius(sunRadius * radiusMul).setWeight(19891000).build();
 
         // planets
         DrawnSphere.Builder builder = new DrawnSphere.Builder();
 
         // pluto
         DrawnSphere pluto = (DrawnSphere) builder.setDrawnRadius(plutoDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(365 * 248)).setName("Pluto").setRadius(1153).setWeight(0.1305)
+                .setTimeAround(Utils.daysToMilliseconds(365 * 248)).setName("Pluto").setRadius(1153 * radiusMul).setWeight(0.1305)
                 .build();
         pluto.setX(sun.getX() - coordMul);
 
         // mercury
         DrawnSphere mercury = (DrawnSphere) builder.setDrawnRadius(meruryDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(87.97)).setAge(4.6).setName("Mercury").setRadius(2439.7)
+                .setTimeAround(Utils.daysToMilliseconds(87.97)).setAge(4.6).setName("Mercury").setRadius(2439.7 * radiusMul)
                 .setWeight(3.33022).build();
         mercury.setX(sun.getX() - mercury.getDrawnRadius());
 
         // venus
         DrawnSphere venus = (DrawnSphere) builder.setDrawnRadius(venusDrawRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(224.7)).setName("Venus").setRadius(6051.8).setWeight(48.67)
+                .setTimeAround(Utils.daysToMilliseconds(224.7)).setName("Venus").setRadius(6051.8 * radiusMul).setWeight(48.67)
                 .build();
         venus.setX(sun.getX() - venus.getDrawnRadius());
 
         // earth
         DrawnSphere earth = (DrawnSphere) builder.setDrawnRadius(earthDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(365.26)).setName("Earth").setRadius(6378.1).setWeight(59.72)
+                .setTimeAround(Utils.daysToMilliseconds(365.26)).setName("Earth").setRadius(6378.1 * radiusMul).setWeight(59.72)
                 .build();
         earth.setX(sun.getX() - earth.getDrawnRadius());
 
         // mars
         DrawnSphere mars = (DrawnSphere) builder.setDrawnRadius(marsDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(687)).setName("Mars").setRadius(3396.9).setWeight(6.39).build();
+                .setTimeAround(Utils.daysToMilliseconds(687)).setName("Mars").setRadius(3396.9 * radiusMul).setWeight(6.39).build();
         mars.setX(sun.getX() - mars.getDrawnRadius());
 
         // Jupiter
         DrawnSphere jupiter = (DrawnSphere) builder.setDrawnRadius(jupiterDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(4332.6)).setName("Jupiter").setRadius(71492).setWeight(18980)
+                .setTimeAround(Utils.daysToMilliseconds(4332.6)).setName("Jupiter").setRadius(71492 * radiusMul).setWeight(18980)
                 .build();
         jupiter.setX(sun.getX() - jupiter.getDrawnRadius());
 
         // saturn
         DrawnSphere saturn = (DrawnSphere) builder.setDrawnRadius(saturnDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(10759.2)).setName("Saturn").setRadius(60268).setWeight(5683)
+                .setTimeAround(Utils.daysToMilliseconds(10759.2)).setName("Saturn").setRadius(60268 * radiusMul).setWeight(5683)
                 .build();
         saturn.setX(sun.getX() - saturn.getDrawnRadius());
 
         // uran
         DrawnSphere uran = (DrawnSphere) builder.setDrawnRadius(uranDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(30685.4)).setName("Uranus").setRadius(25559).setWeight(868.1)
+                .setTimeAround(Utils.daysToMilliseconds(30685.4)).setName("Uranus").setRadius(25559 * radiusMul).setWeight(868.1)
                 .build();
         uran.setX(sun.getX() - uran.getDrawnRadius());
 
         // neptun
         DrawnSphere neptun = (DrawnSphere) builder.setDrawnRadius(neptunDrawnRadius).setTarget(sun)
-                .setTimeAround(Utils.daysToMilliseconds(60189)).setName("Neptune").setRadius(24764).setWeight(1024)
+                .setTimeAround(Utils.daysToMilliseconds(60189)).setName("Neptune").setRadius(24764 * radiusMul).setWeight(1024)
                 .build();
         neptun.setX(sun.getX() - neptun.getDrawnRadius());
 
@@ -149,7 +154,7 @@ public class App {
         DrawableSphere neptunDraw = new DrawableSphere(neptun);
         DrawableSphere plutoDraw = new DrawableSphere(pluto);
 
-        double ratio = 0.0001;
+        double ratio = 1;
         Camera.getInstance().setRatio(ratio);
         sunDraw.setRatio(ratio);
         mercuryDraw.setRatio(ratio);
@@ -176,10 +181,14 @@ public class App {
         objs.add(neptunDraw);
         objs.add(plutoDraw);
 
+        objects = objs;
+        
+        BackGround background = new BackGround();
+        
         // add to drawing
         renderer.addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw)
                 .addObject(marsDraw).addObject(jupiterDraw).addObject(saturnDraw).addObject(uranDraw)
-                .addObject(neptunDraw).addObject(plutoDraw);
+                .addObject(neptunDraw).addObject(plutoDraw).addObject(background);
 
         // add to scene
         scene.addObject(sun).addObject(mercury).addObject(venus).addObject(earth).addObject(mars).addObject(jupiter)
@@ -225,7 +234,11 @@ public class App {
         frame.getCanvas().addKeyListener(keyAdapter);
         frame.getCanvas().addMouseMotionListener(coordGetter);
         frame.getContentPane().setLayout(new GridLayout(1, 2, 10, 10));
-        final CoordPanel coordPanel = new CoordPanel(coordGetter);
+        
+        background.setWidth(frame.getCanvas().getWidth());
+        background.setHeight(frame.getCanvas().getHeight());
+        
+//        final CoordPanel coordPanel = new CoordPanel(coordGetter);
 //        frame.getContentPane().add(coordPanel);
         frame.setVisible(true);
         
@@ -243,7 +256,21 @@ public class App {
         Logger.getRootLogger().setLevel(Level.ERROR);
         scene.show();
     }
+    
+    public static void showOrbits(boolean show) {
+        for (DrawableSpaceObject obj : objects) {
+            if (obj instanceof DrawableSphere) {
+                ((DrawableSphere) obj).setShowOrbit(show);
+            }
+        }
+        
+        showOrbits = show;
+    }
 
+    private static List<DrawableSpaceObject> objects;
+    
+    public static boolean showOrbits;
+    
     public static final String CONF_PATH = "/home/unit7";
     public static final String TEXTURES_PATH = "/textures";
     private static final Logger log = Logger.getLogger(App.class);
