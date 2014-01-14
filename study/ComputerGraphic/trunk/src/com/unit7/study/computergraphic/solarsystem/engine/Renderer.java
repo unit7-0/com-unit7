@@ -205,8 +205,8 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
     private void loadTextures(List<Drawable> objs) {
         InputStream in = null;
         for (int i = 0; i < objs.size(); ++i) {
-            DrawableSpaceObject obj = (DrawableSpaceObject) objs.get(i);
-            String name = obj.getObject().getName();
+            Drawable obj = objs.get(i);
+            String name = ((Nameable) obj).getName();
             try {
                 in = new FileInputStream(App.CONF_PATH + App.TEXTURES_PATH + "/" + name.toLowerCase() + ".png");
                 TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), in, false, "png");
