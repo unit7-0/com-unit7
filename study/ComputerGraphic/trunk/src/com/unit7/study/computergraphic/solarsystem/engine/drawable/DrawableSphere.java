@@ -76,6 +76,12 @@ public class DrawableSphere extends DrawableSpaceObject {
             log.debug(String.format("radius: %.2f", radius));
         }
 
+/*        gl.glRasterPos3d(radius, radius, 0);
+        GLUT glut = new GLUT();
+        glut.glutBitmapString(GLUT.BITMAP_9_BY_15, this.getName());
+        gl.glRasterPos3d(radius, radius - 5, 0);
+        glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "Age: " + this.getObject().getAge() + " bln. years");*/
+        
         glu.gluQuadricDrawStyle(quadric, GLU.GLU_FILL);
         glu.gluQuadricNormals(quadric, GLU.GLU_SMOOTH);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
