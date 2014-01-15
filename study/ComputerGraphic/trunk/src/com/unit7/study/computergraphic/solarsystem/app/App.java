@@ -58,7 +58,7 @@ import com.unit7.study.computergraphic.solarsystem.core.processors.Scene;
  * 
  */
 public class App {
-    public static void main(String[] args) {
+    public App() {
         Renderer renderer = new Renderer();
         Scene scene = new Scene();
         GravitationSystem grSystem = new GravitationSystem();
@@ -167,7 +167,6 @@ public class App {
         neptunDraw.setRatio(ratio);
         plutoDraw.setRatio(ratio);
 
-        App app = new App();
         // loadTextures
         List<DrawableSpaceObject> objs = new ArrayList<DrawableSpaceObject>();
         objs.add(sunDraw);
@@ -242,7 +241,7 @@ public class App {
 //        frame.getContentPane().add(coordPanel);
         frame.setVisible(true);
         
-        Timer timer = new Timer();
+//        Timer timer = new Timer();
   /*      timer.schedule(new TimerTask() {
             
             @Override
@@ -254,10 +253,14 @@ public class App {
         
         // new Thread(grSystem).start();
         Logger.getRootLogger().setLevel(Level.ERROR);
-        scene.show();
+        new Thread(scene).run();
     }
     
-    public static void showOrbits(boolean show) {
+    public boolean isShowOrbits() {
+		return showOrbits;
+	}
+
+	public void showOrbits(boolean show) {
         for (DrawableSpaceObject obj : objects) {
             if (obj instanceof DrawableSphere) {
                 ((DrawableSphere) obj).setShowOrbit(show);
@@ -267,11 +270,18 @@ public class App {
         showOrbits = show;
     }
 
-    private static List<DrawableSpaceObject> objects;
+	public static void main(String[] args) {
+		app = new App();
+	}
+	
+	public static App app;
+	
+	private List<DrawableSpaceObject> objects;
     
-    public static boolean showOrbits;
+    private boolean showOrbits;
     
     public static final String CONF_PATH = "C:/temp";
     public static final String TEXTURES_PATH = "/textures";
+    
     private static final Logger log = Logger.getLogger(App.class);
 }
