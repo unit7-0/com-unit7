@@ -12,7 +12,7 @@ package com.unit7.study.computergraphic.solarsystem.core;
  * 
  */
 public enum SpaceObjectStatus {
-    PLANET("Planet"), SATELLITE("Satellite");
+    DWARF_PLANET("Dwarf planet"), PLANET("Planet"), SATELLITE("Satellite"), STAR("Star");
 
     private SpaceObjectStatus(String value) {
         this.value = value;
