@@ -48,7 +48,7 @@ import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
 import com.unit7.study.computergraphic.solarsystem.engine.Time;
 import com.unit7.study.computergraphic.solarsystem.engine.Utils;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.BackGround;
+import com.unit7.study.computergraphic.solarsystem.engine.drawable.Background;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSpaceObject;
 import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSphere;
@@ -183,12 +183,12 @@ public class App {
 
         objects = objs;
         
-        BackGround background = new BackGround();
+        Background background = new Background();
         
         // add to drawing
-        renderer.addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw)
+        renderer.addObject(background).addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw)
                 .addObject(marsDraw).addObject(jupiterDraw).addObject(saturnDraw).addObject(uranDraw)
-                .addObject(neptunDraw).addObject(plutoDraw).addObject(background);
+                .addObject(neptunDraw).addObject(plutoDraw);
 
         // add to scene
         scene.addObject(sun).addObject(mercury).addObject(venus).addObject(earth).addObject(mars).addObject(jupiter)
@@ -253,7 +253,7 @@ public class App {
   */      
         
         // new Thread(grSystem).start();
-        Logger.getRootLogger().setLevel(Level.ERROR);
+//        Logger.getRootLogger().setLevel(Level.ERROR);
         scene.show();
     }
     
@@ -271,7 +271,7 @@ public class App {
     
     public static boolean showOrbits;
     
-    public static final String CONF_PATH = "/home/unit7";
+    public static final String CONF_PATH = "C:/temp";
     public static final String TEXTURES_PATH = "/textures";
     private static final Logger log = Logger.getLogger(App.class);
 }
