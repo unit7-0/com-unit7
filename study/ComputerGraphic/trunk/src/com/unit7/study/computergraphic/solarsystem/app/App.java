@@ -34,24 +34,24 @@ import com.jogamp.newt.event.KeyAdapter;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
-import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere;
-import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere.Builder;
-import com.unit7.study.computergraphic.solarsystem.engine.Camera;
-import com.unit7.study.computergraphic.solarsystem.engine.GLCanvasKeyboardListener;
-import com.unit7.study.computergraphic.solarsystem.engine.GLCanvasMouseListener;
-import com.unit7.study.computergraphic.solarsystem.engine.GLFrame;
-import com.unit7.study.computergraphic.solarsystem.engine.GravitationSystem;
-import com.unit7.study.computergraphic.solarsystem.engine.MouseCoordGetter;
-import com.unit7.study.computergraphic.solarsystem.engine.Renderer;
-import com.unit7.study.computergraphic.solarsystem.engine.Scene;
-import com.unit7.study.computergraphic.solarsystem.engine.SpaceObject;
-import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
-import com.unit7.study.computergraphic.solarsystem.engine.Time;
-import com.unit7.study.computergraphic.solarsystem.engine.Utils;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.Background;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSpaceObject;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSphere;
+import com.unit7.study.computergraphic.solarsystem.core.Camera;
+import com.unit7.study.computergraphic.solarsystem.core.DrawnSphere;
+import com.unit7.study.computergraphic.solarsystem.core.SpaceObject;
+import com.unit7.study.computergraphic.solarsystem.core.Sphere;
+import com.unit7.study.computergraphic.solarsystem.core.Time;
+import com.unit7.study.computergraphic.solarsystem.core.Utils;
+import com.unit7.study.computergraphic.solarsystem.core.DrawnSphere.Builder;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.Background;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.GLFrame;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.Renderer;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.Drawable;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSpaceObject;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSphere;
+import com.unit7.study.computergraphic.solarsystem.core.processors.GravitationSystem;
+import com.unit7.study.computergraphic.solarsystem.core.processors.KeyboardListener;
+import com.unit7.study.computergraphic.solarsystem.core.processors.MouseCameraListener;
+import com.unit7.study.computergraphic.solarsystem.core.processors.MouseCoordGetter;
+import com.unit7.study.computergraphic.solarsystem.core.processors.Scene;
 
 /**
  * @author unit7
@@ -204,8 +204,8 @@ public class App {
          */
 
         GLFrame frame = new GLFrame(renderer);
-        MouseAdapter mouseAdapter = new GLCanvasMouseListener();
-        java.awt.event.KeyAdapter keyAdapter = new GLCanvasKeyboardListener();
+        MouseAdapter mouseAdapter = new MouseCameraListener();
+        java.awt.event.KeyAdapter keyAdapter = new KeyboardListener();
         MouseCoordGetter coordGetter = new MouseCoordGetter(frame.getCanvas());
 
         class CoordPanel extends JPanel {
