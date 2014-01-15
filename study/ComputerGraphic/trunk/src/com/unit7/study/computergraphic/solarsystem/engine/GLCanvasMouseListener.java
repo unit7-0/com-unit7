@@ -47,7 +47,7 @@ public class GLCanvasMouseListener extends MouseAdapter {
         double diffY = (lastY - y) / del;
 
         Camera camera = Camera.getInstance();
-        camera.setRotateX(Math.abs(diffY));
+     /*   camera.setRotateX(Math.abs(diffY));
         camera.setRotateY(Math.abs(diffX));
 
         double newAngle = diffX + diffY + camera.getRotatingAngle();
@@ -56,11 +56,49 @@ public class GLCanvasMouseListener extends MouseAdapter {
         else
             newAngle %= -360;
 
-        camera.setRotatingAngle(newAngle);
-        camera.setEyeY(camera.getEyeY() + diffY);
-        camera.setEyeX(camera.getEyeX() + diffX);
-        camera.setEyeZ(camera.getEyeZ() - (Math.abs(camera.getEyeX()) + Math.abs(camera.getEyeY())) / 2);
+        camera.setRotatingAngle(newAngle);*/
+        
+        // TODO 
+        // radius
+        double x2 = Utils.sqr(camera.getEyeX());
+        double y2 = Utils.sqr(camera.getEyeY());
+        double z2 = Utils.sqr(camera.getEyeZ());
+        double r2 = x2 + y2 + z2;
+        double r = Math.sqrt(r2);
+        
+        // x rotating
+        double dx = camera.getEyeX() + diffX * signX;
+        if (Math.abs(dx) > r) {
+        	dx = r;
+        	signX = -signX;
+        }
+        
+        camera.setEyeX(dx);
+        x2 = Utils.sqr(camera.getEyeX());
+        double z = Math.sqrt(r2 - x2 - y2);
+        
+        camera.setEyeZ(z);
+        
+        if (log.isDebugEnabled()) {
+        	log.debug("z: " + z);
+        }
+        
+        // y rotating
+        double dy =  camera.getEyeY() + diffY * signY;
+        if (Math.abs(dy) > r) {
+        	dy = r;
+        	signY = -signY;
+        }
+        
+        camera.setEyeY(dy);
+        y2 = Utils.sqr(camera.getEyeY());
+        z = Math.sqrt(r2 - x2 - y2);
+        camera.setEyeZ(z);
 
+        if (log.isDebugEnabled()) {
+        	log.debug("z: " + z);
+        }
+        
         lastX = x;
         lastY = y;
 
@@ -81,6 +119,9 @@ public class GLCanvasMouseListener extends MouseAdapter {
 
     private int lastX;
     private int lastY;
+    
+    private int signX = 1;
+    private int signY = 1;
 
     private static final Logger log = Logger.getLogger(GLCanvasMouseListener.class);
 }
