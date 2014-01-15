@@ -59,7 +59,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
 
         // gl.glPushMatrix();
         Camera camera = Camera.getInstance();
-        double angle = camera.getRotatingAngle();
+/*        double angle = camera.getRotatingAngle();
         if (angle > 0) {
             double xRotate = camera.normalizeXRotating();
             double yRotate = camera.normalizeYRotating();
@@ -69,9 +69,9 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
                 log.debug(String.format("angle: %.2f, rotate [ %.3f, %.3f, %.3f ]", angle, xRotate, yRotate, zRotate));
             }
 
-            // gl.glRotated(angle, xRotate, yRotate, zRotate);
-            // camera.resetRotating();
-        }
+             gl.glRotated(angle, xRotate, yRotate, zRotate);
+             camera.resetRotating();
+        }*/
 
         /*
          * gl.glMatrixMode(GL2.GL_MODELVIEW); gl.glLoadIdentity();

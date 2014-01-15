@@ -9,6 +9,8 @@ package com.unit7.study.computergraphic.solarsystem.core;
 
 import org.apache.log4j.Logger;
 
+import com.unit7.study.computergraphic.solarsystem.core.interfaces.Coordinable;
+
 /**
  * @author unit7
  * 
@@ -32,7 +34,29 @@ public class Camera {
         }
     }
 
+    public void updateTracking() {
+    	if (target == null)
+    		return;
+    	
+//    	centerX = target.getX();
+//    	centerY = target.getY();
+//    	centerZ = target.getZ();
+    	
+    	double dist = Math.sqrt(Utils.sqr(centerX - eyeX) + Utils.sqr(centerY - eyeY) + Utils.sqr(centerZ - eyeZ));
+    	
+    	if (log.isDebugEnabled()) {
+    		log.debug(String.format("center [ %.2f, %.2f, %.2f ], dist %.2f", centerX, centerY, centerZ, dist));
+    	}
+    	
+    	if (Math.abs(dist - 0.00000001) > distance || dist + 0.00000001 < distance) {
+    		eyeX = 0;//centerX;
+    		eyeY = 0;//centerY;
+    		eyeZ = 90;//distance - centerZ;
+    	}
+    }
+    
     public double getEyeX() {
+    	updateTracking();
         return eyeX;
     }
 
@@ -42,6 +66,7 @@ public class Camera {
     }
 
     public double getEyeY() {
+    	updateTracking();
         return eyeY;
     }
 
@@ -51,6 +76,7 @@ public class Camera {
     }
 
     public double getEyeZ() {
+    	updateTracking();
         return eyeZ;
     }
 
@@ -60,6 +86,7 @@ public class Camera {
     }
 
     public double getCenterX() {
+    	updateTracking();
         return centerX;
     }
 
@@ -69,6 +96,7 @@ public class Camera {
     }
 
     public double getCenterY() {
+    	updateTracking();
         return centerY;
     }
 
@@ -78,6 +106,7 @@ public class Camera {
     }
 
     public double getCenterZ() {
+    	updateTracking();
         return centerZ;
     }
 
@@ -87,6 +116,7 @@ public class Camera {
     }
 
     public double getUpX() {
+    	updateTracking();
         return upX;
     }
 
@@ -96,6 +126,7 @@ public class Camera {
     }
 
     public double getUpY() {
+    	updateTracking();
         return upY;
     }
 
@@ -105,6 +136,7 @@ public class Camera {
     }
 
     public double getUpZ() {
+    	updateTracking();
         return upZ;
     }
 
@@ -118,18 +150,8 @@ public class Camera {
         updateCamera();
     }
 
-    public void subEyeY(double v) {
-        eyeY -= v;
-        updateCamera();
-    }
-
     public void addEyeZ(double v) {
         eyeZ += v;
-        updateCamera();
-    }
-
-    public void subEyeZ(double v) {
-        eyeZ -= v;
         updateCamera();
     }
 
@@ -138,18 +160,8 @@ public class Camera {
         updateCamera();
     }
 
-    public void subCenterX(double v) {
-        centerX -= v;
-        updateCamera();
-    }
-
     public void addCenterY(double v) {
         centerY += v;
-        updateCamera();
-    }
-
-    public void subCenterY(double v) {
-        centerY -= v;
         updateCamera();
     }
 
@@ -158,18 +170,8 @@ public class Camera {
         updateCamera();
     }
 
-    public void subCenterZ(double v) {
-        centerZ -= v;
-        updateCamera();
-    }
-
     public void addUpX(double v) {
         upX += v;
-        updateCamera();
-    }
-
-    public void subUpX(double v) {
-        upX -= v;
         updateCamera();
     }
 
@@ -178,28 +180,13 @@ public class Camera {
         updateCamera();
     }
 
-    public void subUpY(double v) {
-        upY -= v;
-        updateCamera();
-    }
-
     public void addUpZ(double v) {
         upZ += v;
         updateCamera();
     }
 
-    public void subUpZ(double v) {
-        upZ -= v;
-        updateCamera();
-    }
-
     public void addEyeX(double v) {
         eyeX += v;
-        updateCamera();
-    }
-
-    public void subEyeX(double v) {
-        eyeX -= v;
         updateCamera();
     }
 
@@ -276,13 +263,32 @@ public class Camera {
         this.ratio = ratio;
     }
 
-    private double eyeX, eyeY, eyeZ = 90;
+	public Coordinable<Double> getTarget() {
+		return target;
+	}
+
+	public void setTarget(Coordinable<Double> target) {
+		this.target = target;
+	}
+
+	public double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(double distance) {
+		this.distance = distance;
+	}
+
+	private double eyeX, eyeY, eyeZ = 90;
     private double centerX, centerY, centerZ;
     private double upX, upY = 1, upZ;
     private double rotateX, rotateY, rotateZ;
     private double rotatingAngle;
     private double ratio; // коэффициент преобразования размера для объектов
 
+    private Coordinable<Double> target;
+    private double distance;
+    
     private static final Logger log = Logger.getLogger(Camera.class);
 
     private static final Camera instance = new Camera();
