@@ -20,8 +20,9 @@ import com.unit7.study.computergraphic.solarsystem.core.interfaces.ActionObject;
  * @author unit7
  * 
  */
-public class Scene extends ObjectHolderImpl<ActionObject> {
-    public void show() {
+public class Scene extends ObjectHolderImpl<ActionObject> implements Runnable {
+	@Override
+    public void run() {
         while (!quite) {
             Collection<ActionObject> objs = getObjects();
             Iterator<ActionObject> it = objs.iterator();

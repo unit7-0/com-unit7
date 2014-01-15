@@ -51,7 +51,7 @@ public class KeyboardListener extends KeyAdapter {
             Camera.getInstance().addEyeZ(-d);
             break;
         case KeyEvent.VK_SPACE:
-            App.showOrbits(!App.showOrbits);
+            App.app.showOrbits(!App.app.isShowOrbits());
             break;
         }
     //    super.keyPressed(e);
