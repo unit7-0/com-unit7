@@ -25,11 +25,11 @@ public class DrawnSphere extends Sphere implements DrawnObject {
 			return;
 
 		angle = (angle + dAngle);
-		/*if (angle >= 180) {
-			dAngle = -dAngle;
-			angle = 180;
+		if (angle >= 360) {
+			dAngle = dAngle;
+			angle = 0;
 		}
-		*/
+		
 		double dx = 0;
 		if (target != null) {
 			dx = -lastTargetX + target.getX();

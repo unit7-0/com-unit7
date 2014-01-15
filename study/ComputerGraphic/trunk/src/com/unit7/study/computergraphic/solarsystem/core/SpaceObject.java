@@ -114,6 +114,22 @@ public abstract class SpaceObject implements ActionObject, Nameable, Coordinable
         this.status = status;
     }
 
+    public double getWeightDegree() {
+        return weightDegree;
+    }
+
+    public void setWeightDegree(double weightDegree) {
+        this.weightDegree = weightDegree;
+    }
+
+    public boolean isShowInfo() {
+        return showInfo;
+    }
+
+    public void setShowInfo(boolean showInfo) {
+        this.showInfo = showInfo;
+    }
+
     @Override
     public String toString() {
         return String.format("SpaceObject [weight=%s, age=%s, name=%s]", weight, age, name);
@@ -125,6 +141,8 @@ public abstract class SpaceObject implements ActionObject, Nameable, Coordinable
     private String name;
     private double x, y, z;
     private double vx, vy, vz;
+    
+    private boolean showInfo;
     
     private SpaceObjectStatus status;
 }

@@ -56,6 +56,10 @@ public class KeyboardListener extends KeyAdapter {
             break;
         case KeyEvent.VK_SPACE:
             app.showOrbits(!app.isShowOrbits());
+            app.showInfo(!app.isShowInfo());
+            break;
+        case KeyEvent.VK_I:
+            app.showInfo(!app.isShowInfo());
             break;
         }
     //    super.keyPressed(e);
