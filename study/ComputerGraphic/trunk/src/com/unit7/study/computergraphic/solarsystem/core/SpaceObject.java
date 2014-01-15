@@ -8,13 +8,14 @@
 package com.unit7.study.computergraphic.solarsystem.core;
 
 import com.unit7.study.computergraphic.solarsystem.core.interfaces.ActionObject;
+import com.unit7.study.computergraphic.solarsystem.core.interfaces.Coordinable;
 import com.unit7.study.computergraphic.solarsystem.core.interfaces.Nameable;
 
 /**
  * @author unit7
  * 
  */
-public abstract class SpaceObject implements ActionObject, Nameable {
+public abstract class SpaceObject implements ActionObject, Nameable, Coordinable<Double> {
     public double getWeight() {
         return weight;
     }
@@ -39,27 +40,33 @@ public abstract class SpaceObject implements ActionObject, Nameable {
         this.age = age;
     }
 
-    public double getX() {
+    @Override
+    public Double getX() {
         return x;
     }
 
-    public void setX(double x) {
+    @Override
+    public void setX(Double x) {
         this.x = x;
     }
 
-    public double getY() {
+    @Override
+    public Double getY() {
         return y;
     }
 
-    public void setY(double y) {
+    @Override
+    public void setY(Double y) {
         this.y = y;
     }
 
-    public double getZ() {
+    @Override
+    public Double getZ() {
         return z;
     }
 
-    public void setZ(double z) {
+    @Override
+    public void setZ(Double z) {
         this.z = z;
     }
 

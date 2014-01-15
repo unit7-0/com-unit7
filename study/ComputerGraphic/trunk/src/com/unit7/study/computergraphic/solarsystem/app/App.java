@@ -8,43 +8,25 @@
 package com.unit7.study.computergraphic.solarsystem.app;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.media.opengl.GLProfile;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import com.jogamp.newt.event.KeyAdapter;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureData;
-import com.jogamp.opengl.util.texture.TextureIO;
 import com.unit7.study.computergraphic.solarsystem.core.Camera;
 import com.unit7.study.computergraphic.solarsystem.core.DrawnSphere;
-import com.unit7.study.computergraphic.solarsystem.core.SpaceObject;
 import com.unit7.study.computergraphic.solarsystem.core.Sphere;
 import com.unit7.study.computergraphic.solarsystem.core.Time;
 import com.unit7.study.computergraphic.solarsystem.core.Utils;
-import com.unit7.study.computergraphic.solarsystem.core.DrawnSphere.Builder;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.Background;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.GLFrame;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.Renderer;
-import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.Drawable;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSpaceObject;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSphere;
 import com.unit7.study.computergraphic.solarsystem.core.processors.GravitationSystem;
@@ -77,6 +59,7 @@ public class App {
         double saturnDrawnRadius = 1613325.783 / plutoDrawnRadius * coordMul;
         double uranDrawnRadius = 2848938.461 / plutoDrawnRadius * coordMul;
         double neptunDrawnRadius = 4503946.49 / plutoDrawnRadius * coordMul;
+        double moondDrawnRadius = 9840.4 / plutoDrawnRadius * coordMul;
 
         plutoDrawnRadius = coordMul;
 
@@ -137,11 +120,17 @@ public class App {
                 .build();
         uran.setX(sun.getX() - uran.getDrawnRadius());
 
-        // neptun
+        // neptune
         DrawnSphere neptun = (DrawnSphere) builder.setDrawnRadius(neptunDrawnRadius).setTarget(sun)
                 .setTimeAround(Utils.daysToMilliseconds(60189)).setName("Neptune").setRadius(24764 * radiusMul).setWeight(1024)
                 .build();
         neptun.setX(sun.getX() - neptun.getDrawnRadius());
+        
+        // moon
+		DrawnSphere moon = (DrawnSphere) builder.setDrawnRadius(moondDrawnRadius)
+				.setTarget(earth).setTimeAround(Utils.daysToMilliseconds(27.32)).setName("Moon").setRadius(1737.4 * radiusMul)
+				.setWeight(1).build();
+		moon.setX(earth.getX() - moon.getDrawnRadius());
 
         DrawableSphere sunDraw = new DrawableSphere(sun);
         DrawableSphere mercuryDraw = new DrawableSphere(mercury);
@@ -153,6 +142,7 @@ public class App {
         DrawableSphere uranDraw = new DrawableSphere(uran);
         DrawableSphere neptunDraw = new DrawableSphere(neptun);
         DrawableSphere plutoDraw = new DrawableSphere(pluto);
+        DrawableSphere moonDraw = new DrawableSphere(moon);
 
         double ratio = 1;
         Camera.getInstance().setRatio(ratio);
@@ -166,6 +156,7 @@ public class App {
         uranDraw.setRatio(ratio);
         neptunDraw.setRatio(ratio);
         plutoDraw.setRatio(ratio);
+        moonDraw.setRatio(ratio);
 
         // loadTextures
         List<DrawableSpaceObject> objs = new ArrayList<DrawableSpaceObject>();
@@ -179,6 +170,7 @@ public class App {
         objs.add(uranDraw);
         objs.add(neptunDraw);
         objs.add(plutoDraw);
+        objs.add(moonDraw);
 
         objects = objs;
         
@@ -187,11 +179,11 @@ public class App {
         // add to drawing
         renderer.addObject(background).addObject(sunDraw).addObject(mercuryDraw).addObject(venusDraw).addObject(earthDraw)
                 .addObject(marsDraw).addObject(jupiterDraw).addObject(saturnDraw).addObject(uranDraw)
-                .addObject(neptunDraw).addObject(plutoDraw);
+                .addObject(neptunDraw).addObject(plutoDraw).addObject(moonDraw);
 
         // add to scene
         scene.addObject(sun).addObject(mercury).addObject(venus).addObject(earth).addObject(mars).addObject(jupiter)
-                .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto);
+                .addObject(saturn).addObject(uran).addObject(neptun).addObject(pluto).addObject(moon);
 
         /*
          * mercury.setVy(-0.000000711); venus.setVy(-0.000000600);
@@ -204,7 +196,7 @@ public class App {
 
         GLFrame frame = new GLFrame(renderer);
         MouseAdapter mouseAdapter = new MouseCameraListener();
-        java.awt.event.KeyAdapter keyAdapter = new KeyboardListener();
+        java.awt.event.KeyAdapter keyAdapter = new KeyboardListener(this);
         MouseCoordGetter coordGetter = new MouseCoordGetter(frame.getCanvas());
 
         class CoordPanel extends JPanel {
@@ -253,7 +245,10 @@ public class App {
         
         // new Thread(grSystem).start();
         Logger.getRootLogger().setLevel(Level.ERROR);
-        new Thread(scene).run();
+        new Thread(scene).start();
+        
+//        Camera.getInstance().setTarget(jupiter);
+        Camera.getInstance().setDistance(20);
     }
     
     public boolean isShowOrbits() {
@@ -271,10 +266,8 @@ public class App {
     }
 
 	public static void main(String[] args) {
-		app = new App();
+		new App();
 	}
-	
-	public static App app;
 	
 	private List<DrawableSpaceObject> objects;
     

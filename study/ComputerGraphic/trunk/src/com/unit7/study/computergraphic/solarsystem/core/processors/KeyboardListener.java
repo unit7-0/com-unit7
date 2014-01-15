@@ -20,6 +20,10 @@ import com.unit7.study.computergraphic.solarsystem.core.Camera;
  * 
  */
 public class KeyboardListener extends KeyAdapter {
+	public KeyboardListener(App app) {
+		this.app = app;
+	}
+	
     @Override
     public void keyPressed(KeyEvent e) {
         if (log.isDebugEnabled()) {
@@ -51,11 +55,13 @@ public class KeyboardListener extends KeyAdapter {
             Camera.getInstance().addEyeZ(-d);
             break;
         case KeyEvent.VK_SPACE:
-            App.app.showOrbits(!App.app.isShowOrbits());
+            app.showOrbits(!app.isShowOrbits());
             break;
         }
     //    super.keyPressed(e);
     }
 
+    private App app;
+    
     private static final Logger log = Logger.getLogger(KeyboardListener.class);
 }
