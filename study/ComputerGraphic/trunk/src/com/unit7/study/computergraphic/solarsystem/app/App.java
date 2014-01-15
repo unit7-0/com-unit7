@@ -253,7 +253,7 @@ public class App {
   */      
         
         // new Thread(grSystem).start();
-//        Logger.getRootLogger().setLevel(Level.ERROR);
+        Logger.getRootLogger().setLevel(Level.ERROR);
         scene.show();
     }
     
