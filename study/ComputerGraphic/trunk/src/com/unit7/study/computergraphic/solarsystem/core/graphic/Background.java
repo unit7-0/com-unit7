@@ -34,7 +34,7 @@ public class Background implements Drawable, Nameable {
 		double r = 10;
 		double z = 0;
 
-		CreateSkyBox(gl, 0, 0, 0, 400, 400, 400);
+		CreateSkyBox(gl, 0, 0, 0, 600, 600, 400);
 	}
 	
 	void CreateSkyBox(GL2 gl, float x, float y, float z, float width, float height, float length)

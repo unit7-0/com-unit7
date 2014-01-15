@@ -194,7 +194,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
         // Setup perspective projection, with aspect ratio matches viewport
         gl.glMatrixMode(GL2.GL_PROJECTION); // choose projection matrix
         gl.glLoadIdentity(); // reset projection matrix
-        glu.gluPerspective(45.0, aspect, 0, 500); // fovy, aspect, zNear, zFar
+        glu.gluPerspective(45.0, aspect, 0, 600); // fovy, aspect, zNear, zFar
 
         Camera camera = Camera.getInstance();
         glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
