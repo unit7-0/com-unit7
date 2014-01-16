@@ -92,7 +92,7 @@ public class DrawableSphere extends DrawableSpaceObject {
         if (object.isShowInfo()) {
             double pos = 0;
             double d = 3;
-            gl.glColor3d(0, 0, 0.8);
+            gl.glColor3d(0.4, 0.4, 0.9);
             gl.glRasterPos3d(radius, radius - pos, 0);
             GLUT glut = new GLUT();
             
@@ -122,7 +122,7 @@ public class DrawableSphere extends DrawableSpaceObject {
    }
 */
             
-           /* glut.glutBitmapString(GLUT.BITMAP_9_BY_15, String.format("Status: %s", object.getStatus().getValue()));
+            glut.glutBitmapString(GLUT.BITMAP_9_BY_15, String.format("Status: %s", object.getStatus().getValue()));
             pos += d;
             gl.glRasterPos3d(radius, radius - pos, 0);
             glut.glutBitmapString(GLUT.BITMAP_9_BY_15, String.format("Name: %s", object.getName()));
@@ -132,7 +132,7 @@ public class DrawableSphere extends DrawableSpaceObject {
             gl.glRasterPos3d(radius, radius - pos, 0);
             pos += d;
             glut.glutBitmapString(GLUT.BITMAP_9_BY_15, String.format("Age: %.2f bln. years", object.getAge()));
-*/
+
             gl.glColor3d(1, 1, 1);
         }
     }
