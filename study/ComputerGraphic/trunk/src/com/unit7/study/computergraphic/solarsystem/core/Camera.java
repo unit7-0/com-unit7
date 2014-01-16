@@ -38,9 +38,9 @@ public class Camera {
     	if (target == null)
     		return;
     	
-//    	centerX = target.getX();
-//    	centerY = target.getY();
-//    	centerZ = target.getZ();
+    	centerX = target.getX();
+    	centerY = target.getY();
+    	centerZ = target.getZ();
     	
     	double dist = Math.sqrt(Utils.sqr(centerX - eyeX) + Utils.sqr(centerY - eyeY) + Utils.sqr(centerZ - eyeZ));
     	
@@ -49,9 +49,9 @@ public class Camera {
     	}
     	
     	if (Math.abs(dist - 0.00000001) > distance || dist + 0.00000001 < distance) {
-    		eyeX = 0;//centerX;
-    		eyeY = 0;//centerY;
-    		eyeZ = 90;//distance - centerZ;
+    		eyeX = centerX;
+    		eyeY = centerY;
+    		eyeZ = distance - centerZ;
     	}
     }
     

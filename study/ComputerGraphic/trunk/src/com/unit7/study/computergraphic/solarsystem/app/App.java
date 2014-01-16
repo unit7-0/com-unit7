@@ -13,6 +13,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
 
@@ -259,8 +260,9 @@ public class App {
         Logger.getRootLogger().setLevel(Level.ERROR);
         new Thread(scene).start();
 
-        // Camera.getInstance().setTarget(jupiter);
-        Camera.getInstance().setDistance(20);
+        /* Camera.getInstance().setTarget(mars);
+        Camera.getInstance().setDistance(5);
+        */
     }
 
     public boolean isShowOrbits() {

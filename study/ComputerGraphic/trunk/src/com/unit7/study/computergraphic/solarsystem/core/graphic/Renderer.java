@@ -84,6 +84,8 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
                     camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ()));
         }
         
+        gl.glTranslated(camera.getCenterX(), camera.getCenterY(),
+                camera.getCenterZ());
         glu.gluLookAt(camera.getEyeX(), camera.getEyeY(), camera.getEyeZ(), camera.getCenterX(), camera.getCenterY(),
                 camera.getCenterZ(), camera.getUpX(), camera.getUpY(), camera.getUpZ());
         // camera.resetCamera();
