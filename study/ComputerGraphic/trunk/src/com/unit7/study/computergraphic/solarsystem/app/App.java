@@ -301,8 +301,5 @@ public class App {
     private boolean showOrbits;
     private boolean showInfo;
 
-    public static final String CONF_PATH = "/home/unit7";
-    public static final String TEXTURES_PATH = "/textures";
-
     private static final Logger log = Logger.getLogger(App.class);
 }
