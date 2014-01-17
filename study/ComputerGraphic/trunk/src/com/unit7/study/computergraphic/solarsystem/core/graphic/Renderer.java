@@ -32,6 +32,7 @@ import com.unit7.study.computergraphic.solarsystem.core.ObjectHolderImpl;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.Drawable;
 import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSpaceObject;
 import com.unit7.study.computergraphic.solarsystem.core.interfaces.Nameable;
+import com.unit7.study.computergraphic.solarsystem.resources.Resources;
 
 /**
  * @author unit7
@@ -213,7 +214,7 @@ public class Renderer extends ObjectHolderImpl<Drawable> implements GLEventListe
             Drawable obj = objs.get(i);
             String name = ((Nameable) obj).getName();
             try {
-                in = new FileInputStream(App.CONF_PATH + App.TEXTURES_PATH + "/" + name.toLowerCase() + ".png");
+                in = Resources.getResourceAsStream(name.toLowerCase() + ".png");
                 TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), in, false, "png");
                 Texture text = TextureIO.newTexture(data);
                 obj.setTexture(text);

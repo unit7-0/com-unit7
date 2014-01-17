@@ -14,16 +14,16 @@ import javax.media.opengl.GLDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
-import com.unit7.study.computergraphic.solarsystem.engine.ActionObject;
-import com.unit7.study.computergraphic.solarsystem.engine.DrawnSphere;
-import com.unit7.study.computergraphic.solarsystem.engine.GLFrame;
-import com.unit7.study.computergraphic.solarsystem.engine.Renderer;
-import com.unit7.study.computergraphic.solarsystem.engine.Scene;
-import com.unit7.study.computergraphic.solarsystem.engine.Sphere;
-import com.unit7.study.computergraphic.solarsystem.engine.Time;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.Drawable;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSpaceObject;
-import com.unit7.study.computergraphic.solarsystem.engine.drawable.DrawableSphere;
+import com.unit7.study.computergraphic.solarsystem.core.DrawnSphere;
+import com.unit7.study.computergraphic.solarsystem.core.Sphere;
+import com.unit7.study.computergraphic.solarsystem.core.Time;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.GLFrame;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.Renderer;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.Drawable;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSpaceObject;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.drawable.DrawableSphere;
+import com.unit7.study.computergraphic.solarsystem.core.interfaces.ActionObject;
+import com.unit7.study.computergraphic.solarsystem.core.processors.Scene;
 
 /**
  * @author unit7

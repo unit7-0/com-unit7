@@ -7,8 +7,8 @@
 
 package opengl.test;
 
-import com.unit7.study.computergraphic.solarsystem.engine.GLFrame;
-import com.unit7.study.computergraphic.solarsystem.engine.Renderer;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.GLFrame;
+import com.unit7.study.computergraphic.solarsystem.core.graphic.Renderer;
 
 /**
  * @author unit7
