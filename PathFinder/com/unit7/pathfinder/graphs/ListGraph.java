@@ -110,14 +110,14 @@ public class ListGraph {
      */
     public List<Edge> getPath(Node f, Node s) {
         List<Edge> res = new ArrayList<Edge>();
-        // узел - расстояние до него и предок
-        Map<Node, Pair<Integer, Node>> dist = new HashMap<Node, Pair<Integer, Node>>();
+        // узел - расстояние до него и предок + вес ребра
+        Map<Node, Pair<Integer, Pair<Integer, Node>>> dist = new HashMap<Node, Pair<Integer, Pair<Integer, Node>>>();
         for (Iterator<Node> it = nodes.iterator(); it.hasNext(); )  {
             Node n = it.next();
-            dist.put(n, new Pair<Integer, Node>(Integer.MAX_VALUE / 2, n));
+            dist.put(n, new Pair<Integer, Pair<Integer, Node>>(Integer.MAX_VALUE / 2, new Pair<Integer, Node>(-1, n)));
         }
         
-        dist.put(f, new Pair<Integer, Node>(0, f));
+        dist.put(f, new Pair<Integer, Pair<Integer, Node>>(0, new Pair<Integer, Node>(-1, f)));
         Queue<Node> q = new LinkedList<Node>();
         q.add(f);
         while (!q.isEmpty()) {
@@ -127,9 +127,11 @@ public class ListGraph {
                 int d = dist.get(n).getFirst() + e.getWeight();
                 Node to = e.getDestination();
                 if (d < dist.get(to).getFirst()) {
-                    Pair<Integer, Node> p = dist.get(to);
+                    Pair<Integer, Pair<Integer, Node>> p = dist.get(to);
                     p.setFirst(d);
-                    p.setSecond(n);
+                    Pair<Integer, Node> anc = p.getSecond();
+                    anc.setSecond(n);
+                    anc.setFirst(e.getWeight());
                     q.add(to);
                 }
             }
@@ -142,11 +144,12 @@ public class ListGraph {
         
         Node n = s;
         while (!n.equals(f)) {
-            Pair<Integer, Node> cur = dist.get(n);
-            Node anc = cur.getSecond();
-            for (Iterator<Edge> it = n.getEdges().iterator(); it.hasNext(); ) {
+            Pair<Integer, Pair<Integer, Node>> cur = dist.get(n);
+            Node anc = cur.getSecond().getSecond();
+            int weight = cur.getSecond().getFirst();
+            for (Iterator<Edge> it = anc.getEdges().iterator(); it.hasNext(); ) {
                 Edge e = it.next();
-                if (e.getDestination().equals(anc)) {
+                if (e.getWeight() == weight && e.getDestination().equals(n)) {
                     res.add(e);
                     n = anc;
                     break;
