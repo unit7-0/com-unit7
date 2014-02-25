@@ -71,8 +71,8 @@ public class CreateConnection extends UserInputFrame {
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CreateConnection.this.name = name.getText();
-                CreateConnection.this.time = time.getText();
+                CreateConnection.this.name = name.getText().trim();
+                CreateConnection.this.time = time.getText().trim();
                 quit.set(true);
             }
         });
