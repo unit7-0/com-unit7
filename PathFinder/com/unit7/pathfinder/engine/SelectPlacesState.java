@@ -9,6 +9,7 @@ package com.unit7.pathfinder.engine;
 
 
 /**
+ * Состояние выбора точки на карте. Делегирует поведение параметру map
  * @author unit7
  *
  */

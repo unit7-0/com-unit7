@@ -35,6 +35,11 @@ import com.unit7.pathfinder.gui.UserInputFrame;
  * 
  */
 public class Utils {
+	/**
+	 * Выравнивает фрейм по центру относительно другого
+	 * @param main
+	 * @param depend
+	 */
     public static void centreFrame(Window main, Window depend) {
         int x = 0, y = 0;
         if (main == null) {
@@ -49,6 +54,13 @@ public class Utils {
         depend.setLocation(x, y);
     }
 
+    /**
+     * Проверяет пересекаются ли окружности с указанным радиусом
+     * @param p1
+     * @param p2
+     * @param r
+     * @return
+     */
     public static boolean isIntersect(Pair<Integer, Integer> p1, Pair<Integer, Integer> p2, Integer r) {
         if (p1 == null || p2 == null)
             return false;
@@ -60,6 +72,11 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Получает фрейм, создает ему гуй и ждет пока пользователь не закончит работу, затем возвращает нужные данные
+     * @param obj
+     * @return
+     */
     public static Object getUserInput(UserInputFrame obj) {
         final AtomicBoolean quit = new AtomicBoolean();
         quit.set(false);
@@ -83,6 +100,7 @@ public class Utils {
     }
 
     /**
+     * Сериализует объект
      * @param mapHolder
      */
     public static <T extends NamedHolder & Serializable> void saveObject(T obj, String dir) {
@@ -112,6 +130,13 @@ public class Utils {
         }
     }
     
+    /**
+     * Десериализует объект
+     * @param dir
+     * @param name
+     * @return
+     * @throws ClassNotFoundException
+     */
     public static <T extends NamedHolder & Serializable> T readObject(String dir, String name) throws ClassNotFoundException {
         T obj = null;
         InputStream in = null;

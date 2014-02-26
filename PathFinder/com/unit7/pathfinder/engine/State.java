@@ -10,6 +10,7 @@ package com.unit7.pathfinder.engine;
 import java.io.Serializable;
 
 /**
+ * Состояние ImageMap
  * @author unit7
  *
  */
