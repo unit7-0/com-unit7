@@ -40,362 +40,416 @@ import com.unit7.pathfinder.tools.Utils;
  *         делегирует выполнение объекту state.
  */
 public class ImageMap extends MouseAdapter implements State, Serializable {
-    private static final long serialVersionUID = -6654681313826803880L;
-    
-    public ImageMap() {
-    }
+	private static final long serialVersionUID = -6654681313826803880L;
 
-    public ImageMap(BufferedImage image) {
-        this.image = image;
-    }
+	public ImageMap() {
+	}
 
-    public void setImage(BufferedImage image) {
-        this.image = image;
-        clear();
-    }
+	public ImageMap(BufferedImage image) {
+		this.image = image;
+	}
 
-    public BufferedImage getImage() {
-        return image;
-    }
+	public void setImage(BufferedImage image) {
+		this.image = image;
+		clear();
+	}
 
-    public void setState(State state) {
-        this.state = state;
-    }
+	public BufferedImage getImage() {
+		return image;
+	}
 
-    /*
-     * @see
-     * com.unit7.pathfinder.gui.State#addPlace(com.unit7.pathfinder.gui.ImageMap
-     * )
-     */
-    @Override
-    public void addPlace(ImageMap map) {
-        state.addPlace(this);
-    }
+	public void setState(State state) {
+		this.state = state;
+	}
 
-    /*
-     * @see
-     * com.unit7.pathfinder.gui.State#addConnection(com.unit7.pathfinder.gui
-     * .ImageMap)
-     */
-    @Override
-    public void addConnection(ImageMap map) {
-        state.addConnection(this);
-    }
+	/*
+	 * @see
+	 * com.unit7.pathfinder.gui.State#addPlace(com.unit7.pathfinder.gui.ImageMap
+	 * )
+	 */
+	@Override
+	public void addPlace(ImageMap map) {
+		state.addPlace(this);
+	}
 
-    /*
-     * @see
-     * com.unit7.pathfinder.gui.State#changeConnection(com.unit7.pathfinder.
-     * gui.ImageMap)
-     */
-    @Override
-    public void changeConnection(ImageMap map) {
-        state.changeConnection(this);
-    }
+	/*
+	 * @see
+	 * com.unit7.pathfinder.gui.State#addConnection(com.unit7.pathfinder.gui
+	 * .ImageMap)
+	 */
+	@Override
+	public void addConnection(ImageMap map) {
+		state.addConnection(this);
+	}
 
-    /*
-     * @see
-     * com.unit7.pathfinder.gui.State#findPath(com.unit7.pathfinder.gui.ImageMap
-     * )
-     */
-    @Override
-    public void findPath(ImageMap map) {
-        state.findPath(this);
-    }
+	/*
+	 * @see
+	 * com.unit7.pathfinder.gui.State#changeConnection(com.unit7.pathfinder.
+	 * gui.ImageMap)
+	 */
+	@Override
+	public void changeConnection(ImageMap map) {
+		state.changeConnection(this);
+	}
 
-    @Override
-    public void showConnections(ImageMap map) {
-        state.showConnections(this);
-    }
+	/*
+	 * @see
+	 * com.unit7.pathfinder.gui.State#findPath(com.unit7.pathfinder.gui.ImageMap
+	 * )
+	 */
+	@Override
+	public void findPath(ImageMap map) {
+		state.findPath(this);
+	}
 
-    @Override
-    public void afterClick(ImageMap map) {
-        state.afterClick(this);
-    }
+	@Override
+	public void showConnections(ImageMap map) {
+		state.showConnections(this);
+	}
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (image == null)
-            return;
-        
-        try {
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                firstPoint = null;
-                secondPoint = null;
-                setState(SELECT_PLACE_STATE);
-                return;
-            }
+	@Override
+	public void afterClick(ImageMap map) {
+		state.afterClick(this);
+	}
 
-            int x = e.getX();
-            int y = e.getY();
-            coords.setFirst(x);
-            coords.setSecond(y);
-            changed = true;
-            afterClick(null);
-        } finally {
-            if (panel != null)
-                panel.repaint();
-        }
-    }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (image == null)
+			return;
 
-    public Node findPoint(Pair<Integer, Integer> p) {
-        int x = p.getFirst();
-        int y = p.getSecond();
-        for (Iterator<Pair<Integer, Integer>> it = points.keySet().iterator(); it.hasNext();) {
-            Pair<Integer, Integer> p1 = it.next();
-            if (Utils.isIntersect(p, p1, POINT_RADIUS))
-                return points.get(p1);
-        }
+		try {
+			// правая кнокпа - очистка выделения
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				firstPoint = null;
+				secondPoint = null;
+				setState(SELECT_PLACE_STATE);
+				return;
+			}
 
-        return null;
-    }
+			// установка точки по координатам клика
+			int x = e.getX();
+			int y = e.getY();
+			coords.setFirst(x);
+			coords.setSecond(y);
+			changed = true;
+			afterClick(null);
+		} finally {
+			if (panel != null)
+				panel.repaint();
+		}
+	}
 
-    public void addPoint() {
-        Node node = findPoint(coords);
-        System.out.println("addpoint: " + node);
-        if (node == null) {
-            String name = JOptionPane.showInputDialog("Enter the name of the place");
-            if (name == null)
-            	return;
-            
-            name = name.trim();
-            if ("".equals(name)) {
-            	JOptionPane.showMessageDialog(null, "Wrong format");
-            	return;
-            }
-            
-            node = new Node(name);
-            points.put(new Pair<Integer, Integer>(coords.getFirst(), coords.getSecond()), node);
-            graph.add(node);
-            changed = true;
-        }
-    }
+	/**
+	 * Ищет точку по заданным координатам с радиусом POINT_RADIUS, если находит,
+	 * возвращает узел графа
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public Node findPoint(Pair<Integer, Integer> p) {
+		int x = p.getFirst();
+		int y = p.getSecond();
+		for (Iterator<Pair<Integer, Integer>> it = points.keySet().iterator(); it
+				.hasNext();) {
+			Pair<Integer, Integer> p1 = it.next();
+			if (Utils.isIntersect(p, p1, POINT_RADIUS))
+				return points.get(p1);
+		}
 
-    public void selectPoint() {
-        Node node = findPoint(coords);
-        System.out.println("selectpoint: " + node);
-        if (node != null) {
-            Pair<Integer, Integer> point = new Pair<Integer, Integer>(coords.getFirst(), coords.getSecond());
-            if (firstPoint == null) {
-                firstPoint = point;
-                changed = true;
-            } else if (secondPoint == null) {
-                secondPoint = point;
-                changed = true;
-            }
-        }
-    }
+		return null;
+	}
 
-    public void createConnection() {
-        if (firstPoint == null || secondPoint == null) {
-            JOptionPane.showMessageDialog(null, "Points not selected");
-            return;
-        }
+	/**
+	 * Добавляет точку в граф, если ее еще нет
+	 */
+	public void addPoint() {
+		Node node = findPoint(coords);
+		if (node == null) {
+			String name = JOptionPane
+					.showInputDialog("Enter the name of the place");
+			if (name == null)
+				return;
 
-        Node f = findPoint(firstPoint);
-        Node s = findPoint(secondPoint);
-        
-        CreateConnection cConn = new CreateConnection((String) null, new String[] { f.getName(), f.getName() });
-        cConn.setTitle("Create Connection");
-        Object data = Utils.getUserInput(cConn);
-        if (data == null)
-            return;
+			name = name.trim();
+			if ("".equals(name)) {
+				JOptionPane.showMessageDialog(null, "Wrong format");
+				return;
+			}
 
-        Object[] d = (Object[]) data;
-        String name = (String) d[0];
-        String timeS = (String) d[1];
+			node = new Node(name);
+			points.put(
+					new Pair<Integer, Integer>(coords.getFirst(), coords
+							.getSecond()), node);
+			graph.add(node);
+			changed = true;
+		}
+	}
 
-        if (name == null || timeS == null)
-            return;
+	/**
+	 * Отмечает точку, если это возможно
+	 */
+	public void selectPoint() {
+		Node node = findPoint(coords);
+		if (node != null) {
+			Pair<Integer, Integer> point = new Pair<Integer, Integer>(
+					coords.getFirst(), coords.getSecond());
+			if (firstPoint == null) {
+				firstPoint = point;
+				changed = true;
+			} else if (secondPoint == null) {
+				secondPoint = point;
+				changed = true;
+			}
+		}
+	}
 
-        if ("".equals(name) || "".equals(timeS)) {
-        	JOptionPane.showMessageDialog(null, "Wrong format");
-        	return;
-        }
-        
-        int time = 0;
+	/**
+	 * Создание соединения между отмеченными точками
+	 */
+	public void createConnection() {
+		if (firstPoint == null || secondPoint == null) {
+			JOptionPane.showMessageDialog(null, "Points not selected");
+			return;
+		}
 
-        try {
-            time = Integer.parseInt(timeS);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Wrong format");
-            return;
-        }
+		Node f = findPoint(firstPoint);
+		Node s = findPoint(secondPoint);
 
-        graph.connect(f, s, name, time);
-        changed = true;
+		CreateConnection cConn = new CreateConnection((String) null,
+				new String[] { f.getName(), f.getName() });
+		cConn.setTitle("Create Connection");
+		// запрашиваем данные у пользователя
+		Object data = Utils.getUserInput(cConn);
+		if (data == null)
+			return;
 
-        System.out.println("ok: " + f);
-    }
+		Object[] d = (Object[]) data;
+		String name = (String) d[0];
+		String timeS = (String) d[1];
 
-    public void showConnections() {
-        if (firstPoint == null || secondPoint == null) {
-            JOptionPane.showMessageDialog(null, "Points not selected");
-            return;
-        }
+		if (name == null || timeS == null)
+			return;
 
-        Node f = findPoint(firstPoint), s = findPoint(secondPoint);
-        List<Edge> edges = graph.getEdgesBetween(f, s);
-        ShowConnections sConn = new ShowConnections(edges, new String[] { f.getName(), s.getName() });
-        Utils.getUserInput(sConn);
-    }
+		if ("".equals(name) || "".equals(timeS)) {
+			JOptionPane.showMessageDialog(null, "Wrong format");
+			return;
+		}
 
-    public void changeConnection() {
-        if (firstPoint == null || secondPoint == null) {
-            JOptionPane.showMessageDialog(null, "Points not selected");
-            return;
-        }
+		int time = 0;
 
-        List<Edge> edges = graph.getEdgesBetween(findPoint(firstPoint), findPoint(secondPoint));
-        Edge e;
+		try {
+			time = Integer.parseInt(timeS);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Wrong format");
+			return;
+		}
 
-        if (edges.size() > 1) {
-        	ChangeConnections cConn = new ChangeConnections(edges);
-        	cConn.setTitle("Change connection");
-            Object data = Utils.getUserInput(cConn);
-            e = (Edge) data;
-        } else if (edges.size() == 1)
-            e = edges.get(0);
-        else {
-            JOptionPane.showMessageDialog(null, "No connectnions between points");
-            return;
-        }
+		graph.connect(f, s, name, time);
+		changed = true;
+	}
 
-        if (e == null)
-            return;
+	/**
+	 * Показывает прямы связи между точками
+	 */
+	public void showConnections() {
+		if (firstPoint == null || secondPoint == null) {
+			JOptionPane.showMessageDialog(null, "Points not selected");
+			return;
+		}
 
-        Node f = findPoint(firstPoint);
-        Node s = findPoint(secondPoint);
-        
-        CreateConnection cConn = new CreateConnection(e.getName(), new String[] { f.getName(), s.getName() });
-        cConn.setTitle("Change connection");
-        Object data = Utils.getUserInput(cConn);
-        if (data == null)
-            return;
+		Node f = findPoint(firstPoint), s = findPoint(secondPoint);
+		List<Edge> edges = graph.getEdgesBetween(f, s);
+		ShowConnections sConn = new ShowConnections(edges, new String[] {
+				f.getName(), s.getName() });
+		// показываем окошко
+		Utils.getUserInput(sConn);
+	}
 
-        Object[] d = (Object[]) data;
-        String name = (String) d[0];
-        String timeS = (String) d[1];
+	/**
+	 * Изменяет одно из соединений между выделенными точками
+	 */
+	public void changeConnection() {
+		if (firstPoint == null || secondPoint == null) {
+			JOptionPane.showMessageDialog(null, "Points not selected");
+			return;
+		}
 
-        if (name == null || timeS == null)
-            return;
+		List<Edge> edges = graph.getEdgesBetween(findPoint(firstPoint),
+				findPoint(secondPoint));
+		Edge e;
 
-        int time = 0;
+		if (edges.size() > 1) {
+			ChangeConnections cConn = new ChangeConnections(edges);
+			cConn.setTitle("Change connection");
+			// запрашиваем данные - какое соединение
+			Object data = Utils.getUserInput(cConn);
+			e = (Edge) data;
+		} else if (edges.size() == 1)
+			e = edges.get(0);
+		else {
+			JOptionPane.showMessageDialog(null,
+					"No connectnions between points");
+			return;
+		}
 
-        try {
-            time = Integer.parseInt(timeS);
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null, "Wrong format");
-            return;
-        }
+		if (e == null)
+			return;
 
-        graph.setConnectionWeight(f, s, name, e.getWeight(), time);
-        changed = true;
+		Node f = findPoint(firstPoint);
+		Node s = findPoint(secondPoint);
 
-        System.out.println("ok: " + f);
-    }
+		CreateConnection cConn = new CreateConnection(e.getName(),
+				new String[] { f.getName(), s.getName() });
+		cConn.setTitle("Change connection");
+		// запрашиваем данные - время пути
+		Object data = Utils.getUserInput(cConn);
+		if (data == null)
+			return;
 
-    public void findPath() {
-        if (firstPoint == null || secondPoint == null) {
-            JOptionPane.showMessageDialog(null, "Points not selected");
-            return;
-        }
-        
-        Node f = findPoint(firstPoint);
-        Node s = findPoint(secondPoint);
-        
-        List<Edge> path = graph.getPath(f, s);
-        
-        if (path.size() == 0) {
-            JOptionPane.showMessageDialog(null, "No ways between points");
-            return;
-        }
-        
-        int i = 0;
-        int total = 0;
-        String[] sPath = new String[path.size() + 2];
-        Node node = f;
-        sPath[i++] = String.format("From %s to %s:", f.getName(), s.getName());
-        for (Edge e : path) {
-            sPath[i++] = String.format("%s %s %s (%d)", node.getName(), e.getName(), e.getDestination().getName(), e.getWeight());
-            total += e.getWeight();
-            node = e.getDestination();
-        }
-        
-        sPath[i] = "Total: " + total;
-        Utils.getUserInput(new ShowPath(sPath));
-    }
-    
-    public void clear() {
-        graph = new ListGraph();
-        firstPoint = null;
-        secondPoint = null;
-        points.clear();
-        changed = false;
-    }
-    
-    public Collection<Pair<Integer, Integer>> getPoints() {
-        return Collections.unmodifiableCollection(points.keySet());
-    }
+		Object[] d = (Object[]) data;
+		String name = (String) d[0];
+		String timeS = (String) d[1];
 
-    @SuppressWarnings("unchecked")
-    public Pair<Integer, Integer>[] getSelectedPoints() {
-        return new Pair[] { firstPoint, secondPoint };
-    }
+		if (name == null || timeS == null)
+			return;
 
-    public void setImagePanel(ImageMapPanel panel) {
-        this.panel = panel;
-    }
+		int time = 0;
 
-    public boolean isChanged() {
-        return changed;
-    }
+		try {
+			time = Integer.parseInt(timeS);
+		} catch (NumberFormatException ex) {
+			JOptionPane.showMessageDialog(null, "Wrong format");
+			return;
+		}
 
-    public void loadImage() throws IOException {
-        File f = new File(imagePath);
-        image = ImageIO.read(f);
-        changed = true;
-    }
-    
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-    
-    /**
-     * @return
-     */
-    public String getImagePath() {
-        // TODO Auto-generated method stub
-        return imagePath;
-    }
+		graph.setConnectionWeight(f, s, name, e.getWeight(), time);
+		changed = true;
+	}
 
-    /**
-     * @param b
-     */
-    public void setChanged(boolean changed) {
-        // TODO Auto-generated method stub
-        this.changed = changed;
-    }
-    
-    // изображение
-    private transient BufferedImage image;
-    // состояние
-    private State state = new SelectPlacesState();
-    // граф
-    private ListGraph graph = new ListGraph();
-    // выбранные точки
-    private Pair<Integer, Integer> firstPoint, secondPoint;
-    // координаты клика
-    private Pair<Integer, Integer> coords = new Pair<Integer, Integer>();
-    // отмеченные точки - связь с графом
-    private Map<Pair<Integer, Integer>, Node> points = new HashMap<Pair<Integer, Integer>, Node>();
-    // панель, на котороый лежит imageMap
-    private ImageMapPanel panel;
-    // признак изменения данных
-    private boolean changed;
-    // путь до картинки для сериализации
-    private String imagePath;
+	/**
+	 * Находит кратчайший путь между выделенными точками
+	 */
+	public void findPath() {
+		if (firstPoint == null || secondPoint == null) {
+			JOptionPane.showMessageDialog(null, "Points not selected");
+			return;
+		}
 
-    public static final State NEW_PLACE_STATE = new NewPlaceState();
-    public static final State SELECT_PLACE_STATE = new SelectPlacesState();
-    public static final int POINT_RADIUS = 7;
+		Node f = findPoint(firstPoint);
+		Node s = findPoint(secondPoint);
+
+		List<Edge> path = graph.getPath(f, s);
+
+		if (path.size() == 0) {
+			JOptionPane.showMessageDialog(null, "No ways between points");
+			return;
+		}
+
+		int i = 0;
+		int total = 0;
+		String[] sPath = new String[path.size() + 2];
+		Node node = f;
+		// формируем данные для отображения списка - путь
+		sPath[i++] = String.format("From %s to %s:", f.getName(), s.getName());
+		for (Edge e : path) {
+			sPath[i++] = String.format("%s %s %s (%d)", node.getName(),
+					e.getName(), e.getDestination().getName(), e.getWeight());
+			total += e.getWeight();
+			node = e.getDestination();
+		}
+
+		sPath[i] = "Total: " + total;
+		// показываем
+		Utils.getUserInput(new ShowPath(sPath));
+	}
+
+	/**
+	 * При загрузке или создании нового документа, очищаем поля
+	 */
+	public void clear() {
+		graph = new ListGraph();
+		firstPoint = null;
+		secondPoint = null;
+		points.clear();
+		changed = false;
+	}
+
+	public Collection<Pair<Integer, Integer>> getPoints() {
+		return Collections.unmodifiableCollection(points.keySet());
+	}
+
+	@SuppressWarnings("unchecked")
+	public Pair<Integer, Integer>[] getSelectedPoints() {
+		return new Pair[] { firstPoint, secondPoint };
+	}
+
+	public void setImagePanel(ImageMapPanel panel) {
+		this.panel = panel;
+	}
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+	/**
+	 * Грузит картинку по imagePath
+	 * @throws IOException
+	 */
+	public void loadImage() throws IOException {
+		File f = new File(imagePath);
+		image = ImageIO.read(f);
+		changed = true;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getImagePath() {
+		// TODO Auto-generated method stub
+		return imagePath;
+	}
+
+	/**
+	 * @param b
+	 */
+	public void setChanged(boolean changed) {
+		// TODO Auto-generated method stub
+		this.changed = changed;
+	}
+
+	// изображение
+	private transient BufferedImage image;
+	// состояние
+	private State state = new SelectPlacesState();
+	// граф
+	private ListGraph graph = new ListGraph();
+	// выбранные точки
+	private Pair<Integer, Integer> firstPoint, secondPoint;
+	// координаты клика
+	private Pair<Integer, Integer> coords = new Pair<Integer, Integer>();
+	// отмеченные точки - связь с графом
+	private Map<Pair<Integer, Integer>, Node> points = new HashMap<Pair<Integer, Integer>, Node>();
+	// панель, на котороый лежит imageMap
+	private ImageMapPanel panel;
+	// признак изменения данных
+	private boolean changed;
+	// путь до картинки для сериализации
+	private String imagePath;
+
+	/**
+	 * Состояние установки новой точки
+	 */
+	public static final State NEW_PLACE_STATE = new NewPlaceState();
+	/**
+	 * Состояние выбора точка
+	 */
+	public static final State SELECT_PLACE_STATE = new SelectPlacesState();
+	/**
+	 * Радиус точки
+	 */
+	public static final int POINT_RADIUS = 7;
 }

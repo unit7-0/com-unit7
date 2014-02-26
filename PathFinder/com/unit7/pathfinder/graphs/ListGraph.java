@@ -32,6 +32,13 @@ public class ListGraph implements Serializable {
             nodes.add(node);
     }
 
+    /**
+     * Связать два узла ребром
+     * @param f
+     * @param s
+     * @param name
+     * @param weight
+     */
     public void connect(Node f, Node s, String name, int weight) {
         if (weight < 0)
             throw new IllegalArgumentException("weight < 0");
@@ -46,6 +53,14 @@ public class ListGraph implements Serializable {
         s.addEdge(e2);
     }
 
+    /**
+     * Устанавливает вес ребра в обе стороны
+     * @param f
+     * @param s
+     * @param name
+     * @param oldWeight
+     * @param weight
+     */
     public void setConnectionWeight(Node f, Node s, String name, int oldWeight, int weight) {
         if (!(nodes.contains(f) && nodes.contains(s)))
             throw new NoSuchElementException();
@@ -63,6 +78,11 @@ public class ListGraph implements Serializable {
         return Collections.unmodifiableList(nodes);
     }
     
+    /**
+     * Возвращает список ребер из указнного узла
+     * @param node
+     * @return
+     */
     public List<Edge> getEdgesFrom(Node node) {
         if (!nodes.contains(node))
             throw new NoSuchElementException();
@@ -70,6 +90,12 @@ public class ListGraph implements Serializable {
         return Collections.unmodifiableList(node.getEdges());
     }
     
+    /**
+     * Возвращает список ребер между указанными узлами
+     * @param f
+     * @param s
+     * @return
+     */
     public List<Edge> getEdgesBetween(Node f, Node s) {
         if (!(nodes.contains(f) && nodes.contains(s)))
             throw new NoSuchElementException();
@@ -85,10 +111,23 @@ public class ListGraph implements Serializable {
         return res;
     }
     
+    /**
+     * Проверяте наличие пути между узлами
+     * @param f
+     * @param s
+     * @return
+     */
     public boolean pathExists(Node f, Node s) {
         return dfs(f, s, new HashSet<Node>());
     }
     
+    /**
+     * Поиск в глубину
+     * @param root
+     * @param to
+     * @param map
+     * @return
+     */
     public boolean dfs(Node root, Node to, Set<Node> map) {
         if (map.contains(root))
             return false;
@@ -121,6 +160,7 @@ public class ListGraph implements Serializable {
         }
         
         dist.put(f, new Pair<Integer, Pair<Integer, Node>>(0, new Pair<Integer, Node>(-1, f)));
+        // вершины для обработки
         Queue<Node> q = new LinkedList<Node>();
         q.add(f);
         while (!q.isEmpty()) {
@@ -129,6 +169,7 @@ public class ListGraph implements Serializable {
                 Edge e = it.next();
                 int d = dist.get(n).getFirst() + e.getWeight();
                 Node to = e.getDestination();
+                // обновим расстояние до вершины
                 if (d < dist.get(to).getFirst()) {
                     Pair<Integer, Pair<Integer, Node>> p = dist.get(to);
                     p.setFirst(d);
@@ -146,6 +187,7 @@ public class ListGraph implements Serializable {
         }
         
         Node n = s;
+        // формируем путь из ребер. Идем от последней вершины
         while (!n.equals(f)) {
             Pair<Integer, Pair<Integer, Node>> cur = dist.get(n);
             Node anc = cur.getSecond().getSecond();

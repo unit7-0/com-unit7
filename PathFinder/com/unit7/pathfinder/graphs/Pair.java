@@ -10,6 +10,7 @@ package com.unit7.pathfinder.graphs;
 import java.io.Serializable;
 
 /**
+ * Пара значений
  * @author unit7
  * 
  */

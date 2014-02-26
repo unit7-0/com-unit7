@@ -24,6 +24,7 @@ import com.unit7.pathfinder.graphs.Edge;
 import com.unit7.pathfinder.tools.Utils;
 
 /**
+ * Форма изменения соединения
  * @author unit7
  *
  */
@@ -115,6 +116,8 @@ public class ChangeConnections extends UserInputFrame {
         return this;
     }
 
+    // соединения
     private List<Edge> edges;
+    // выбранное соединение
     private Edge selected;
 }
