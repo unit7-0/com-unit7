@@ -174,6 +174,14 @@ public class FrameApp extends JFrame implements AbstractFrame {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	while (mapHolder.getObj().isChanged()) {
+                    if (showSaveQuestion()) {
+                        save.doClick();
+                    } else {
+                        break;
+                    }
+                }
+            	
                 System.exit(0);
             }
         });
@@ -232,12 +240,12 @@ public class FrameApp extends JFrame implements AbstractFrame {
                         mapHolder.setName(holder.getName());
                         mapHolder.setObj(holder.getObj());
                         mapHolder.getObj().setImagePanel(imagePanel);
-                        mapHolder.getObj().setChanged(false);
                         imagePanel.addMouseListener(mapHolder.getObj());
                         FrameApp.this.setTitle(NAME + " \"" + mapHolder.getName() + "\"");
                         try {
                             if (mapHolder.getObj().getImagePath() != null) {
                                 mapHolder.getObj().loadImage();
+                                mapHolder.getObj().setChanged(false);
                                 BufferedImage image = mapHolder.getObj().getImage();
                                 FrameApp.this.imagePanel.setPreferredSize(new Dimension(image.getWidth(), image
                                         .getHeight()));

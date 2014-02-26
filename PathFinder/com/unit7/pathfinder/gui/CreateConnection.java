@@ -25,8 +25,9 @@ import com.unit7.pathfinder.tools.Utils;
  * 
  */
 public class CreateConnection extends UserInputFrame {
-    public CreateConnection(String name) {
+    public CreateConnection(String name, String[] places) {
         super();
+        this.places = places;
         this.name = name;
     }
     
@@ -53,7 +54,7 @@ public class CreateConnection extends UserInputFrame {
     public JFrame createGUI() {
         JPanel content = new JPanel();
 
-        JLabel title = new JLabel("Enter the name of the connection and the time traveling");
+        JLabel title = new JLabel("Path from " + places[0] + " to " + places[1]);
         JLabel nameL = new JLabel("Name:");
         JLabel timeL = new JLabel("Time: ");
 
@@ -112,6 +113,7 @@ public class CreateConnection extends UserInputFrame {
         return this;
     }
 
+    private String[] places;
     private String name;
     private String time;
 }

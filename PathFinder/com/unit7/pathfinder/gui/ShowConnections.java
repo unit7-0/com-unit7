@@ -29,7 +29,8 @@ import com.unit7.pathfinder.tools.Utils;
  * 
  */
 public class ShowConnections extends UserInputFrame {
-    public ShowConnections(List<Edge> edges) {
+    public ShowConnections(List<Edge> edges, String[] places) {
+    	this.places = places;
         this.edges = edges;
     }
 
@@ -50,7 +51,7 @@ public class ShowConnections extends UserInputFrame {
         JPanel content = new JPanel();
         content.setLayout(new GridLayout(3, 1, 10, 10));
 
-        JLabel title = new JLabel("Direct connections beetwen points");
+        JLabel title = new JLabel(String.format("From %s to %s", places[0], places[1]));
         DefaultListModel model = new DefaultListModel();
 
         for (Iterator<Edge> it = edges.iterator(); it.hasNext();) {
@@ -85,5 +86,6 @@ public class ShowConnections extends UserInputFrame {
         return this;
     }
 
+    private String[] places;
     private List<Edge> edges;
 }
