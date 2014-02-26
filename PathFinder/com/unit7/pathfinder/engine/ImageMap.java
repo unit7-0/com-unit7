@@ -121,6 +121,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
             if (e.getButton() == MouseEvent.BUTTON3) {
                 firstPoint = null;
                 secondPoint = null;
+                setState(SELECT_PLACE_STATE);
                 return;
             }
 
@@ -153,6 +154,15 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
         System.out.println("addpoint: " + node);
         if (node == null) {
             String name = JOptionPane.showInputDialog("Enter the name of the place");
+            if (name == null)
+            	return;
+            
+            name = name.trim();
+            if ("".equals(name)) {
+            	JOptionPane.showMessageDialog(null, "Wrong format");
+            	return;
+            }
+            
             node = new Node(name);
             points.put(new Pair<Integer, Integer>(coords.getFirst(), coords.getSecond()), node);
             graph.add(node);
@@ -181,7 +191,9 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
             return;
         }
 
-        Object data = Utils.getUserInput(new CreateConnection((String) null));
+        CreateConnection cConn = new CreateConnection((String) null);
+        cConn.setTitle("Create Connection");
+        Object data = Utils.getUserInput(cConn);
         if (data == null)
             return;
 
@@ -192,6 +204,11 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
         if (name == null || timeS == null)
             return;
 
+        if ("".equals(name) || "".equals(timeS)) {
+        	JOptionPane.showMessageDialog(null, "Wrong format");
+        	return;
+        }
+        
         int time = 0;
 
         try {
@@ -230,7 +247,9 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
         Edge e;
 
         if (edges.size() > 1) {
-            Object data = Utils.getUserInput(new ChangeConnections(edges));
+        	ChangeConnections cConn = new ChangeConnections(edges);
+        	cConn.setTitle("Change connection");
+            Object data = Utils.getUserInput(cConn);
             e = (Edge) data;
         } else if (edges.size() == 1)
             e = edges.get(0);
@@ -242,7 +261,9 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
         if (e == null)
             return;
 
-        Object data = Utils.getUserInput(new CreateConnection(e.getName()));
+        CreateConnection cConn = new CreateConnection(e.getName());
+        cConn.setTitle("Change connection");
+        Object data = Utils.getUserInput(cConn);
         if (data == null)
             return;
 

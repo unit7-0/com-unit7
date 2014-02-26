@@ -77,6 +77,7 @@ public class ShowConnections extends UserInputFrame {
         content.add(list);
         content.add(controls);
         
+        setTitle("Connections");
         setContentPane(content);
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
