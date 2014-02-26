@@ -70,6 +70,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
         // setSize(400, 300);
         pack();
         // setSize(getWidth(), 300);
+        setTitle(NAME);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Utils.centreFrame(null, this);
         return this;
@@ -233,6 +234,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
                         mapHolder.getObj().setImagePanel(imagePanel);
                         mapHolder.getObj().setChanged(false);
                         imagePanel.addMouseListener(mapHolder.getObj());
+                        FrameApp.this.setTitle(NAME + " \"" + mapHolder.getName() + "\"");
                         try {
                             if (mapHolder.getObj().getImagePath() != null) {
                                 mapHolder.getObj().loadImage();
@@ -265,6 +267,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
                 }
 
                 Utils.saveObject(mapHolder, dir);
+                FrameApp.this.setTitle(NAME + " \"" + mapHolder.getName() + "\"");
                 mapHolder.getObj().setChanged(false);
             }
         });
@@ -326,6 +329,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
         return panel;
     }
 
+    private static final String NAME = "PathFinder";
     private NamedHolder<ImageMap> mapHolder = new NamedHolder<ImageMap>(new ImageMap());
     private ImageMapPanel imagePanel;
     private String dir = "";
