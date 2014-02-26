@@ -72,7 +72,7 @@ public class ShowPath extends UserInputFrame {
         content.add(list);
         content.add(controls);
         
-        setTitle("Fastest path");
+        setTitle("Snabbaste vägen");
         setContentPane(content);
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

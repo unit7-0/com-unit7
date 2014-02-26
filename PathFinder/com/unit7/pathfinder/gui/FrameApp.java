@@ -79,20 +79,20 @@ public class FrameApp extends JFrame implements AbstractFrame {
     private void createCommands(JPanel panel) {
         // create menu
         JMenuBar menuBar = new JMenuBar();
-        JMenu file = new JMenu("File");
-        JMenu operations = new JMenu("Operations");
+        JMenu file = new JMenu("Arkiv");
+        JMenu operations = new JMenu("Operationer");
 
-        JMenuItem create = new JMenuItem("Create");
-        JMenuItem open = new JMenuItem("Open");
-        final JMenuItem save = new JMenuItem("Save");
-        final JMenuItem saveAs = new JMenuItem("Save as...");
-        JMenuItem exit = new JMenuItem("Exit");
+        JMenuItem create = new JMenuItem("Nytt");
+        JMenuItem open = new JMenuItem("Öppna");
+        final JMenuItem save = new JMenuItem("Spara");
+        final JMenuItem saveAs = new JMenuItem("Spara com...");
+        JMenuItem exit = new JMenuItem("Avsluta");
 
-        JMenuItem newConnection = new JMenuItem("New connection");
-        JMenuItem newPlace = new JMenuItem("New place");
-        JMenuItem showConnection = new JMenuItem("Show connection");
-        JMenuItem changeConnection = new JMenuItem("Change connection");
-        JMenuItem findPath = new JMenuItem("Find path");
+        JMenuItem newConnection = new JMenuItem("Ny förbindelse");
+        JMenuItem newPlace = new JMenuItem("Ny plats");
+        JMenuItem showConnection = new JMenuItem("Visa förbindelser");
+        JMenuItem changeConnection = new JMenuItem("Ändra förbindelse");
+        JMenuItem findPath = new JMenuItem("Hitta väg");
 
         file.add(create);
         file.add(open);
@@ -299,11 +299,11 @@ public class FrameApp extends JFrame implements AbstractFrame {
         });
 
         // create buttons
-        JButton newPlaceButton = new JButton("New place");
-        JButton newConnectionButton = new JButton("New connection");
-        JButton changeConnectionButton = new JButton("Change connection");
-        JButton showConnectionButton = new JButton("Show connection");
-        JButton findPathButton = new JButton("Find path");
+        JButton newPlaceButton = new JButton("Ny plats");
+        JButton newConnectionButton = new JButton("Ny förbindelse");
+        JButton changeConnectionButton = new JButton("Ändra förbindelse");
+        JButton showConnectionButton = new JButton("Visa förbindelser");
+        JButton findPathButton = new JButton("Hitta väg");
 
         // add listeners
         newPlaceButton.addActionListener(newPlaceListener);
@@ -320,7 +320,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
     }
 
     public boolean showSaveQuestion() {
-        int res = JOptionPane.showConfirmDialog(FrameApp.this, "Save the changes?");
+        int res = JOptionPane.showConfirmDialog(FrameApp.this, "Du har osparade ändringar, Vill du spara dem ?");
         if (res == JOptionPane.YES_OPTION) {
             return true;
         }

@@ -55,8 +55,8 @@ public class CreateConnection extends UserInputFrame {
         JPanel content = new JPanel();
 
         JLabel title = new JLabel("Path from " + places[0] + " to " + places[1]);
-        JLabel nameL = new JLabel("Name:");
-        JLabel timeL = new JLabel("Time: ");
+        JLabel nameL = new JLabel("Namn:");
+        JLabel timeL = new JLabel("Tid: ");
 
         final JTextField name = new JTextField(20);
         final JTextField time = new JTextField(20);

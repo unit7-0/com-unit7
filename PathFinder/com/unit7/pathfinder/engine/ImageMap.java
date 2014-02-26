@@ -166,7 +166,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		Node node = findPoint(coords);
 		if (node == null) {
 			String name = JOptionPane
-					.showInputDialog("Enter the name of the place");
+					.showInputDialog("Platsens namn:");
 			if (name == null)
 				return;
 
@@ -288,7 +288,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			e = edges.get(0);
 		else {
 			JOptionPane.showMessageDialog(null,
-					"No connectnions between points");
+					"Förbindelse existerar inte!");
 			return;
 		}
 
@@ -341,7 +341,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		List<Edge> path = graph.getPath(f, s);
 
 		if (path.size() == 0) {
-			JOptionPane.showMessageDialog(null, "No ways between points");
+			JOptionPane.showMessageDialog(null, "Förbindelse existerar inte!");
 			return;
 		}
 
