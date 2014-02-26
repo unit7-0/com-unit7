@@ -191,7 +191,10 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
             return;
         }
 
-        CreateConnection cConn = new CreateConnection((String) null);
+        Node f = findPoint(firstPoint);
+        Node s = findPoint(secondPoint);
+        
+        CreateConnection cConn = new CreateConnection((String) null, new String[] { f.getName(), f.getName() });
         cConn.setTitle("Create Connection");
         Object data = Utils.getUserInput(cConn);
         if (data == null)
@@ -218,9 +221,6 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
             return;
         }
 
-        Node f = findPoint(firstPoint);
-        Node s = findPoint(secondPoint);
-
         graph.connect(f, s, name, time);
         changed = true;
 
@@ -233,8 +233,10 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
             return;
         }
 
-        List<Edge> edges = graph.getEdgesBetween(findPoint(firstPoint), findPoint(secondPoint));
-        Utils.getUserInput(new ShowConnections(edges));
+        Node f = findPoint(firstPoint), s = findPoint(secondPoint);
+        List<Edge> edges = graph.getEdgesBetween(f, s);
+        ShowConnections sConn = new ShowConnections(edges, new String[] { f.getName(), s.getName() });
+        Utils.getUserInput(sConn);
     }
 
     public void changeConnection() {
@@ -261,7 +263,10 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
         if (e == null)
             return;
 
-        CreateConnection cConn = new CreateConnection(e.getName());
+        Node f = findPoint(firstPoint);
+        Node s = findPoint(secondPoint);
+        
+        CreateConnection cConn = new CreateConnection(e.getName(), new String[] { f.getName(), s.getName() });
         cConn.setTitle("Change connection");
         Object data = Utils.getUserInput(cConn);
         if (data == null)
@@ -282,9 +287,6 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
             JOptionPane.showMessageDialog(null, "Wrong format");
             return;
         }
-
-        Node f = findPoint(firstPoint);
-        Node s = findPoint(secondPoint);
 
         graph.setConnectionWeight(f, s, name, e.getWeight(), time);
         changed = true;
@@ -310,8 +312,9 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
         
         int i = 0;
         int total = 0;
-        String[] sPath = new String[path.size() + 1];
+        String[] sPath = new String[path.size() + 2];
         Node node = f;
+        sPath[i++] = String.format("From %s to %s:", f.getName(), s.getName());
         for (Edge e : path) {
             sPath[i++] = String.format("%s %s %s (%d)", node.getName(), e.getName(), e.getDestination().getName(), e.getWeight());
             total += e.getWeight();
@@ -350,6 +353,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
     public void loadImage() throws IOException {
         File f = new File(imagePath);
         image = ImageIO.read(f);
+        changed = true;
     }
     
     public void setImagePath(String imagePath) {
