@@ -212,7 +212,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
-                        JOptionPane.showMessageDialog(FrameApp.this, "Error while image reading!");
+                        JOptionPane.showMessageDialog(FrameApp.this, "Fel vid bild läsning!");
                     }
                 }
             }
@@ -255,12 +255,12 @@ public class FrameApp extends JFrame implements AbstractFrame {
                         } catch (IOException e1) {
                             // TODO Auto-generated catch block
                             e1.printStackTrace();
-                            JOptionPane.showMessageDialog(FrameApp.this, "Error while image readin!");
+                            JOptionPane.showMessageDialog(FrameApp.this, "Fel vid bild läsning!");
                         }
                     } catch (ClassNotFoundException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
-                        JOptionPane.showMessageDialog(FrameApp.this, "Format not matched!");
+                        JOptionPane.showMessageDialog(FrameApp.this, "Format som inte matchas!");
                     }
                 }
             }

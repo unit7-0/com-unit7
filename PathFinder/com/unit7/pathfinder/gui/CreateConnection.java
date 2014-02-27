@@ -54,7 +54,7 @@ public class CreateConnection extends UserInputFrame {
     public JFrame createGUI() {
         JPanel content = new JPanel();
 
-        JLabel title = new JLabel("Path from " + places[0] + " to " + places[1]);
+        JLabel title = new JLabel("Vägen från " + places[0] + "  till " + places[1]);
         JLabel nameL = new JLabel("Namn:");
         JLabel timeL = new JLabel("Tid: ");
 
@@ -67,7 +67,7 @@ public class CreateConnection extends UserInputFrame {
         }
         
         JButton ok = new JButton("Ok");
-        JButton cancel = new JButton("Cancel");
+        JButton cancel = new JButton("Avbryter");
 
         ok.addActionListener(new ActionListener() {
             @Override
