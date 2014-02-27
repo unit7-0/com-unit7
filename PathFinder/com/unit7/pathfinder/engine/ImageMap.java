@@ -151,7 +151,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 * @param p
 	 * @return
 	 */
-	public Node findPoint(Pair<Integer, Integer> p) {
+	public Node findNode(Pair<Integer, Integer> p) {
 		int x = p.getFirst();
 		int y = p.getSecond();
 		for (Iterator<Pair<Integer, Integer>> it = points.keySet().iterator(); it
@@ -168,7 +168,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 * Добавляет точку в граф, если ее еще нет
 	 */
 	public void addPoint() {
-		Node node = findPoint(coords);
+		Node node = findNode(coords);
 		if (node == null) {
 			String name = JOptionPane
 					.showInputDialog("Platsens namn:");
@@ -182,9 +182,10 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			}
 
 			node = new Node(name);
-			points.put(
-					new Pair<Integer, Integer>(coords.getFirst(), coords
-							.getSecond()), node);
+			Pair<Integer, Integer> p = new Pair<Integer, Integer>(coords.getFirst(), coords
+					.getSecond());
+			points.put(p, node);
+			nodes.put(node, p);
 			graph.add(node);
 			changed = true;
 		}
@@ -194,7 +195,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 * Отмечает точку, если это возможно
 	 */
 	public void selectPoint() {
-		Node node = findPoint(coords);
+		Node node = findNode(coords);
 		if (node != null) {
 			Pair<Integer, Integer> point = new Pair<Integer, Integer>(
 					coords.getFirst(), coords.getSecond());
@@ -217,8 +218,8 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			return;
 		}
 
-		Node f = findPoint(firstPoint);
-		Node s = findPoint(secondPoint);
+		Node f = findNode(firstPoint);
+		Node s = findNode(secondPoint);
 
 		CreateConnection cConn = new CreateConnection((String) null,
 				new String[] { f.getName(), f.getName() });
@@ -251,6 +252,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 
 		graph.connect(f, s, name, time);
 		changed = true;
+		panel.repaint();
 	}
 
 	/**
@@ -262,7 +264,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			return;
 		}
 
-		Node f = findPoint(firstPoint), s = findPoint(secondPoint);
+		Node f = findNode(firstPoint), s = findNode(secondPoint);
 		List<Edge> edges = graph.getEdgesBetween(f, s);
 		ShowConnections sConn = new ShowConnections(edges, new String[] {
 				f.getName(), s.getName() });
@@ -279,8 +281,8 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			return;
 		}
 
-		List<Edge> edges = graph.getEdgesBetween(findPoint(firstPoint),
-				findPoint(secondPoint));
+		List<Edge> edges = graph.getEdgesBetween(findNode(firstPoint),
+				findNode(secondPoint));
 		Edge e;
 
 		if (edges.size() > 1) {
@@ -300,8 +302,8 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		if (e == null)
 			return;
 
-		Node f = findPoint(firstPoint);
-		Node s = findPoint(secondPoint);
+		Node f = findNode(firstPoint);
+		Node s = findNode(secondPoint);
 
 		CreateConnection cConn = new CreateConnection(e.getName(),
 				new String[] { f.getName(), s.getName() });
@@ -340,8 +342,8 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			return;
 		}
 
-		Node f = findPoint(firstPoint);
-		Node s = findPoint(secondPoint);
+		Node f = findNode(firstPoint);
+		Node s = findNode(secondPoint);
 
 		List<Edge> path = graph.getPath(f, s);
 
@@ -376,6 +378,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		firstPoint = null;
 		secondPoint = null;
 		points.clear();
+		nodes.clear();
 		changed = false;
 	}
 
@@ -426,6 +429,10 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		this.changed = changed;
 	}
 
+	public Pair<Integer, Integer> findPoint(Node node) {
+		return nodes.get(node);
+	}
+	
 	// изображение
 	private transient BufferedImage image;
 	// состояние
@@ -438,6 +445,8 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	private Pair<Integer, Integer> coords = new Pair<Integer, Integer>();
 	// отмеченные точки - связь с графом
 	private Map<Pair<Integer, Integer>, Node> points = new HashMap<Pair<Integer, Integer>, Node>();
+	// для связей
+	private Map<Node, Pair<Integer, Integer>> nodes = new HashMap<Node, Pair<Integer, Integer>>();
 	// панель, на котороый лежит imageMap
 	private ImageMapPanel panel;
 	// признак изменения данных

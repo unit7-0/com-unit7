@@ -205,10 +205,12 @@ public class FrameApp extends JFrame implements AbstractFrame {
                         mapHolder.getObj().clear();
                         mapHolder.getObj().setImagePath(f.getAbsolutePath());
                         mapHolder.getObj().loadImage();
+                        mapHolder.setName(null);
                         BufferedImage image = mapHolder.getObj().getImage();
                         FrameApp.this.imagePanel.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
                         FrameApp.this.pack();
                         FrameApp.this.repaint();
+                        FrameApp.this.setTitle(NAME);
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
