@@ -67,6 +67,11 @@ public class ChangeConnections extends UserInputFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String val = (String) list.getSelectedValue();
+                if (val == null) {
+                	quit.set(true);
+                	return;
+                }
+                
                 String[] vals = val.split("\\s");
                 String name = null;
                 String weightS = null;
