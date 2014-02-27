@@ -50,7 +50,7 @@ public class ChangeConnections extends UserInputFrame {
         JPanel content = new JPanel();
         content.setLayout(new GridLayout(3, 1, 10, 10));
 
-        JLabel title = new JLabel("Direct connections beetwen points");
+        JLabel title = new JLabel("Direkta kopplingar mellan punkter");
         DefaultListModel<String> model = new DefaultListModel<String>();
 
         for (Iterator<Edge> it = edges.iterator(); it.hasNext();) {

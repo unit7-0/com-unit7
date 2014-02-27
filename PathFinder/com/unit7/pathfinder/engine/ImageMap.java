@@ -129,6 +129,11 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			// установка точки по координатам клика
 			int x = e.getX();
 			int y = e.getY();
+			
+			if (x > image.getWidth() || y > image.getHeight()) {
+				return;
+			}
+			
 			coords.setFirst(x);
 			coords.setSecond(y);
 			changed = true;
@@ -172,7 +177,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 
 			name = name.trim();
 			if ("".equals(name)) {
-				JOptionPane.showMessageDialog(null, "Wrong format");
+				JOptionPane.showMessageDialog(null, "Fel format");
 				return;
 			}
 
@@ -208,7 +213,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 */
 	public void createConnection() {
 		if (firstPoint == null || secondPoint == null) {
-			JOptionPane.showMessageDialog(null, "Points not selected");
+			JOptionPane.showMessageDialog(null, "Poäng inte valt");
 			return;
 		}
 
@@ -217,7 +222,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 
 		CreateConnection cConn = new CreateConnection((String) null,
 				new String[] { f.getName(), f.getName() });
-		cConn.setTitle("Create Connection");
+		cConn.setTitle("Skapa anslutning");
 		// запрашиваем данные у пользователя
 		Object data = Utils.getUserInput(cConn);
 		if (data == null)
@@ -231,7 +236,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			return;
 
 		if ("".equals(name) || "".equals(timeS)) {
-			JOptionPane.showMessageDialog(null, "Wrong format");
+			JOptionPane.showMessageDialog(null, "Fel format");
 			return;
 		}
 
@@ -240,7 +245,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		try {
 			time = Integer.parseInt(timeS);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "Wrong format");
+			JOptionPane.showMessageDialog(null, "Fel format");
 			return;
 		}
 
@@ -253,7 +258,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 */
 	public void showConnections() {
 		if (firstPoint == null || secondPoint == null) {
-			JOptionPane.showMessageDialog(null, "Points not selected");
+			JOptionPane.showMessageDialog(null, "Poäng inte valt");
 			return;
 		}
 
@@ -270,7 +275,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 */
 	public void changeConnection() {
 		if (firstPoint == null || secondPoint == null) {
-			JOptionPane.showMessageDialog(null, "Points not selected");
+			JOptionPane.showMessageDialog(null, "Poäng inte valt");
 			return;
 		}
 
@@ -280,7 +285,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 
 		if (edges.size() > 1) {
 			ChangeConnections cConn = new ChangeConnections(edges);
-			cConn.setTitle("Change connection");
+			cConn.setTitle("ändra anslutning");
 			// запрашиваем данные - какое соединение
 			Object data = Utils.getUserInput(cConn);
 			e = (Edge) data;
@@ -300,7 +305,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 
 		CreateConnection cConn = new CreateConnection(e.getName(),
 				new String[] { f.getName(), s.getName() });
-		cConn.setTitle("Change connection");
+		cConn.setTitle("ändra anslutning");
 		// запрашиваем данные - время пути
 		Object data = Utils.getUserInput(cConn);
 		if (data == null)
@@ -318,7 +323,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		try {
 			time = Integer.parseInt(timeS);
 		} catch (NumberFormatException ex) {
-			JOptionPane.showMessageDialog(null, "Wrong format");
+			JOptionPane.showMessageDialog(null, "Fel format");
 			return;
 		}
 
@@ -331,7 +336,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 */
 	public void findPath() {
 		if (firstPoint == null || secondPoint == null) {
-			JOptionPane.showMessageDialog(null, "Points not selected");
+			JOptionPane.showMessageDialog(null, "Poäng inte valt");
 			return;
 		}
 
@@ -350,7 +355,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		String[] sPath = new String[path.size() + 2];
 		Node node = f;
 		// формируем данные для отображения списка - путь
-		sPath[i++] = String.format("From %s to %s:", f.getName(), s.getName());
+		sPath[i++] = String.format("Från %s till %s:", f.getName(), s.getName());
 		for (Edge e : path) {
 			sPath[i++] = String.format("%s %s %s (%d)", node.getName(),
 					e.getName(), e.getDestination().getName(), e.getWeight());
@@ -358,7 +363,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			node = e.getDestination();
 		}
 
-		sPath[i] = "Total: " + total;
+		sPath[i] = "Totall: " + total;
 		// показываем
 		Utils.getUserInput(new ShowPath(sPath));
 	}

@@ -51,7 +51,7 @@ public class ShowConnections extends UserInputFrame {
         JPanel content = new JPanel();
         content.setLayout(new GridLayout(3, 1, 10, 10));
 
-        JLabel title = new JLabel(String.format("From %s to %s", places[0], places[1]));
+        JLabel title = new JLabel(String.format("Från %s till %s", places[0], places[1]));
         DefaultListModel model = new DefaultListModel();
 
         for (Iterator<Edge> it = edges.iterator(); it.hasNext();) {
@@ -78,7 +78,7 @@ public class ShowConnections extends UserInputFrame {
         content.add(list);
         content.add(controls);
         
-        setTitle("Connections");
+        setTitle("Anslutning");
         setContentPane(content);
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

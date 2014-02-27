@@ -48,7 +48,7 @@ public class ShowPath extends UserInputFrame {
         JPanel content = new JPanel();
         content.setLayout(new GridLayout(3, 1, 10, 10));
 
-        JLabel title = new JLabel("Path between points");
+        JLabel title = new JLabel("Vägen mellan punkter");
         DefaultListModel<String> model = new DefaultListModel<String>();
 
         for (String s : sPath) {
