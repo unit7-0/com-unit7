@@ -41,7 +41,7 @@ public class ImageMapPanel extends JPanel {
 		super.paintComponent(g);
 		Image image = mapHolder.getObj().getImage();
 		if (image != null)
-			g.drawImage(image, 0, 0, image.getHeight(null),
+			g.drawImage(image, 0, 0, image.getWidth(null),
 					image.getHeight(null), null);
 
 		g.setColor(pointColor);
