@@ -7,6 +7,7 @@
 
 package com.unit7.pathfinder.engine;
 
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -25,6 +26,7 @@ import javax.swing.JOptionPane;
 
 import com.unit7.pathfinder.graphs.Edge;
 import com.unit7.pathfinder.graphs.ListGraph;
+import com.unit7.pathfinder.graphs.ListGraphNode;
 import com.unit7.pathfinder.graphs.Node;
 import com.unit7.pathfinder.graphs.Pair;
 import com.unit7.pathfinder.gui.ChangeConnections;
@@ -70,6 +72,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	@Override
 	public void addPlace(ImageMap map) {
 		state.addPlace(this);
+		panel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 	}
 
 	/*
@@ -123,6 +126,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 				firstPoint = null;
 				secondPoint = null;
 				setState(SELECT_PLACE_STATE);
+				panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				return;
 			}
 
@@ -137,6 +141,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			coords.setFirst(x);
 			coords.setSecond(y);
 			changed = true;
+			panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			afterClick(null);
 		} finally {
 			if (panel != null)
@@ -152,8 +157,6 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 	 * @return
 	 */
 	public Node findNode(Pair<Integer, Integer> p) {
-		int x = p.getFirst();
-		int y = p.getSecond();
 		for (Iterator<Pair<Integer, Integer>> it = points.keySet().iterator(); it
 				.hasNext();) {
 			Pair<Integer, Integer> p1 = it.next();
@@ -181,7 +184,7 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 				return;
 			}
 
-			node = new Node(name);
+			node = new ListGraphNode(name);
 			Pair<Integer, Integer> p = new Pair<Integer, Integer>(coords.getFirst(), coords
 					.getSecond());
 			points.put(p, node);
@@ -250,7 +253,14 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 			return;
 		}
 
-		graph.connect(f, s, name, time);
+		try {
+			graph.connect(f, s, name, time);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(panel, "Неверное значение веса");
+			return;
+		}
+		
 		changed = true;
 		panel.repaint();
 	}
@@ -382,8 +392,8 @@ public class ImageMap extends MouseAdapter implements State, Serializable {
 		changed = false;
 	}
 
-	public Collection<Pair<Integer, Integer>> getPoints() {
-		return Collections.unmodifiableCollection(points.keySet());
+	public Map<Pair<Integer, Integer>, Node> getPoints() {
+		return Collections.unmodifiableMap(points);
 	}
 
 	@SuppressWarnings("unchecked")

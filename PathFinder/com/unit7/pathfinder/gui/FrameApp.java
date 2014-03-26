@@ -10,18 +10,14 @@ package com.unit7.pathfinder.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -33,9 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import sun.util.locale.LocaleUtils;
-
-import com.unit7.pathfinder.engine.Holder;
 import com.unit7.pathfinder.engine.ImageMap;
 import com.unit7.pathfinder.engine.NamedHolder;
 import com.unit7.pathfinder.tools.Utils;
@@ -117,6 +110,7 @@ public class FrameApp extends JFrame implements AbstractFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mapHolder.getObj().setState(ImageMap.NEW_PLACE_STATE);
+				mapHolder.getObj().addPlace(mapHolder.getObj());
 			}
 		};
 		ActionListener newConnectionListener = new ActionListener() {
