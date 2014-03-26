@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -45,29 +46,32 @@ public class ImageMapPanel extends JPanel {
 					image.getHeight(null), null);
 
 		g.setColor(pointColor);
-		Collection<Pair<Integer, Integer>> points = mapHolder.getObj()
+		Map<Pair<Integer, Integer>, Node> points = mapHolder.getObj()
 				.getPoints();
 		Pair<Integer, Integer>[] selected = mapHolder.getObj()
 				.getSelectedPoints();
-		for (Iterator<Pair<Integer, Integer>> it = points.iterator(); it
+		for (Iterator<Map.Entry<Pair<Integer, Integer>, Node>> it = points.entrySet().iterator(); it
 				.hasNext();) {
-			Pair<Integer, Integer> p = it.next();
+			Map.Entry<Pair<Integer, Integer>, Node> p = it.next();
 			// рисуем связи
-			Node node = mapHolder.getObj().findNode(p);
+			Node node = p.getValue();
+			int x = p.getKey().getFirst(), y = p.getKey().getSecond();
 			if (node != null) {
 				for (Edge e : node.getEdges()) {
 					Node n1 = e.getDestination();
 					Pair<Integer, Integer> to = mapHolder.getObj()
 							.findPoint(n1);
-					g.drawLine(p.getFirst(), p.getSecond(), to.getFirst(),
+					g.drawLine(x, y, to.getFirst(),
 							to.getSecond());
 				}
 			}
 
-			if (!Utils.isIntersect(p, selected[0], radius)
-					&& !Utils.isIntersect(p, selected[1], radius)) {
-				int x = p.getFirst();
-				int y = p.getSecond();
+			Color c = g.getColor();
+			g.setColor(Color.BLACK);
+			g.drawString(node.getName(), x, y - radius);
+			g.setColor(c);
+			if (!Utils.isIntersect(p.getKey(), selected[0], radius)
+					&& !Utils.isIntersect(p.getKey(), selected[1], radius)) {
 				g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
 			}
 		}

@@ -24,10 +24,11 @@ import java.util.Set;
  * @author unit7
  * 
  */
-public class ListGraph implements Serializable {
+public class ListGraph<T extends Node> implements Graph<T>, Serializable {
     private static final long serialVersionUID = -1470389398513225245L;
 
-    public void add(Node node) {
+    @Override
+    public void add(T node) {
         if (!nodes.contains(node))
             nodes.add(node);
     }
@@ -39,7 +40,8 @@ public class ListGraph implements Serializable {
      * @param name
      * @param weight
      */
-    public void connect(Node f, Node s, String name, int weight) {
+    @Override
+    public void connect(T f, T s, String name, int weight) {
         if (weight < 0)
             throw new IllegalArgumentException("weight < 0");
 
@@ -74,7 +76,7 @@ public class ListGraph implements Serializable {
         e2.setWeight(weight);
     }
     
-    public List<Node> getNodes() {
+    public List<T> getNodes() {
         return Collections.unmodifiableList(nodes);
     }
     
@@ -154,7 +156,7 @@ public class ListGraph implements Serializable {
         List<Edge> res = new ArrayList<Edge>();
         // узел - расстояние до него и предок + вес ребра
         Map<Node, Pair<Integer, Pair<Integer, Node>>> dist = new HashMap<Node, Pair<Integer, Pair<Integer, Node>>>();
-        for (Iterator<Node> it = nodes.iterator(); it.hasNext(); )  {
+        for (Iterator<T> it = nodes.iterator(); it.hasNext(); )  {
             Node n = it.next();
             dist.put(n, new Pair<Integer, Pair<Integer, Node>>(Integer.MAX_VALUE / 2, new Pair<Integer, Node>(-1, n)));
         }
@@ -211,5 +213,5 @@ public class ListGraph implements Serializable {
         return "ListGraph [nodes=" + nodes + "]";
     }
 
-    private List<Node> nodes = new ArrayList<Node>();
+    private List<T> nodes = new ArrayList<T>();
 }
